@@ -11,7 +11,7 @@ public class PropertiesUtilsTest {
 	@Test
 	public void test() {
 		try {
-			Properties prop = PropertiesUtils.load("facebook4j.properties");
+			Properties prop = PropertiesUtils.load("general.properties");
 			assertNotNull(prop);
 			System.out.println(prop);
 			assertNotNull(prop.getProperty("debug"));

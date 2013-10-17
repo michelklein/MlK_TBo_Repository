@@ -24,12 +24,18 @@ public class PropertiesUtils {
 	 * 
 	 * @param propsName
 	 * @return Properties
+	 * @throws IOException 
 	 * @throws Exception
 	 */
-	public static Properties load(String propsName) throws Exception {
+	public static Properties load(String propsName)  {
 		Properties props = new Properties();
 		URL url = ClassLoader.getSystemResource(propsName);
-		props.load(url.openStream());
+			try {
+				props.load(url.openStream());
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		return props;
 	}
 
