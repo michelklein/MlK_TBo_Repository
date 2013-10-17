@@ -1,4 +1,4 @@
-package facebook4j.examples.signin;
+package de.uni.mannheim.semantic.facebook;
 
 import java.io.IOException;
 
@@ -12,7 +12,7 @@ import facebook4j.FacebookException;
 
 public class PostServlet extends HttpServlet {
     private static final long serialVersionUID = 4179545353414298791L;
- 
+
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
