@@ -24,7 +24,7 @@ public class SignInServlet extends HttpServlet {
 		Properties prop = PropertiesUtils.load("general.properties");
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-
+System.out.println(prop.getProperty("oauth.appId"));
 		cb.setDebugEnabled(true).setOAuthAppId(prop.getProperty("oauth.appId"))
 				.setOAuthAppSecret(prop.getProperty("oauth.appSecret"))
 				.setOAuthPermissions(prop.getProperty("oauth.permissions"));

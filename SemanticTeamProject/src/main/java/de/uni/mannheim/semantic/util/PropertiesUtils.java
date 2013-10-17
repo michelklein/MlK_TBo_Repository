@@ -3,6 +3,7 @@ package de.uni.mannheim.semantic.util;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.Properties;
 
@@ -28,10 +29,11 @@ public class PropertiesUtils {
 	 * @throws Exception
 	 */
 	public static Properties load(String propsName)  {
+	     InputStream in = PropertiesUtils.class.getClassLoader().getResourceAsStream(propsName);
 		Properties props = new Properties();
-		URL url = ClassLoader.getSystemResource(propsName);
+//		URL url = ClassLoader.getSystemResource(propsName);
 			try {
-				props.load(url.openStream());
+				props.load(in);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
