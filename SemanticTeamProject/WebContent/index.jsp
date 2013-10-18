@@ -5,7 +5,6 @@
 <head>
  <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
  
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
     <script src="bootstrap/js/bootstrap.min.js"></script>
     <script src="bootstrap/js/jquery-1.10.2.min.js"></script>
  
@@ -23,38 +22,47 @@
   
   <table class="table table-striped">
 <tr>
+<th>Attribute</th>
 <th>Facebook</th>
 <th>OpenData</th>
 </tr>
 <tr>
+<td>Firstname</td>
 <td>${c.getFbp().getFirstname()}</td>
 <td>?</td>
 </tr>
 <tr>
+<td>Lastname</td>
 <td>${c.getFbp().getName()}</td>
 <td>?</td>
 </tr>
 <tr>
+<td>Birthday</td>
 <td>${c.getFbp().getFormattedBirthday()}</td>
 <td>?</td>
 </tr>
 <tr>
+<td>Location</td>
+<td>${c.getFbp().getCurrLocation().getName()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>Firstname</td>
 <td>${c.getFbp().getName()}</td>
 <td>?</td>
 </tr>
 <tr>
+<td>Firstname</td>
 <td>${c.getFbp().getName()}</td>
 <td>?</td>
 </tr>
 <tr>
+<td>Firstname</td>
 <td>${c.getFbp().getName()}</td>
 <td>?</td>
 </tr>
 <tr>
-<td>${c.getFbp().getName()}</td>
-<td>?</td>
-</tr>
-<tr>
+<td>Firstname</td>
 <td>${c.getFbp().getFirstname()}</td>
 <td>?</td>
 </tr>

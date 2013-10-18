@@ -19,6 +19,7 @@ import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.IdNameEntity;
 import facebook4j.Location;
+import facebook4j.Page;
 import facebook4j.User.Education;
 
 public class FBParser {
@@ -36,7 +37,7 @@ public class FBParser {
 			Institution birthplace = new Institution();
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			Date birthdate = df.parse(fb.getMe().getBirthday());
-			String currLocation = fb.getMe().getLocation().getId();
+			Institution currLocation = fetchDataForID(fb.getMe().getLocation().getId());
 			List<Institution> education = fetchMoreDataForID(fb.getMe()
 					.getEducation());
 			;
@@ -59,9 +60,25 @@ public class FBParser {
 
 	}
 
+	private Institution fetchDataForID(String id) throws FacebookException {
+		System.out.println(id);
+		// TODO Auto-generated method stub
+		Institution i = new Institution();
+		for (Page p : fb.searchPages(id)) {
+			
+			System.out.println(p.getId());
+			i.setName(p.getName());
+			
+			i.setLoc(new de.uni.mannheim.semantic.model.Location(p.getLocation().getLatitude(),p.getLocation().getLongitude()));
+						}
+		
+		return i;
+	}
+
 	private List<Institution> fetchMoreDataForID(List<Education> list)
 			throws FacebookException {
-		// TODO Auto-generated method stub
+
+		
 		for (Education e : list) {
 
 			for (Location l : fb.searchLocations(e.getSchool().getId())) {
