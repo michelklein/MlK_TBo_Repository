@@ -11,13 +11,28 @@
   <a href="signin">Sign in with Facebook</a>
 </tag:notloggedin>
 <tag:loggedin>
-  <h1>Welcome ${facebook.name} (${facebook.id})</h1>
-    <h1>${facebook.getStatuses().get(0).getMessage()} </h1>
+
+  <h1>You and ...</h1>
+  
+  <table border="1">
+<tr>
+<th>Facebook</th>
+<th>OpenData</th>
+</tr>
+<tr>
+<td>${c.getFbp().getFirstname()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>${c.getFbp().getName()}</td>
+<td>?</td>
+</tr>
+</table>
+  
+ 
   <form action="./post" method="post">
     <textarea cols="80" rows="2" name="message"></textarea>
     <input type="submit" name="post" value="statuses" />
-    
-           
   </form>
 <a href="./logout">logout</a>
 </tag:loggedin>

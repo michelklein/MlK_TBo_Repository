@@ -1,4 +1,4 @@
-package de.uni.mannheim.semantic.facebook;
+package de.uni.mannheim.semantic.facebook.oauth;
 
 import static org.junit.Assert.assertNotNull;
 
@@ -21,10 +21,10 @@ public class SignInServlet extends HttpServlet {
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
+		System.out.println("sign");
 		Properties prop = PropertiesUtils.load("general.properties");
 
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-System.out.println(prop.getProperty("oauth.appId"));
 		cb.setDebugEnabled(true).setOAuthAppId(prop.getProperty("oauth.appId"))
 				.setOAuthAppSecret(prop.getProperty("oauth.appSecret"))
 				.setOAuthPermissions(prop.getProperty("oauth.permissions"));
@@ -36,8 +36,6 @@ System.out.println(prop.getProperty("oauth.appId"));
 		callbackURL.replace(index, callbackURL.length(), "")
 				.append("/callback");
 		String fURL = facebook.getOAuthAuthorizationURL(callbackURL.toString());
-		// response.sendRedirect("https://www.facebook.com/dialog/oauth?client_id="+clientID+"&client_secret="+clientSecret+"&redirect_uri="+callbackURL);
-		// response.sendRedirect(callbackURL.toString());
 		response.sendRedirect(fURL);
 
 	}

@@ -1,4 +1,4 @@
-package de.uni.mannheim.semantic.facebook;
+package de.uni.mannheim.semantic.facebook.oauth;
 
 import java.io.IOException;
 
@@ -7,6 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.uni.mannheim.semantic.facebook.FBParser;
+import de.uni.mannheim.semantic.gui.GUIObjectContainer;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 
@@ -15,20 +17,20 @@ public class CallbackServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        System.out.println("callback");
         Facebook facebook = (Facebook) request.getSession().getAttribute("facebook");
         String oauthCode = request.getParameter("code");
-        System.out.println(oauthCode);
-//        facebook.setOAuthAccessToken(facebook.getOAuthAccessToken());
-//        facebook.setOAuthAppId("575994579138307", "9d00e50135caad5b3809debac5f4622e");
         try {
         	
             facebook.getOAuthAccessToken(oauthCode);
         } catch (FacebookException e) {
             throw new ServletException(e);
         }
-        
-        Worker w = new Worker(facebook);
-        
+    
+        FBParser fbParser = new FBParser(facebook);
+        System.out.println(fbParser.getP().getFirstname());
+        GUIObjectContainer c = new GUIObjectContainer(fbParser.getP());
+        request.getSession().setAttribute("c", c);
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

@@ -1,4 +1,4 @@
-package de.uni.mannheim.semantic.facebook;
+package de.uni.mannheim.semantic.facebook.oauth;
 
 import java.io.IOException;
 
