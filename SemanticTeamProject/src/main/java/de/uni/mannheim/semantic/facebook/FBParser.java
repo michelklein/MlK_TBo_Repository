@@ -31,7 +31,6 @@ public class FBParser {
 		try {
 			fb.getCheckins().get(0).getPlace().getLocation().getLatitude();
 			String firstname = fb.getMe().getFirstName();
-			System.out.println(fb.getMe().getFirstName());
 			String name = fb.getMe().getLastName();
 			Institution home = new Institution();
 			Institution birthplace = new Institution();
@@ -66,7 +65,6 @@ public class FBParser {
 		for (Education e : list) {
 
 			for (Location l : fb.searchLocations(e.getSchool().getId())) {
-				System.out.println(l.getPlace().getName());
 l.getPlace().getLocation().getLatitude();
 			}
 		}
@@ -84,7 +82,7 @@ l.getPlace().getLocation().getLatitude();
 
 				value = field.get(p);
 
-				System.out.println("Field: " + fname + " : " + value);
+//				System.out.println("Field: " + fname + " : " + value);
 			}
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block

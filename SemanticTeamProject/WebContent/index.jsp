@@ -3,18 +3,25 @@
 
 <html>
 <head>
+ <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+ 
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <script src="bootstrap/js/jquery-1.10.2.min.js"></script>
+ 
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>Sign in with Facebook example</title>
 </head>
 <body>
+    
 <tag:notloggedin>
-  <a href="signin">Sign in with Facebook</a>
+  <a href="signin">sign in with Facebook</a>
 </tag:notloggedin>
 <tag:loggedin>
-
+<a href="./logout">logout</a>
   <h1>You and ...</h1>
   
-  <table border="1">
+  <table class="table table-striped">
 <tr>
 <th>Facebook</th>
 <th>OpenData</th>
@@ -27,14 +34,34 @@
 <td>${c.getFbp().getName()}</td>
 <td>?</td>
 </tr>
+<tr>
+<td>${c.getFbp().getFormattedBirthday()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>${c.getFbp().getName()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>${c.getFbp().getName()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>${c.getFbp().getName()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>${c.getFbp().getName()}</td>
+<td>?</td>
+</tr>
+<tr>
+<td>${c.getFbp().getFirstname()}</td>
+<td>?</td>
+</tr>
 </table>
   
  
-  <form action="./post" method="post">
-    <textarea cols="80" rows="2" name="message"></textarea>
-    <input type="submit" name="post" value="statuses" />
-  </form>
-<a href="./logout">logout</a>
+
 </tag:loggedin>
 </body>
 </html>

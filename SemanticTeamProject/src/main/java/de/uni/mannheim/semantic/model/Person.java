@@ -60,7 +60,10 @@ public class Person {
 	public List<Institution> getEmployer() {
 		return employer;
 	}
-	
+	public String getFormattedBirthday(){
+		return getBirthdate().toLocaleString();
+	}
+
 	
 	
 	
