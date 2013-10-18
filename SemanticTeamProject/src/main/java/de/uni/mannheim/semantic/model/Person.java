@@ -15,6 +15,7 @@ public class Person {
 	private String firstname;
 	private String name;
 	private Date birthdate;
+
 	private Institution currLocation;
 
 	private Institution home;
@@ -37,7 +38,10 @@ public class Person {
 	}
 
 	public Person(String firstname, String name, Institution home,
+
 			Institution birthplace, String birthdate, Institution currLocation,
+
+
 			List<Institution> education, List<Institution> employer) {
 		super();
 		this.firstname = firstname;
@@ -76,8 +80,9 @@ public class Person {
 		return birthdate;
 	}
 
+
 	public Institution getCurrLocation() {
-		return currLocation;
+	return currLocation;
 	}
 
 	public List<Institution> getEducation() {
@@ -87,6 +92,7 @@ public class Person {
 	public List<Institution> getEmployer() {
 		return employer;
 	}
+
 	
 	
 	
