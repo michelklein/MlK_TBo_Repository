@@ -96,7 +96,7 @@ public class FBParser {
 			p = new FBPerson(firstname, name, home, location, birthdate,
 					currLocation, education, employer, inter, picURL);
 
-			TBoSuperDuperPrinter(p);
+//			TBoSuperDuperPrinter(p);
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

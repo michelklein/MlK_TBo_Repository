@@ -26,6 +26,12 @@ public class Institution {
 		}
 
 	}
+	public Institution(String n, String lo, String la) {
+		name=n;
+		if(lo!=null&&la!=null){
+		loc= new Location(Double.parseDouble(lo), Double.parseDouble(la));
+		}
+		}
 	public String getName() {
 		return name;
 	}

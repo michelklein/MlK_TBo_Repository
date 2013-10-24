@@ -6,15 +6,18 @@ import java.util.List;
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 
+import de.uni.mannheim.semantic.model.CelPerson;
 import de.uni.mannheim.semantic.model.FBPerson;
 
 public class GUIObjectContainer {
 
 	private FBPerson fbp;
+	private CelPerson cp;
 	private List<String> celebrities;
 
-	public GUIObjectContainer(FBPerson fbp, List<String> celebrities) {
+	public GUIObjectContainer(FBPerson fbp,CelPerson cp, List<String> celebrities) {
 		this.fbp = fbp;
+		this.cp = cp;
 		this.celebrities = celebrities;
 	}
 
@@ -37,5 +40,13 @@ public class GUIObjectContainer {
 			array.add(celebrity);
 		}
 		return array.toString();
+	}
+
+	public CelPerson getCp() {
+		return cp;
+	}
+
+	public void setCp(CelPerson cp) {
+		this.cp = cp;
 	}
 }

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import de.uni.mannheim.semantic.facebook.FBParser;
 import de.uni.mannheim.semantic.gui.GUIObjectContainer;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
+import de.uni.mannheim.semantic.model.CelPerson;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 
@@ -20,7 +21,14 @@ public class DoTheMagic extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Facebook facebook = (Facebook) request.getSession().getAttribute("facebook");
         FBParser fbParser = new FBParser(facebook);
-        GUIObjectContainer c = new GUIObjectContainer(fbParser.getP(), CelebritiesFetcher.get().getDummyCelebrities());
+        CelPerson cp;
+        if(request.getParameter("celname")!=null){
+        	System.out.println("CELNAME"+request.getParameter("celname"));
+         cp=CelebritiesFetcher.get().getCelebrity(request.getParameter("celname").toString());
+        }else{
+         cp=null;
+        }
+		GUIObjectContainer c = new GUIObjectContainer(fbParser.getP(),cp,CelebritiesFetcher.get().getCelebrities() );
         request.getSession().setAttribute("c", c);
         response.sendRedirect(request.getContextPath() + "/");
     }

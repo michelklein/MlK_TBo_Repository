@@ -131,10 +131,10 @@
 			<div class="panel panel-default">
 					<div class="panel-body">
 						<div class="panel-header-own">
-							<img src="${c.getFbp().getPicURL()}" alt="Your Picture"
+							<img src="${c.getCp().getPicURL()}" alt="Your Picture"
 								class="img-rounded">
-							<span class="header-name header-bold">${c.getFbp().getFirstname()}</span>
-							<span class="header-name">${c.getFbp().getName()}</span>
+							<span class="header-name header-bold">${c.getCp().getFirstname()}</span>
+							<span class="header-name">${c.getCp().getName()}</span>
 						</div>
 
 						<table class="table">
@@ -144,43 +144,43 @@
 							</tr>
 							<tr>
 								<td>Image</td>
-								<td>${c.getFbp().getPicURL()}</td>
+								<td>${c.getCp().getPicURL()}</td>
 							</tr>
 							<tr>
 								<td>Firstname</td>
-								<td>${c.getFbp().getFirstname()}</td>
+								<td>${c.getCp().getFirstname()}</td>
 							</tr>
 							<tr>
 								<td>Lastname</td>
-								<td>${c.getFbp().getName()}</td>
+								<td>${c.getCp().getName()}</td>
 							</tr>
 							<tr>
 								<td>Birthday</td>
-								<td>${c.getFbp().getFormattedBirthday()}</td>
+								<td>${c.getCp().getFormattedBirthday()}</td>
 							</tr>
 							<tr>
 								<td>Home</td>
-								<td>${c.getFbp().getHome().getName()}</td>
+								<td>${c.getCp().getHome().getName()}</td>
 							</tr>
 							<tr>
 								<td>location</td>
-								<td>${c.getFbp().getLocation().getName()}</td>
+								<td>${c.getCp().getLocation().getName()}</td>
 							</tr>
 							<tr>
 								<td>Education</td>
-								<td><c:forEach var="e" items="${c.getFbp().getEducation()}">
+								<td><c:forEach var="e" items="${c.getCp().getEducation()}">
         						${e.getName()}</br>
 									</c:forEach></td>
 							</tr>
 							<tr>
 								<td>Employer</td>
-								<td><c:forEach var="e" items="${c.getFbp().getEmployer()}">
+								<td><c:forEach var="e" items="${c.getCp().getEmployer()}">
   							${e.getName()}</br>
 									</c:forEach></td>
 							</tr>
 							<tr>
 								<td>Interests</td>
-								<td><c:forEach var="i" items="${c.getFbp().getInterest()}">
+								<td><c:forEach var="i" items="${c.getCp().getInterest()}">
   								${i}</br>
 									</c:forEach>
 							</tr>
