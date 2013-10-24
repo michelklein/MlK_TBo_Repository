@@ -6,10 +6,10 @@ import java.util.List;
 public class FBPerson extends Person {
 
 	public FBPerson(String firstname, String name, Institution home,
-			Institution birthplace, Date birthdate, Institution currLocation,
-			List<Institution> education, List<Institution> employer) {
-		super(firstname, name, home, birthplace, birthdate, currLocation, education,
-				employer);
+			Institution location, Date birthdate, Institution currLocation,
+			List<Institution> education, List<Institution> employer, List<String> interest, String picURL) {
+		super(firstname, name, home, location, birthdate, currLocation, education,
+				employer, interest,picURL);
 		// TODO Auto-generated constructor stub
 	}
 	

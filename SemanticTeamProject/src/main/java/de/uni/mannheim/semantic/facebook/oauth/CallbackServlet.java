@@ -24,13 +24,8 @@ public class CallbackServlet extends HttpServlet {
         	
             facebook.getOAuthAccessToken(oauthCode);
         } catch (FacebookException e) {
-            throw new ServletException(e);
         }
     
-        FBParser fbParser = new FBParser(facebook);
-        System.out.println(fbParser.getP().getFirstname());
-        GUIObjectContainer c = new GUIObjectContainer(fbParser.getP());
-        request.getSession().setAttribute("c", c);
-        response.sendRedirect(request.getContextPath() + "/");
+        response.sendRedirect(request.getContextPath() + "/magic");
     }
 }

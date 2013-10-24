@@ -16,6 +16,10 @@
     <servlet-name>logout</servlet-name>
     <servlet-class>de.uni.mannheim.semantic.facebook.oauth.LogoutServlet</servlet-class>
   </servlet>
+   <servlet>
+    <servlet-name>magic</servlet-name>
+    <servlet-class>de.uni.mannheim.semantic.util.DoTheMagic</servlet-class>
+  </servlet>
 
 
   <servlet-mapping>
@@ -30,7 +34,10 @@
     <servlet-name>logout</servlet-name>
     <url-pattern>/logout</url-pattern>
   </servlet-mapping>
-
+ <servlet-mapping>
+    <servlet-name>magic</servlet-name>
+    <url-pattern>/magic</url-pattern>
+  </servlet-mapping>
 
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
