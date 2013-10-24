@@ -23,6 +23,7 @@ import facebook4j.IdNameEntity;
 import facebook4j.Location;
 import facebook4j.Page;
 import facebook4j.Picture;
+import facebook4j.PictureSize;
 import facebook4j.ResponseList;
 import facebook4j.User.Education;
 import facebook4j.User.Work;
@@ -45,7 +46,7 @@ public class FBParser {
 		try {
 
 			// Picture
-			String picURL = fb.getPictureURL().toString();
+			String picURL = fb.getPictureURL(PictureSize.large).toString();
 			// Firstname
 			String firstname = fb.getMe().getFirstName();
 			// Name

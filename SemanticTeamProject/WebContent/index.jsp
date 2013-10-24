@@ -30,24 +30,54 @@
 
 	<tag:loggedin>
 		<div id="header">
-			<button type="button" id="logout" class="btn btn-default btn-sm" onclick="location.href='./logout'">
-				<span class="glyphicon glyphicon-off"></span> 
+			<!-- <button type="button" id="logout" class="btn btn-default btn-sm"
+				onclick="location.href='./logout'">
+				<span class="glyphicon glyphicon-off"></span>
 			</button>
-			
+			<button type="button" id="refresh" class="btn btn-default btn-sm"
+				onclick="location.href='./magic'">
+				<span class="glyphicon glyphicon-refresh"></span>
+			</button>
+ -->
+
+			<div id="search-bar">
+				<div class="input-group">
+					<input id="search-celebrity" type="text" class="form-control"
+						data-provide="typeahead" data-items="4"
+						placeholder="Type in your celebrity ..."> <span
+						class="input-group-addon"> <span
+						class="glyphicon glyphicon-search"></span>
+					</span><span class="input-group-addon"> <span
+						class="glyphicon glyphicon-refresh" onclick="location.href='./magic'"></span>
+					</span><span class="input-group-addon"> <span
+						class="glyphicon glyphicon-off" onclick="location.href='./logout'"></span>
+					</span>
+				</div>
+			</div>
+
 			<h1>
 				Celebritie comparison <small> You and your favourites</small>
 			</h1>
 		</div>
+
+
 		<div id="content">
-			<div id="left">Test</div>
-			<div id="right">
-				<div class="input-group">
-					<input id="search" type="text" class="form-control"
-						data-provide="typeahead" data-items="4"
-						placeholder="Type in your celebrity ..."> 
-					<span class="input-group-addon">
-							<span class="glyphicon glyphicon-search"></span>
-					</span>
+			<div class="content-area">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">${c.getFbp().getFirstname()} ${c.getFbp().getName()}</h3>
+					</div>
+					<div class="panel-body"><img src="${c.getFbp().getPicURL()}" alt="Your Picture" class="img-rounded"></div>
+				</div>
+				
+			</div>
+			<div class="content-area right">
+			
+			<div class="panel panel-default">
+					<div class="panel-heading">
+						<h3 class="panel-title">${c.getFbp().getFirstname()} ${c.getFbp().getName()}</h3>
+					</div>
+					<div class="panel-body"><img src="${c.getFbp().getPicURL()}" alt="Your Picture" class="img-rounded"></div>
 				</div>
 			</div>
 		</div>
@@ -56,18 +86,23 @@
 		<script type="text/javascript">
 			var celebrities = ${c.getCelebritiesAsJson()};
 			console.debug(celebrities);
-			$('#search').typeahead({
+			$('#search-celebrity').typeahead({
 				name : 'celebrities',
-				local : celebrities
+				local : celebrities,
+				limit: 10
 			});
 		</script>
 
-		<!-- 
-		<table class="table table-striped">
+				<table class="table table-striped">
 			<tr>
 				<th>Attribute</th>
 				<th>Facebook</th>
 				<th>OpenData</th>
+			</tr>
+			<tr>
+				<td>Image</td>
+				<td>${c.getFbp().getPicURL()}</td>
+				<td>?</td>
 			</tr>
 			<tr>
 				<td>Firstname</td>
@@ -85,33 +120,37 @@
 				<td>?</td>
 			</tr>
 			<tr>
-				<td>Location</td>
-				<td>${c.getFbp().getCurrLocation().getName()}</td>
+				<td>Home</td>
+				<td>${c.getFbp().getHome().getName()}</td>
 				<td>?</td>
 			</tr>
 			<tr>
-				<td>Firstname</td>
-				<td>${c.getFbp().getName()}</td>
+				<td>location</td>
+				<td>${c.getFbp().getLocation().getName()}</td>
 				<td>?</td>
 			</tr>
 			<tr>
-				<td>Firstname</td>
-				<td>${c.getFbp().getName()}</td>
+				<td>Education</td>
+				<td><c:forEach var="e" items="${c.getFbp().getEducation()}">
+        ${e.getName()}</br>
+					</c:forEach></td>
 				<td>?</td>
 			</tr>
 			<tr>
-				<td>Firstname</td>
-				<td>${c.getFbp().getName()}</td>
+				<td>Employer</td>
+				<td><c:forEach var="e" items="${c.getFbp().getEmployer()}">
+  ${e.getName()}</br>
+					</c:forEach></td>
 				<td>?</td>
 			</tr>
 			<tr>
-				<td>Firstname</td>
-				<td>${c.getFbp().getFirstname()}</td>
+				<td>Interests</td>
+				<td><c:forEach var="i" items="${c.getFbp().getInterest()}">
+  ${i}</br>
+					</c:forEach>
 				<td>?</td>
 			</tr>
-		</table> -->
-
-
+		</table>
 		
 
 	</tag:loggedin>
