@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <html>
 <head>
@@ -64,21 +65,130 @@
 		<div id="content">
 			<div class="content-area">
 				<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">${c.getFbp().getFirstname()} ${c.getFbp().getName()}</h3>
+					<div class="panel-body">
+						<div class="panel-header-own">
+							<img src="${c.getFbp().getPicURL()}" alt="Your Picture"
+								class="img-rounded">
+							<span class="header-name header-bold">${c.getFbp().getFirstname()}</span>
+							<span class="header-name">${c.getFbp().getName()}</span>
+						</div>
+
+						<table class="table table-striped">
+							<tr>
+								<th>Attribute</th>
+								<th>Value</th>
+							</tr>
+							<tr>
+								<td>Image</td>
+								<td>${c.getFbp().getPicURL()}</td>
+							</tr>
+							<tr>
+								<td>Firstname</td>
+								<td>${c.getFbp().getFirstname()}</td>
+							</tr>
+							<tr>
+								<td>Lastname</td>
+								<td>${c.getFbp().getName()}</td>
+							</tr>
+							<tr>
+								<td>Birthday</td>
+								<td>${c.getFbp().getFormattedBirthday()}</td>
+							</tr>
+							<tr>
+								<td>Home</td>
+								<td>${c.getFbp().getHome().getName()}</td>
+							</tr>
+							<tr>
+								<td>location</td>
+								<td>${c.getFbp().getLocation().getName()}</td>
+							</tr>
+							<tr>
+								<td>Education</td>
+								<td><c:forEach var="e" items="${c.getFbp().getEducation()}">
+        						${e.getName()}</br>
+									</c:forEach></td>
+							</tr>
+							<tr>
+								<td>Employer</td>
+								<td><c:forEach var="e" items="${c.getFbp().getEmployer()}">
+  							${e.getName()}</br>
+									</c:forEach></td>
+							</tr>
+							<tr>
+								<td>Interests</td>
+								<td><c:forEach var="i" items="${c.getFbp().getInterest()}">
+  								${i}</br>
+									</c:forEach>
+							</tr>
+						</table>
+
 					</div>
-					<div class="panel-body"><img src="${c.getFbp().getPicURL()}" alt="Your Picture" class="img-rounded"></div>
 				</div>
-				
+
 			</div>
 			<div class="content-area right">
 			
 			<div class="panel panel-default">
-					<div class="panel-heading">
-						<h3 class="panel-title">${c.getFbp().getFirstname()} ${c.getFbp().getName()}</h3>
+					<div class="panel-body">
+						<div class="panel-header-own">
+							<img src="${c.getFbp().getPicURL()}" alt="Your Picture"
+								class="img-rounded">
+							<span class="header-name header-bold">${c.getFbp().getFirstname()}</span>
+							<span class="header-name">${c.getFbp().getName()}</span>
+						</div>
+
+						<table class="table">
+							<tr>
+								<th>Attribute</th>
+								<th>Value</th>
+							</tr>
+							<tr>
+								<td>Image</td>
+								<td>${c.getFbp().getPicURL()}</td>
+							</tr>
+							<tr>
+								<td>Firstname</td>
+								<td>${c.getFbp().getFirstname()}</td>
+							</tr>
+							<tr>
+								<td>Lastname</td>
+								<td>${c.getFbp().getName()}</td>
+							</tr>
+							<tr>
+								<td>Birthday</td>
+								<td>${c.getFbp().getFormattedBirthday()}</td>
+							</tr>
+							<tr>
+								<td>Home</td>
+								<td>${c.getFbp().getHome().getName()}</td>
+							</tr>
+							<tr>
+								<td>location</td>
+								<td>${c.getFbp().getLocation().getName()}</td>
+							</tr>
+							<tr>
+								<td>Education</td>
+								<td><c:forEach var="e" items="${c.getFbp().getEducation()}">
+        						${e.getName()}</br>
+									</c:forEach></td>
+							</tr>
+							<tr>
+								<td>Employer</td>
+								<td><c:forEach var="e" items="${c.getFbp().getEmployer()}">
+  							${e.getName()}</br>
+									</c:forEach></td>
+							</tr>
+							<tr>
+								<td>Interests</td>
+								<td><c:forEach var="i" items="${c.getFbp().getInterest()}">
+  								${i}</br>
+									</c:forEach>
+							</tr>
+						</table>
+
 					</div>
-					<div class="panel-body"><img src="${c.getFbp().getPicURL()}" alt="Your Picture" class="img-rounded"></div>
 				</div>
+
 			</div>
 		</div>
 
@@ -91,67 +201,17 @@
 				local : celebrities,
 				limit: 10
 			});
+			
+			function bob(result) {
+			    alert('hi bob, you typed: '+ result);
+			}
+
+			$('#search-celebrity').change(function(){
+			    var result = $(this).val();
+			    bob(result);
+			});
 		</script>
 
-				<table class="table table-striped">
-			<tr>
-				<th>Attribute</th>
-				<th>Facebook</th>
-				<th>OpenData</th>
-			</tr>
-			<tr>
-				<td>Image</td>
-				<td>${c.getFbp().getPicURL()}</td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Firstname</td>
-				<td>${c.getFbp().getFirstname()}</td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Lastname</td>
-				<td>${c.getFbp().getName()}</td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Birthday</td>
-				<td>${c.getFbp().getFormattedBirthday()}</td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Home</td>
-				<td>${c.getFbp().getHome().getName()}</td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>location</td>
-				<td>${c.getFbp().getLocation().getName()}</td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Education</td>
-				<td><c:forEach var="e" items="${c.getFbp().getEducation()}">
-        ${e.getName()}</br>
-					</c:forEach></td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Employer</td>
-				<td><c:forEach var="e" items="${c.getFbp().getEmployer()}">
-  ${e.getName()}</br>
-					</c:forEach></td>
-				<td>?</td>
-			</tr>
-			<tr>
-				<td>Interests</td>
-				<td><c:forEach var="i" items="${c.getFbp().getInterest()}">
-  ${i}</br>
-					</c:forEach>
-				<td>?</td>
-			</tr>
-		</table>
-		
 
 	</tag:loggedin>
 

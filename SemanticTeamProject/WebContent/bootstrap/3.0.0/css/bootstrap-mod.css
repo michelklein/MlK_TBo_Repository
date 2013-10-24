@@ -65,9 +65,33 @@
 	border: 1px solid transparent;
 }
 
+.panel-header-own {
+	display: block;
+	margin-left: auto;
+	margin-right: auto; 
+	left: 25%;
+	position: relative;
+	margin-bottom: 20px;
+}
+
 .img-rounded {
 	border: 1px solid rgba(0, 0, 0, 0.15);
 	box-shadow: 0 6px 12px rgba(0, 0, 0, 0.176);
+	margin-right: 10px;
+}
+
+.header-bold {
+	font-weight: bold !important;
+	color: black !important;
+	font-weight: 500 !important;
+}
+
+.header-name {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+	font-weight: 200;
+	line-height: 1.1;
+	color: #999999;
+	font-size: 28px;
 }
 
 .input-group-addon {
