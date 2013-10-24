@@ -28,7 +28,7 @@ public class DoTheMagic extends HttpServlet {
         }else{
          cp=null;
         }
-		GUIObjectContainer c = new GUIObjectContainer(fbParser.getP(),cp,CelebritiesFetcher.get().getCelebrities() );
+		GUIObjectContainer c = new GUIObjectContainer(fbParser.getP(),cp,CelebritiesFetcher.get().getDummyCelebrities());
         request.getSession().setAttribute("c", c);
         response.sendRedirect(request.getContextPath() + "/");
     }

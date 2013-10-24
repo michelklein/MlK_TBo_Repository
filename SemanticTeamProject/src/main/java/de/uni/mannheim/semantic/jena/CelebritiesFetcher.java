@@ -311,7 +311,7 @@ System.out.println(builder.toString());
 				"Branch Warren", "Dena Westerfield", "Flex Wheeler",
 				"Claudia Wilbourn", "Latisha Wilder", "Kate Williams",
 				"Christi Wolf", "Lyen Wong", "Jenny Worth", "Dorian Yates",
-				"Don Youngblood", "Frank Zane" };
+				"Don Youngblood", "Frank Zane", "Arnold Schwarzenegger" };
 		return new ArrayList<String>(Arrays.asList(persons));
 	}
 
