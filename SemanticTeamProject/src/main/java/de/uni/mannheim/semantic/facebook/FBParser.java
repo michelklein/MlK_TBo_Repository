@@ -23,70 +23,78 @@ import facebook4j.IdNameEntity;
 import facebook4j.Location;
 import facebook4j.Page;
 import facebook4j.Picture;
+import facebook4j.ResponseList;
 import facebook4j.User.Education;
 import facebook4j.User.Work;
 
 public class FBParser {
 	private static Facebook fb;
 	private FBPerson p;
-	
-	public static Facebook getFB(){
+
+	public static Facebook getFB() {
 		return fb;
 	}
-	
+
 	public FBParser(Facebook f) {
 		// TODO Auto-generated constructor stub
 		fb = f;
-		
+		Institution home = null;
+		Institution location = null;
+		Institution currLocation = null;
+
 		try {
 
-			
-			//Picture
+			// Picture
 			String picURL = fb.getPictureURL().toString();
-			//Firstname
+			// Firstname
 			String firstname = fb.getMe().getFirstName();
-			//Name
+			// Name
 			String name = fb.getMe().getLastName();
-			//Home
-			Institution home = new Institution(fb.getMe().getHometown().getId());
-			//Location
-			Institution location = new Institution(fb.getMe().getLocation().getId());
-			//Interest
+			// Home
+			IdNameEntity hometown = fb.getMe().getHometown();
+			if (hometown != null) {
+				home = new Institution(hometown.getId());
+			}
+
+			IdNameEntity locationTmp = fb.getMe().getLocation();
+			if (locationTmp != null) {
+				location = new Institution(locationTmp.getId());
+			}
+
+			// Interest
 			List<String> inter = fb.getMe().getInterestedIn();
-			//Birthdate
+			// Birthdate
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			Date birthdate = df.parse(fb.getMe().getBirthday());
-			//CurrLocation
-			Institution currLocation = new Institution(fb.getCheckins().get(0).getId());
-			//education
+
+			// CurrLocation
+			ResponseList<Checkin> checkins = fb.getCheckins();
+			if (checkins != null && checkins.size() > 0) {
+				currLocation = new Institution(checkins.get(0).getId());
+			}
+
+			// education
 			List<Institution> education = new ArrayList<Institution>();
-			for (Education i : fb.getMe()
-					.getEducation()) {
-				education.add(new Institution(i.getSchool().getId()));
-				
+			List<Education> educations = fb.getMe().getEducation();
+			if (educations != null) {
+				for (Education i : educations) {
+					education.add(new Institution(i.getSchool().getId()));
+				}
 			}
-			//employer
+
+			// employer
 			List<Institution> employer = new ArrayList<Institution>();
-			for (Work w : fb.getMe()
-					.getWork()) {
-				employer.add(new Institution(w.getEmployer().getId()));
-				
+			List<Work> work = fb.getMe().getWork();
+			if (work != null) {
+				for (Work w : work) {
+					employer.add(new Institution(w.getEmployer().getId()));
+
+				}
 			}
-			
-			
-			
-			
-			
-			
-			
-			
-			
-			p = new FBPerson(firstname, name, home, location,
-					birthdate, currLocation, education, employer, inter,picURL);
-			
-			
-			
-			
+
+			p = new FBPerson(firstname, name, home, location, birthdate,
+					currLocation, education, employer, inter, picURL);
+
 			TBoSuperDuperPrinter(p);
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
@@ -100,8 +108,6 @@ public class FBParser {
 		}
 
 	}
-
-
 
 	public static void TBoSuperDuperPrinter(Object p) {
 		try {
@@ -135,10 +141,5 @@ public class FBParser {
 	public FBPerson getP() {
 		return p;
 	}
-
-	
-	
-	
-	
 
 }
