@@ -45,7 +45,7 @@
 				<div class="input-group">
 					<input id="search-celebrity" type="text" class="form-control"
 						data-provide="typeahead" data-items="4"
-						placeholder="Type in your celebrity ..."> <span
+						placeholder="Type in your celebrity ..." > <span
 						class="input-group-addon"> <span
 						class="glyphicon glyphicon-search"></span>
 					</span><span class="input-group-addon"> <span
@@ -195,21 +195,15 @@
 
 		<script type="text/javascript">
 			var celebrities = ${c.getCelebritiesAsJson()};
-			console.debug(celebrities);
 			$('#search-celebrity').typeahead({
 				name : 'celebrities',
 				local : celebrities,
-				limit: 10
+				limit: 10,
+			}).on('typeahead:selected', function($e) {
+				  var $typeahead = $(this);
+				  document.location.href='./magic?celname=' + $typeahead.val();
 			});
 			
-			function bob(result) {
-			    alert('hi bob, you typed: '+ result);
-			}
-
-			$('#search-celebrity').change(function(){
-			    var result = $(this).val();
-			    bob(result);
-			});
 		</script>
 
 
