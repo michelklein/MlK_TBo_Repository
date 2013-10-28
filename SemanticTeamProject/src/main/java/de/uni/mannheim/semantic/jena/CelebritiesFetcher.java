@@ -20,9 +20,9 @@ import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
-import de.uni.mannheim.semantic.facebook.FBParser;
+import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.model.CelPerson;
-import de.uni.mannheim.semantic.model.FBPerson;
+import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Person;
 

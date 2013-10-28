@@ -7,21 +7,21 @@ import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
 
 import de.uni.mannheim.semantic.model.CelPerson;
-import de.uni.mannheim.semantic.model.FBPerson;
+import de.uni.mannheim.semantic.model.FacebookPerson;
 
 public class GUIObjectContainer {
 
-	private FBPerson fbp;
+	private FacebookPerson fbp;
 	private CelPerson cp;
 	private List<String> celebrities;
 
-	public GUIObjectContainer(FBPerson fbp,CelPerson cp, List<String> celebrities) {
+	public GUIObjectContainer(FacebookPerson fbp,CelPerson cp, List<String> celebrities) {
 		this.fbp = fbp;
 		this.cp = cp;
 		this.celebrities = celebrities;
 	}
 
-	public FBPerson getFbp() {
+	public FacebookPerson getFbp() {
 		return fbp;
 	}
 	

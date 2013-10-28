@@ -3,9 +3,9 @@ package de.uni.mannheim.semantic.model;
 import java.util.Date;
 import java.util.List;
 
-public class FBPerson extends Person {
+public class FacebookPerson extends Person {
 
-	public FBPerson(String firstname, String name, Institution home,
+	public FacebookPerson(String firstname, String name, Institution home,
 			Institution location, Date birthdate, Institution currLocation,
 			List<Institution> education, List<Institution> employer, List<String> interest, String picURL) {
 		super(firstname, name, home, location, birthdate, currLocation, education,
