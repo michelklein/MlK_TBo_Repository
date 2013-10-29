@@ -21,6 +21,7 @@ import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.IdNameEntity;
 import facebook4j.Location;
+import facebook4j.Movie;
 import facebook4j.Page;
 import facebook4j.Picture;
 import facebook4j.PictureSize;
@@ -92,6 +93,11 @@ public class FBParser {
 
 				}
 			}
+			
+			for (Movie m : fb.getMovies()) {
+				System.out.println(m.getName());
+			}
+		
 
 			p = new FBPerson(firstname, name, home, location, birthdate,
 					currLocation, education, employer, inter, picURL);
