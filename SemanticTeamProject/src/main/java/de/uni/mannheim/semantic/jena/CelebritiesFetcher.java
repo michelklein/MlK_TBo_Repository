@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.jena.atlas.json.JsonArray;
+import org.apache.jena.atlas.json.JsonObject;
+
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
 import com.hp.hpl.jena.query.QueryExecutionFactory;
@@ -25,13 +28,14 @@ import de.uni.mannheim.semantic.model.CelPerson;
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Person;
+import facebook4j.internal.org.json.JSONObject;
 
 public class CelebritiesFetcher {
 	QuerySolution s;
 
 	public static void main(String[] args) throws IOException {
-//		 CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
-//		CelebritiesFetcher.get().getMovies("Arnold Schwarzenegger");
+		// CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
+		// CelebritiesFetcher.get().getMovies("Arnold Schwarzenegger");
 		CelebritiesFetcher.get().getMovies123("Batman: The Dark Knight");
 	}
 
@@ -49,83 +53,78 @@ public class CelebritiesFetcher {
 	}
 
 	public CelPerson getCelebrity(String celName) {
-	
+		StringBuilder builder = new StringBuilder();
+		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
+				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
+				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
+				.append("SELECT  * WHERE {")
 
-			StringBuilder builder = new StringBuilder();
-			builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-					.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-					.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-							.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
-					.append("SELECT  * WHERE {")
-				
-					.append("OPTIONAL { ?p foaf:name ?name.}")
-					.append("OPTIONAL { ?p foaf:givenName ?givenName.}")
-					.append("OPTIONAL { ?p foaf:surname ?surname.}")
-					.append("OPTIONAL { ?p ont:thumbnail ?thumbnail.}")
-					.append("OPTIONAL { ?p ont:birthPlace ?birthPlace.}")
-					.append("OPTIONAL { ?p ont:birthDate ?date.}")
-						.append("OPTIONAL { ?p dbpprop:relations ?child.}")
-					.append("OPTIONAL { ?p dbpprop:profession ?profession.}")
-						.append("OPTIONAL { ?p dbpprop:successor ?successor.}")
-					.append("OPTIONAL { ?p ont:birthName ?birthName.}")
-					.append("FILTER (?name='" + celName + "'@en)")
-					.append("} LIMIT 10");
-			System.out.println(builder.toString());
-			ResultSet rs = execute("http://dbpedia.org/sparql",
-					builder.toString());
-			while (rs.hasNext()) {
-				s = rs.nextSolution();
-				System.out.println(s);
-//				try {
-//				 Iterator<String> varNames = s.varNames();
-//				 while(varNames.hasNext()){
-//				 System.out.println(varNames.next());
-//				 }
-//
-//				 RDFNode asd = s.get("successor");
-////				 System.out.println(s.get("successor").asLiteral().toString());
-//				 
-//				 
-//				String givenName = gll("givenName");
-//				String surname = gll("surname");
-//				String date = gll("date");
-//				String tn = g("thumbnail");
-//				// createInstitution(s.get("birthPlace"));
-//				getMovies(gll("name"));
-//
-//				// Institution hp = new Institution(g("birthPlace"))
-//
-//				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-//
-//				CelPerson p = new CelPerson(givenName, surname, null, null,
-//						df.parse(date), null, null, null, null, tn);
-//
-//				// FBParser.TBoSuperDuperPrinter(p);
-//				return p;
-//			} catch (ParseException e) {
-//				// TODO Auto-generated catch block
-//				e.printStackTrace();
-//			}
+				.append("OPTIONAL { ?p foaf:name ?name.}")
+				.append("OPTIONAL { ?p foaf:givenName ?givenName.}")
+				.append("OPTIONAL { ?p foaf:surname ?surname.}")
+				.append("OPTIONAL { ?p ont:thumbnail ?thumbnail.}")
+				.append("OPTIONAL { ?p ont:birthPlace ?birthPlace.}")
+				.append("OPTIONAL { ?p ont:birthDate ?date.}")
+				.append("OPTIONAL { ?p dbpprop:relations ?child.}")
+				.append("OPTIONAL { ?p dbpprop:profession ?profession.}")
+				.append("OPTIONAL { ?p dbpprop:successor ?successor.}")
+				.append("OPTIONAL { ?p ont:birthName ?birthName.}")
+				.append("FILTER (?name='" + celName + "'@en)")
+				.append("} LIMIT 10");
+		System.out.println(builder.toString());
+		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
+		while (rs.hasNext()) {
+			s = rs.nextSolution();
+			System.out.println(s);
+			try {
+				Iterator<String> varNames = s.varNames();
+				while (varNames.hasNext()) {
+					System.out.println(varNames.next());
+				}
+
+				RDFNode asd = s.get("successor");
+				// System.out.println(s.get("successor").asLiteral().toString());
+
+				String givenName = gll("givenName");
+				String surname = gll("surname");
+				String date = gll("date");
+				String tn = g("thumbnail");
+				// createInstitution(s.get("birthPlace"));
+				getMovies(gll("name"));
+
+				// Institution hp = new Institution(g("birthPlace"))
+
+				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+				CelPerson p = new CelPerson(givenName, surname, null, null,
+						df.parse(date), null, null, null, null, tn);
+
+				// FBParser.TBoSuperDuperPrinter(p);
+				return p;
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		
+		}
+
 		return null;
 
 	}
+
 	private void getMovies(String n) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-		.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-		.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
+				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
 				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
-							.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-		.append("SELECT Distinct * WHERE {")
-	
-		.append("?p rdfs:label ?label.")
-		.append("?p ont:starring <http://dbpedia.org/resource/Arnold_Schwarzenegger>.")
-		.append("FILTER (LANG(?label)='en')")
-		.append("} LIMIT 10");
-		ResultSet rs = execute("http://dbpedia.org/sparql",
-				builder.toString());
+				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
+				.append("SELECT Distinct * WHERE {")
+
+				.append("?p rdfs:label ?label.")
+				.append("?p ont:starring <http://dbpedia.org/resource/Arnold_Schwarzenegger>.")
+				.append("FILTER (LANG(?label)='en')").append("} LIMIT 10");
+		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
 		while (rs.hasNext()) {
 			s = rs.nextSolution();
 			System.out.println(s);
@@ -135,6 +134,7 @@ public class CelebritiesFetcher {
 			// }
 		}
 	}
+
 	private void getMovies123(String n) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
@@ -144,8 +144,7 @@ public class CelebritiesFetcher {
 				.append("PREFIX movie: <http://data.linkedmdb.org/resource/movie/>")
 				.append("SELECT DISTINCT *").append("WHERE {")
 				.append("?p rdfs:label ?label.")
-				.append("FILTER (?label='" + n + "')")
-				.append("}LIMIT 1");
+				.append("FILTER (?label='" + n + "')").append("}LIMIT 1");
 		ResultSet rs = execute("http://data.linkedmdb.org/sparql",
 				builder.toString());
 		while (rs.hasNext()) {
@@ -373,6 +372,16 @@ public class CelebritiesFetcher {
 				"Christi Wolf", "Lyen Wong", "Jenny Worth", "Dorian Yates",
 				"Don Youngblood", "Frank Zane", "Arnold Schwarzenegger" };
 		return new ArrayList<String>(Arrays.asList(persons));
+	}
+
+	public String getDummyCelebritiesAsJson() {
+		JsonObject json = new JsonObject();
+		JsonArray array = new JsonArray();
+		for (String celebrity : getDummyCelebrities()) {
+			json.put("celebritie", celebrity);
+			array.add(celebrity);
+		}
+		return array.toString();
 	}
 
 }

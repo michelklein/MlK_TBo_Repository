@@ -18,7 +18,7 @@
   </servlet>
    <servlet>
     <servlet-name>fetchData</servlet-name>
-    <servlet-class>de.uni.mannheim.semantic.facebook.DataFetcherServlet</servlet-class>
+    <servlet-class>de.uni.mannheim.semantic.FetchDataServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>

@@ -96,7 +96,7 @@ public class Person {
 	/* GUI Functions */
 
 	public String getFormattedBirthday() {
-		return getBirthdate().toLocaleString();
+		return sdfToDate2.format(birthdate).toString();
 	}
 
 	public String getFormattedLocs(List<Institution> i) {

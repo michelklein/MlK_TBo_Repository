@@ -32,21 +32,26 @@
 	<tag:loggedin>
 
 		<script type="text/javascript" language="javascript">
-			$.getJSON("fetchData?method=fetchFacebookPerson", function(data) {
+		$(document).ajaxStart(function() {
+			console.log("ajaxStart");
+			 $("body").addClass("loading"); 
+		});
+
+		$(document).ajaxComplete(function() {
+			console.log("ajaxComplete");
+			 $("body").removeClass("loading"); 
+		});
+			$.getJSON("fetchData?op=facebook", function(data) {
+				console.log("Get FB Data");
 				var json = data;
 				$("#content").show();
 				$("#fbUserImage").attr('src', json.imageURL);
 				$("#userFirstname").html(json.firstname);
 				$("#userLastname").html(json.lastname);
+				$("#attr_age_user").html(json.formattedBirthday);
 				console.debug(data);
 			});
-			$( document ).ajaxStart(function() {
-				$("#loading").show();
-			});
-
-			$( document ).ajaxComplete(function() {
-				$("#loading").hide();
-			});
+			
 		</script>
 
 		<div id="header">
@@ -72,53 +77,73 @@
 				Celebritie comparison <small> You and your favourites</small>
 			</h1>
 		</div>
-	<div id="loading">loading...</div>
+
 		<div id="content">
 			<div class="row">
-				<div class="col-md-3 col-md-offset-2">
+				<div class="col-md-3 col-md-offset-1">
 					<div id="fbUser">
 						<div class="panel-header-own">
 							<img id="fbUserImage" src="images/defaultProfile.png"
 								class="img-rounded"> <span id="userFirstname"
-								class="header-name header-bold">Test</span> <span
-								id="userLastname" class="header-name">Lastname</span>
+								class="header-name header-bold"></span> <span id="userLastname"
+								class="header-name"></span>
 						</div>
 					</div>
 				</div>
-				<div class="col-md-3 col-md-offset-4">
+				<div class="col-md-3 col-md-offset-2">
 					<div id="fbUser">
-						<div class="panel-header-own">
-							<img id="celebrity" src="images/defaultProfile.png"
-								class="img-rounded"> <span id="celebrityFirstname"
-								class="header-name header-bold"></span> <span
-								id="celebrityLastname" class="header-name"></span>
+						<div class="panel-header-own floatRight">
+							<span id="celebrityFirstname" class="header-name header-bold"></span>
+							<span id="celebrityLastname" class="header-name"></span> <img
+								id="celebrityImage" src="images/defaultProfile.png"
+								class="img-rounded imageRight">
 						</div>
 					</div>
 				</div>
 			</div>
 			<div class="row">
-				<div class="col-md-2">attrbitues</div>
-				<div class="col-md-4 col-md-offset-3">Comparison</div>
+				<div id="attr_age_caption" class="col-md-1">Age:</div>
+				<div id="attr_age_user" class="col-md-1"></div>
+				<div class="col-md-6">
+					<div class="progress">
+						<div id="progress_age" class="progress-bar" role="progressbar"
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+							style="width: 0%;">
+							<span class="sr-only"></span>
+						</div>
+					</div>
+				</div>
+				<div id="attr_age_celebrity" class="col-md-1 textAlignRight"></div>
 			</div>
 		</div>
 
 		<script type="text/javascript">
-			var celebrities = $
-			{
-				c.getCelebritiesAsJson()
-			};
 			$('#search-celebrity').typeahead({
 				name : 'celebrities',
-				local : celebrities,
+				prefetch : 'fetchData?op=celebrityList',
 				limit : 10,
-			}).on('typeahead:selected', function($e) {
-				var $typeahead = $(this);
-				document.location.href = './magic?celname=' + $typeahead.val();
-			});
+			}).on(
+					'typeahead:selected',
+					function($e) {
+						var $typeahead = $(this);
+						$.getJSON("fetchData?op=celebrity&name="
+								+ $typeahead.val(), function(data) {
+							var json = data;
+							$("#celebrityImage").attr('src', json.imageURL);
+							$("#celebrityFirstname").html(json.firstname);
+							$("#celebrityLastname").html(json.lastname);
+							$("#attr_age_celebrity").html(
+									json.formattedBirthday);
+							$("#progress_age").width("60%");
+							$("#progress_age > .sr-only").html("60%");
+						});
+					});
 		</script>
 
 
 	</tag:loggedin>
-
+	<div class="loadingModal">
+		<!-- Place at bottom of page -->
+	</div>
 </body>
 </html>
