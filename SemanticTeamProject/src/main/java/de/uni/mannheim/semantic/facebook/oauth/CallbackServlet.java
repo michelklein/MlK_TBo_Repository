@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.uni.mannheim.semantic.facebook.FBParser;
+import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.gui.GUIObjectContainer;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -26,6 +26,6 @@ public class CallbackServlet extends HttpServlet {
         } catch (FacebookException e) {
         }
     
-        response.sendRedirect(request.getContextPath() + "/magic");
+        response.sendRedirect(request.getContextPath() + "/indexMlK.jsp");
     }
 }

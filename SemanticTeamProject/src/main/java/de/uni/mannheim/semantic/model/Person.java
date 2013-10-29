@@ -1,10 +1,11 @@
 package de.uni.mannheim.semantic.model;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
+import facebook4j.internal.org.json.JSONObject;
 
 public class Person {
 	private static SimpleDateFormat sdfToDate = new SimpleDateFormat(
@@ -13,53 +14,48 @@ public class Person {
 			"dd.MM.yyyy");
 
 	private String firstname;
-	private String picURL;
-	private String name;
+	private String lastname;
+	private String imageURL;
 	private Date birthdate;
-
 	private List<String> interest;
-	
-	private Institution currLocation;
-
+	private Institution currentLocation;
 	private Institution home;
 	private Institution location;
 	private List<Institution> education;
 	private List<Institution> employer;
 
-	public Person(String firstname, String name, Institution home,
-			Institution location, Date birthdate, Institution currLocation,
-			List<Institution> education, List<Institution> employer, List<String> interest, String picURL) {
+	public Person(String firstname, String lastname, Institution home,
+			Institution location, Date birthdate, Institution currentLocation,
+			List<Institution> education, List<Institution> employer,
+			List<String> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
-		this.name = name;
+		this.lastname = lastname;
 		this.home = home;
 		this.interest = interest;
 		this.birthdate = birthdate;
 		this.location = location;
-		this.currLocation = currLocation;
+		this.currentLocation = currentLocation;
 		this.education = education;
 		this.employer = employer;
-		this.picURL=picURL;
+		this.imageURL = imageURL;
 	}
 
-	public Person(String firstname, String name, Institution home,
-
-			Institution birthplace, String birthdate, Institution currLocation,
-
-
+	public Person(String firstname, String lastname, Institution home,
+			Institution birthplace, String birthdate, Institution currentLocation,
 			List<Institution> education, List<Institution> employer) {
 		super();
 		this.firstname = firstname;
-		this.name = name;
+		this.lastname = lastname;
 		this.home = home;
 		this.location = birthplace;
 		try {
 			this.birthdate = sdfToDate.parse(birthdate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			// TODO catch and handle exception
 			e.printStackTrace();
 		}
-		this.currLocation = currLocation;
+		this.currentLocation = currentLocation;
 		this.education = education;
 		this.employer = employer;
 
@@ -69,8 +65,8 @@ public class Person {
 		return firstname;
 	}
 
-	public String getName() {
-		return name;
+	public String getLastname() {
+		return lastname;
 	}
 
 	public Institution getHome() {
@@ -85,9 +81,8 @@ public class Person {
 		return birthdate;
 	}
 
-
 	public Institution getCurrLocation() {
-	return currLocation;
+		return currentLocation;
 	}
 
 	public List<Institution> getEducation() {
@@ -98,30 +93,26 @@ public class Person {
 		return employer;
 	}
 
-	
-	
-	
-	
-	
-	/*GUI Functions*/
-	
+	/* GUI Functions */
 
 	public String getFormattedBirthday() {
 		return getBirthdate().toLocaleString();
 	}
-	public String getFormattedLocs(List<Institution> i){
-		String result="";
+
+	public String getFormattedLocs(List<Institution> i) {
+		String result = "";
 		for (Institution institution : i) {
-			result=result+institution.getName();
+			result = result + institution.getName();
 		}
 		return result;
 	}
+
 	public String toString() {
 		if (birthdate != null) {
-			return firstname + " " + name + " " + sdfToDate2.format(birthdate)
-					+ "\n";
+			return firstname + " " + lastname + " "
+					+ sdfToDate2.format(birthdate) + "\n";
 		} else {
-			return firstname + " " + name + "\n";
+			return firstname + " " + lastname + "\n";
 		}
 	}
 
@@ -129,13 +120,13 @@ public class Person {
 		return interest;
 	}
 
-	
-	public String getPicURL() {
-		return picURL;
+	public String getImageURL() {
+		return imageURL;
 	}
-
 	
-
-
+	public String toJsonString() {
+		JSONObject json = new JSONObject(this);
+		return json.toString();
+	}
 
 }

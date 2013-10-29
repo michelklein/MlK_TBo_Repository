@@ -1,48 +1,36 @@
 package de.uni.mannheim.semantic.model;
 
-import de.uni.mannheim.semantic.facebook.FBParser;
-import facebook4j.Facebook;
-import facebook4j.FacebookException;
-import facebook4j.Page;
-import facebook4j.internal.org.json.JSONObject;
 
 public class Institution {
 	private String name;
-	private Location loc;
-	public Institution(String id) {
-		Page p;
-		try {
-			p = FBParser.getFB().getPage(id);
-			name=p.getName();
-			facebook4j.Place.Location location = p.getLocation();
-			if(location!=null){
-				loc= new Location(location.getLongitude(), location.getLatitude());
-			}
-//			FBParser.TBoSuperDuperPrinter(p);
-			
-		} catch (FacebookException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private Location location;
 
+	public Institution(String name, String longitude, String latitude) {
+		this.name = name;
+		if (longitude != null && latitude != null) {
+			location = new Location(Double.parseDouble(longitude), Double.parseDouble(latitude));
+		}
 	}
-	public Institution(String n, String lo, String la) {
-		name=n;
-		if(lo!=null&&la!=null){
-		loc= new Location(Double.parseDouble(lo), Double.parseDouble(la));
-		}
-		}
+
+	public Institution(String name, Double longitude, Double latitude) {
+		this.name = name;
+		location = new Location(longitude, latitude);
+	}
+
 	public String getName() {
 		return name;
 	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Location getLoc() {
-		return loc;
+
+	public Location getLocation() {
+		return location;
 	}
-	public void setLoc(Location loc) {
-		this.loc = loc;
+
+	public void setLoc(Location location) {
+		this.location = location;
 	}
-	
+
 }

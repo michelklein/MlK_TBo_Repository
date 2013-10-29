@@ -1,51 +1,41 @@
 package de.uni.mannheim.semantic.facebook;
 
 import java.lang.reflect.Field;
-import java.net.URL;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import sun.security.action.GetBooleanAction;
-import de.uni.mannheim.semantic.model.FBPerson;
+import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
-import facebook4j.Achievement;
-import facebook4j.Activity;
+import de.uni.mannheim.semantic.model.Location;
 import facebook4j.Checkin;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 import facebook4j.IdNameEntity;
-import facebook4j.Location;
-import facebook4j.Movie;
 import facebook4j.Page;
-import facebook4j.Picture;
 import facebook4j.PictureSize;
 import facebook4j.ResponseList;
 import facebook4j.User.Education;
 import facebook4j.User.Work;
 
-public class FBParser {
-	private static Facebook fb;
-	private FBPerson p;
-
-	public static Facebook getFB() {
-		return fb;
-	}
-
-	public FBParser(Facebook f) {
-		// TODO Auto-generated constructor stub
+public class FacebookParser {
+	private Facebook fb;
+	
+	public FacebookParser(Facebook f) {
 		fb = f;
+	}
+	
+	public FacebookPerson parseFacebookPerson() {
 		Institution home = null;
 		Institution location = null;
 		Institution currLocation = null;
-
+		FacebookPerson person = null;
+		
 		try {
-
 			// Picture
 			String picURL = fb.getPictureURL(PictureSize.large).toString();
 			// Firstname
@@ -55,12 +45,12 @@ public class FBParser {
 			// Home
 			IdNameEntity hometown = fb.getMe().getHometown();
 			if (hometown != null) {
-				home = new Institution(hometown.getId());
+				home = parseInstitution(hometown.getId());
 			}
 
 			IdNameEntity locationTmp = fb.getMe().getLocation();
 			if (locationTmp != null) {
-				location = new Institution(locationTmp.getId());
+				location = parseInstitution(locationTmp.getId());
 			}
 
 			// Interest
@@ -72,7 +62,7 @@ public class FBParser {
 			// CurrLocation
 			ResponseList<Checkin> checkins = fb.getCheckins();
 			if (checkins != null && checkins.size() > 0) {
-				currLocation = new Institution(checkins.get(0).getId());
+				currLocation = parseInstitution(checkins.get(0).getId());
 			}
 
 			// education
@@ -80,7 +70,7 @@ public class FBParser {
 			List<Education> educations = fb.getMe().getEducation();
 			if (educations != null) {
 				for (Education i : educations) {
-					education.add(new Institution(i.getSchool().getId()));
+					education.add(parseInstitution(i.getSchool().getId()));
 				}
 			}
 
@@ -89,20 +79,15 @@ public class FBParser {
 			List<Work> work = fb.getMe().getWork();
 			if (work != null) {
 				for (Work w : work) {
-					employer.add(new Institution(w.getEmployer().getId()));
+					employer.add(parseInstitution(w.getEmployer().getId()));
 
 				}
 			}
-			
-			for (Movie m : fb.getMovies()) {
-				System.out.println(m.getName());
-			}
-		
 
-			p = new FBPerson(firstname, name, home, location, birthdate,
+			person = new FacebookPerson(firstname, name, home, location, birthdate,
 					currLocation, education, employer, inter, picURL);
 
-//			TBoSuperDuperPrinter(p);
+			
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -113,12 +98,29 @@ public class FBParser {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return person;
 
+	}
+	
+	private Institution parseInstitution(String id) {
+		Page p;
+		try {
+			p = fb.getPage(id);
+			String name = p.getName();
+			facebook4j.Place.Location location = p.getLocation();
+			if (location != null) {
+				return new Institution(name, location.getLongitude(),
+						location.getLatitude());
+			}
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	public static void TBoSuperDuperPrinter(Object p) {
 		try {
-			// TODO Auto-generated method stub
 			for (Field field : getInheritedFields(p.getClass())) {
 				field.setAccessible(true);
 				String fname = field.getName();
@@ -145,8 +147,5 @@ public class FBParser {
 		return fields;
 	}
 
-	public FBPerson getP() {
-		return p;
-	}
 
 }
