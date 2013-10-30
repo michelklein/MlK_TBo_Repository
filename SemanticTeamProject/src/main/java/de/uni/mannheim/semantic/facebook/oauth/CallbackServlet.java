@@ -26,6 +26,6 @@ public class CallbackServlet extends HttpServlet {
         } catch (FacebookException e) {
         }
     
-        response.sendRedirect(request.getContextPath() + "/indexMlK.jsp");
+        response.sendRedirect(request.getContextPath() + "/index.jsp");
     }
 }

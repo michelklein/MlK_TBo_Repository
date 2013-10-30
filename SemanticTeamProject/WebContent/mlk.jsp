@@ -1,39 +1,31 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-	pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-<head>
-<link rel="stylesheet" href="bootstrap/css/bootstrap-mod.css">
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap.min.css">
-
-<!-- Optional theme -->
-<link rel="stylesheet"
-	href="bootstrap/3.0.0/css/bootstrap-theme.min.css">
-
-<!-- Latest compiled and minified JavaScript -->
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+<title>Example of Twitter Bootstrap Tooltip</title>
+<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script src="bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="bootstrap/3.0.0/js/jquery-1.10.2.min.js"></script>
-<script src="bootstrap/3.0.0/js/typeahead.js"></script>
-
-<link rel="stylesheet"
-	href="bootstrap/3.0.0/css/typeahead.js-bootstrap.css">
-<link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap-mod.css">
-
-<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>MlK</title>
+<link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap.min.css">
+<script type="text/javascript">
+$(function () {
+    $(".tooltip-examples a").tooltip({
+        placement : 'top'
+    });
+});
+</script>
+<style type="text/css">
+	.bs-example{
+    	margin: 60px;
+    }
+</style>
 </head>
 <body>
-		<div id="header"></div>
-		<div id="content">
-			<div id="left">Test</div>
-			<div id="right">Test</div>
-		</div>
-		
-		<div class="input-group">
-  <input type="text" class="form-control">
-  <span class="input-group-addon">.00</span>
+<div class="bs-example"> 
+    <ul class="tooltip-examples inline">
+        <li><a href="#" data-toggle="tooltip" data-original-title="Default tooltip">Tooltip</a></li>
+        <li><a href="#" data-toggle="tooltip" data-original-title="Another tooltip">Another tooltip</a></li>
+        <li><a href="#" data-toggle="tooltip" data-original-title="A much longer tooltip to demonstrate the max-width of the Bootstrp tooltip.">Large tooltip</a></li>
+        <li><a href="#" data-toggle="tooltip" data-original-title="The last tip!">Last tooltip</a></li>
+    </ul>
 </div>
-		
 </body>
-</html>
+</html>                                		
