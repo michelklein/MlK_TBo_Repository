@@ -1,4 +1,4 @@
-package de.uni.mannheim.semantic.gui;
+package de.uni.mannheim.semantic;
 
 import java.util.ArrayList;
 import java.util.List;

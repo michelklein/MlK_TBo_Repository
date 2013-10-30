@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import de.uni.mannheim.semantic.GUIObjectContainer;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
-import de.uni.mannheim.semantic.gui.GUIObjectContainer;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CelPerson;
 import facebook4j.Facebook;
