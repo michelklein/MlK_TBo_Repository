@@ -7,9 +7,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.jena.atlas.json.JSON;
+import org.apache.jena.atlas.lib.ListUtils;
 
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
@@ -109,8 +112,8 @@ public class FacebookParser {
 			allInts.addAll(fb.getGames());
 
 			for (Category c : allInts) {
-				// interests.add(createInterestByID(c));
-				TBoSuperDuperPrinter(createInterestByID(c));
+				interests.add(createInterestByID(c));
+				// TBoSuperDuperPrinter(createInterestByID(c));
 			}
 			person = new FacebookPerson(firstname, name, home, location,
 					birthdate, currLocation, education, employer, interests,
@@ -148,8 +151,11 @@ public class FacebookParser {
 					JSONObject pc = jo.getJSONObject("pic_cover");
 					url = pc.getString("source");
 				}
-				return new Interest(c.getCategory(), url,
-						jo.getString("genre"), c.getId(), c.getName());
+
+				Set<String> genre = new HashSet<String>();
+				genre.addAll(Arrays.asList(jo.getString("genre").split(",")));
+				return new Interest(c.getCategory(), url, genre, c.getId(),
+						c.getName());
 			}
 
 		} catch (FacebookException e) {

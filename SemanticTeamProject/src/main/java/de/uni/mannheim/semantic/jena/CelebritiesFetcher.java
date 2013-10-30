@@ -1,5 +1,7 @@
 package de.uni.mannheim.semantic.jena;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -7,8 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
@@ -27,16 +31,17 @@ import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.model.CelPerson;
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
+import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Person;
+import de.uni.mannheim.semantic.util.PropertiesUtils;
 import facebook4j.internal.org.json.JSONObject;
 
 public class CelebritiesFetcher {
-	QuerySolution s;
 
 	public static void main(String[] args) throws IOException {
 		// CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
-		// CelebritiesFetcher.get().getMovies("Arnold Schwarzenegger");
-		CelebritiesFetcher.get().getMovies123("Batman: The Dark Knight");
+		CelebritiesFetcher.get().getMovies("Arnold Schwarzenegger");
+		// CelebritiesFetcher.get().getMovieInfo("The Terminator");
 	}
 
 	private static CelebritiesFetcher instance;
@@ -52,14 +57,66 @@ public class CelebritiesFetcher {
 		return instance;
 	}
 
-	public CelPerson getCelebrity(String celName) {
+	public CelPerson createCel(String name) {
+		CelPerson p = null;
+		String givenName = "";
+		String surname = "";
+		String date = "";
+		String tn = "";
+		Institution home = null;
+		List<Interest> interests = new ArrayList<Interest>();
+		ResultSet resSet = getCelebrityBasicInfo(name);
+
+		while (resSet.hasNext()) {
+			QuerySolution s = resSet.nextSolution();
+			givenName = gll(s, "givenName");
+			surname = gll(s, "surname");
+			date = gll(s, "date");
+			tn = g(s, "thumbnail");
+			ResultSet resSet2 = getInstitutionInfos(s.get("birthPlace"));
+			while (resSet.hasNext()) {
+				QuerySolution s2 = resSet.nextSolution();
+				home = new Institution(gll(s, "label"), gll(s, "long"), gll(s,
+						"lat"));
+			}
+			break;
+		}
+		// is he an actor?
+		if (true) {
+			resSet = getMovies(name);
+			while (resSet.hasNext()) {
+				QuerySolution s = resSet.nextSolution();
+				String label = gll(s, "label");
+				if (label.indexOf("(") != -1)
+					label = label.substring(0, label.indexOf("("));
+				interests.add(new Interest("movie", "cover_url",
+						getGenreFromFile(label), "id", label));
+
+			}
+		} else {
+
+		}
+
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+
+		try {
+			p = new CelPerson(givenName, surname, home, null, df.parse(date),
+					null, null, null, interests, tn);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return p;
+
+	}
+
+	private ResultSet getCelebrityBasicInfo(String celName) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
 				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
 				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
 				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
 				.append("SELECT  * WHERE {")
-
 				.append("OPTIONAL { ?p foaf:name ?name.}")
 				.append("OPTIONAL { ?p foaf:givenName ?givenName.}")
 				.append("OPTIONAL { ?p foaf:surname ?surname.}")
@@ -72,47 +129,13 @@ public class CelebritiesFetcher {
 				.append("OPTIONAL { ?p ont:birthName ?birthName.}")
 				.append("FILTER (?name='" + celName + "'@en)")
 				.append("} LIMIT 10");
-		System.out.println(builder.toString());
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-		while (rs.hasNext()) {
-			s = rs.nextSolution();
-			System.out.println(s);
-			try {
-				Iterator<String> varNames = s.varNames();
-				while (varNames.hasNext()) {
-					System.out.println(varNames.next());
-				}
 
-				RDFNode asd = s.get("successor");
-				// System.out.println(s.get("successor").asLiteral().toString());
-
-				String givenName = gll("givenName");
-				String surname = gll("surname");
-				String date = gll("date");
-				String tn = g("thumbnail");
-				// createInstitution(s.get("birthPlace"));
-				getMovies(gll("name"));
-
-				// Institution hp = new Institution(g("birthPlace"))
-
-				DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-
-				CelPerson p = new CelPerson(givenName, surname, null, null,
-						df.parse(date), null, null, null, null, tn);
-
-				// FBParser.TBoSuperDuperPrinter(p);
-				return p;
-			} catch (ParseException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return null;
+		return rs;
 
 	}
 
-	private void getMovies(String n) {
+	private ResultSet getMovies(String n) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
 				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
@@ -120,42 +143,56 @@ public class CelebritiesFetcher {
 				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
 				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
 				.append("SELECT Distinct * WHERE {")
-
 				.append("?p rdfs:label ?label.")
 				.append("?p ont:starring <http://dbpedia.org/resource/Arnold_Schwarzenegger>.")
 				.append("FILTER (LANG(?label)='en')").append("} LIMIT 10");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-		while (rs.hasNext()) {
-			s = rs.nextSolution();
-			System.out.println(s);
-			// Iterator<String> varNames = s.varNames();
-			// while (varNames.hasNext()) {
-			// System.out.println(varNames.next());
-			// }
-		}
+		return rs;
 	}
 
-	private void getMovies123(String n) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				.append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>")
-				.append("PREFIX movie: <http://data.linkedmdb.org/resource/movie/>")
-				.append("SELECT DISTINCT *").append("WHERE {")
-				.append("?p rdfs:label ?label.")
-				.append("FILTER (?label='" + n + "')").append("}LIMIT 1");
-		ResultSet rs = execute("http://data.linkedmdb.org/sparql",
-				builder.toString());
-		while (rs.hasNext()) {
-			s = rs.nextSolution();
-			System.out.println(s);
-			// Iterator<String> varNames = s.varNames();
-			// while (varNames.hasNext()) {
-			// System.out.println(varNames.next());
-			// }
-		}
-	}
+	// private void getMovieInfo(String n) {
+	// StringBuilder builder = new StringBuilder();
+	// builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
+	// .append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+	// .append("PREFIX dbpprop: <http://dbpedia.org/property/>")
+	// .append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
+	// .append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
+	// .append("SELECT * WHERE {").append("?p rdfs:label ?label.")
+	// //
+	// .append("?p ont:starring <http://dbpedia.org/resource/Arnold_Schwarzenegger>.")
+	// .append("FILTER (?label='" + n + "'@en)").append("} LIMIT 10");
+	// ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
+	// while (rs.hasNext()) {
+	// s = rs.nextSolution();
+	// System.out.println(s);
+	// // Iterator<String> varNames = s.varNames();
+	// // while (varNames.hasNext()) {
+	// // System.out.println(varNames.next());
+	// // }
+	// }
+	// }
+	//
+	// private void getMovies123(String n) {
+	// StringBuilder builder = new StringBuilder();
+	// builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
+	// .append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+	// .append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
+	// .append("PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>")
+	// .append("PREFIX movie: <http://data.linkedmdb.org/resource/movie/>")
+	// .append("SELECT DISTINCT *").append("WHERE {")
+	// .append("?p rdfs:label ?label.")
+	// .append("FILTER (?label='" + n + "')").append("}LIMIT 1");
+	// ResultSet rs = execute("http://data.linkedmdb.org/sparql",
+	// builder.toString());
+	// while (rs.hasNext()) {
+	// s = rs.nextSolution();
+	// System.out.println(s);
+	// // Iterator<String> varNames = s.varNames();
+	// // while (varNames.hasNext()) {
+	// // System.out.println(varNames.next());
+	// // }
+	// }
+	// }
 
 	private ResultSet execute(String endPoint, String q) {
 		// create SPARQL Query for getting celebrities
@@ -173,7 +210,27 @@ public class CelebritiesFetcher {
 		return rs;
 	}
 
-	private Institution createInstitution(RDFNode rdfNode) {
+	private Set<String> getGenreFromFile(String ss) {
+		Set<String> g = new HashSet<String>();
+		try {
+			String url = PropertiesUtils.class.getClassLoader()
+					.getResource("genres.list").getFile();
+			BufferedReader bf = new BufferedReader(new FileReader(url));
+			String line;
+			while ((line = bf.readLine()) != null) {
+				int indexfound = line.indexOf(ss);
+				if (indexfound > -1) {
+					g.add(line.substring(line.lastIndexOf("\t") + 1));
+				}
+			}
+			bf.close();
+		} catch (IOException e) {
+			System.out.println("IO Error Occurred: " + e.toString());
+		}
+		return g;
+	}
+
+	private ResultSet getInstitutionInfos(RDFNode rdfNode) {
 
 		String resName = rdfNode.toString().substring(
 				rdfNode.toString().lastIndexOf("/") + 1);
@@ -190,17 +247,12 @@ public class CelebritiesFetcher {
 				.append("FILTER (?label='" + resName + "'@en)")
 				.append("}LIMIT 1");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-		while (rs.hasNext()) {
-			s = rs.nextSolution();
-			// Iterator<String> varNames = s.varNames();
-			// while (varNames.hasNext()) {
-			// System.out.println(varNames.next());
-			// }
-		}
-		return new Institution(gll("label"), gll("long"), gll("lat"));
+
+		return rs;
+
 	}
 
-	private String gll(String string) {
+	private String gll(QuerySolution s, String string) {
 		RDFNode x = s.get(string);
 		if (x != null) {
 			String result = x.asNode().getLiteralLexicalForm();
@@ -210,7 +262,7 @@ public class CelebritiesFetcher {
 		}
 	}
 
-	private String g(String string) {
+	private String g(QuerySolution s, String string) {
 		RDFNode x = s.get(string);
 		return x.toString();
 	}

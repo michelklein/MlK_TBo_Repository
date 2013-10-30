@@ -1,15 +1,18 @@
 package de.uni.mannheim.semantic.model;
 
+import java.util.List;
+import java.util.Set;
+
 public class Interest {
 private String kind;
 private String cover_url;
-private String genre;
+private Set<String> genre;
 private String id;
 private String name;
-public Interest(String kind, String cover_url, String genre, String id, String name) {
+public Interest(String kind, String cover_url, Set<String> set, String id, String name) {
 	this.kind = kind;
 	this.cover_url = cover_url;
-	this.genre = genre;
+	this.genre = set;
 	this.id = id;
 	this.name = name;
 }
@@ -19,10 +22,10 @@ public String getKind() {
 public void setKind(String kind) {
 	this.kind = kind;
 }
-public String getGenre() {
+public Set<String> getGenre() {
 	return genre;
 }
-public void setGenre(String genre) {
+public void setGenre(Set<String> genre) {
 	this.genre = genre;
 }
 public String getId() {

@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CelPerson;
+import de.uni.mannheim.semantic.model.FacebookPerson;
+import de.uni.mannheim.semantic.model.Interest;
 import facebook4j.Facebook;
 
 /**
@@ -41,26 +43,37 @@ public class FetchDataServlet extends HttpServlet {
 			Facebook facebook = (Facebook) request.getSession().getAttribute(
 					"facebook");
 			FacebookParser fbParser = new FacebookParser(facebook);
-			json = fbParser.parseFacebookPerson().toJsonString();
+			FacebookPerson fbPerson = fbParser.parseFacebookPerson();
+			json = fbPerson.toJsonString();
+			for (Interest i : fbPerson.getInterest()) {
+				System.out.println(i.getName());
+				for (String s : i.getGenre()) {
+					System.out.println("___" + s);
+				}
+			}
+
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");
-			CelPerson celebrity = CelebritiesFetcher.get().getCelebrity(
+			CelPerson celebrity = CelebritiesFetcher.get().createCel(
 					celebrityName);
-			if (celebrity != null)
+			if (celebrity != null) {
+
+				for (Interest i : celebrity.getInterest()) {
+					System.out.println(i.getName());
+					for (String s : i.getGenre()) {
+						System.out.println("___" + s);
+					}
+				}
+
 				json = celebrity.toJsonString();
+			}
 		} else if ("celebrityList".equals(method)) {
 			json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();
 		}
 
 		if (json != null) {
 			response.setContentType("application/json");
-			// Get the printwriter object from response to write the required
-			// json
-			// object to the output stream
 			PrintWriter out = response.getWriter();
-			// Assuming your json object is **jsonObject**, perform the
-			// following,
-			// it will return your json object
 			out.print(json);
 			out.flush();
 		}
