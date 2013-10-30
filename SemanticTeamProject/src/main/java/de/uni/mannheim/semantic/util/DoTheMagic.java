@@ -21,15 +21,16 @@ public class DoTheMagic extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Facebook facebook = (Facebook) request.getSession().getAttribute("facebook");
         FacebookParser fbParser = new FacebookParser(facebook);
-        CelPerson cp;
-        if(request.getParameter("celname")!=null){
-        	System.out.println("CELNAME"+request.getParameter("celname"));
-         cp=CelebritiesFetcher.get().getCelebrity(request.getParameter("celname").toString());
-        }else{
-         cp=null;
-        }
-		GUIObjectContainer c = new GUIObjectContainer(fbParser.parseFacebookPerson(),cp,CelebritiesFetcher.get().getDummyCelebrities());
-        request.getSession().setAttribute("c", c);
+        fbParser.parseFacebookPerson();
+//        CelPerson cp;
+//        if(request.getParameter("celname")!=null){
+//        	System.out.println("CELNAME"+request.getParameter("celname"));
+//         cp=CelebritiesFetcher.get().getCelebrity(request.getParameter("celname").toString());
+//        }else{
+//         cp=null;
+//        }
+//		GUIObjectContainer c = new GUIObjectContainer(fbParser.parseFacebookPerson(),cp,CelebritiesFetcher.get().getDummyCelebrities());
+//        request.getSession().setAttribute("c", c);
         response.sendRedirect(request.getContextPath() + "/");
     }
 }

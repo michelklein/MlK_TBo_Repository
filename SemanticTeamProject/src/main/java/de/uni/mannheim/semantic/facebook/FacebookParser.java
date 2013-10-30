@@ -9,11 +9,14 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.jena.atlas.json.JSON;
+
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import facebook4j.Book;
+import facebook4j.Category;
 import facebook4j.Checkin;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
@@ -48,7 +51,8 @@ public class FacebookParser {
 
 		try {
 			// Picture
-			String picURL = fb.getPictureURL(PictureSize.large).toString();
+			// String picURL = fb.getPictureURL(PictureSize.large).toString();
+			String picURL = getLargeProfilePicture();
 			// Firstname
 			String firstname = fb.getMe().getFirstName();
 			// Name
@@ -94,32 +98,24 @@ public class FacebookParser {
 
 				}
 			}
-			
+
 			List<Interest> interests = new ArrayList<Interest>();
-			
-			for (Book p : fb.getBooks()) {
-				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
-			}
-			for (Movie p : fb.getMovies()) {
-				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
-			}
-			for (Television p : fb.getTelevision()) {
-				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
-			}
-			for (Music p : fb.getMusic()) {
-				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
-			}
-			for (Game p : fb.getGames()) {
-				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
-			}
-			for (Interest interest : interests) {
-				System.out.println(interest.getName());
-				System.out.println(interest.getKind());
-				System.out.println(interest.getGenre());
+
+			List<Category> allInts = new ArrayList<Category>();
+			allInts.addAll(fb.getBooks());
+			allInts.addAll(fb.getMovies());
+			allInts.addAll(fb.getTelevision());
+			allInts.addAll(fb.getMusic());
+			allInts.addAll(fb.getGames());
+
+			for (Category c : allInts) {
+				// interests.add(createInterestByID(c));
+				TBoSuperDuperPrinter(createInterestByID(c));
 			}
 			person = new FacebookPerson(firstname, name, home, location,
-					birthdate, currLocation, education, employer, interests, picURL);
-
+					birthdate, currLocation, education, employer, interests,
+					picURL);
+			// TBoSuperDuperPrinter(person);
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -137,15 +133,47 @@ public class FacebookParser {
 
 	}
 
-	private String getGenreByID(String id) {
+	private Interest createInterestByID(Category c) {
+		// TODO Auto-generated method stub
 		JSONArray fqlRes;
 		try {
-			fqlRes = fb.executeFQL("SELECT genre  FROM page  WHERE page_id='"
-					+ id + "'");
+			fqlRes = fb
+					.executeFQL("SELECT pic_cover.source,genre  FROM page  WHERE page_id='"
+							+ c.getId() + "'");
 			if (fqlRes.length() == 1) {
-				Object g = fqlRes.getJSONObject(0).get("genre");
+
+				JSONObject jo = fqlRes.getJSONObject(0);
+				String url = "";
+				if (jo.getString("pic_cover") != null) {
+					JSONObject pc = jo.getJSONObject("pic_cover");
+					url = pc.getString("source");
+				}
+				return new Interest(c.getCategory(), url,
+						jo.getString("genre"), c.getId(), c.getName());
+			}
+
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
+	private String getLargeProfilePicture() {
+
+		JSONArray fqlRes;
+		try {
+			fqlRes = fb
+					.executeFQL("SELECT pid, object_id, src_big FROM photo WHERE object_id IN (SELECT cover_object_id FROM album WHERE owner=me() AND type='profile')");
+
+			if (fqlRes.length() == 1) {
+				Object g = fqlRes.getJSONObject(0).get("src_big");
 				return g.toString();
-			}	
+			}
 
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
@@ -185,6 +213,7 @@ public class FacebookParser {
 				value = field.get(p);
 
 				System.out.println("Field: " + fname + " : " + value);
+
 			}
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
