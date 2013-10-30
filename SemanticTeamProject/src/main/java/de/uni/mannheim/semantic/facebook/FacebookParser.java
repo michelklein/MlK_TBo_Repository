@@ -11,30 +11,41 @@ import java.util.List;
 
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
+import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
+import facebook4j.Book;
 import facebook4j.Checkin;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
+import facebook4j.Game;
 import facebook4j.IdNameEntity;
+import facebook4j.Movie;
+import facebook4j.Music;
 import facebook4j.Page;
 import facebook4j.PictureSize;
+import facebook4j.Reading;
 import facebook4j.ResponseList;
+import facebook4j.Television;
+import facebook4j.User;
 import facebook4j.User.Education;
 import facebook4j.User.Work;
+import facebook4j.internal.org.json.JSONArray;
+import facebook4j.internal.org.json.JSONException;
+import facebook4j.internal.org.json.JSONObject;
 
 public class FacebookParser {
 	private Facebook fb;
-	
+
 	public FacebookParser(Facebook f) {
 		fb = f;
 	}
-	
+
 	public FacebookPerson parseFacebookPerson() {
 		Institution home = null;
 		Institution location = null;
 		Institution currLocation = null;
 		FacebookPerson person = null;
-		
+
 		try {
 			// Picture
 			String picURL = fb.getPictureURL(PictureSize.large).toString();
@@ -83,11 +94,32 @@ public class FacebookParser {
 
 				}
 			}
-
-			person = new FacebookPerson(firstname, name, home, location, birthdate,
-					currLocation, education, employer, inter, picURL);
-
 			
+			List<Interest> interests = new ArrayList<Interest>();
+			
+			for (Book p : fb.getBooks()) {
+				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
+			}
+			for (Movie p : fb.getMovies()) {
+				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
+			}
+			for (Television p : fb.getTelevision()) {
+				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
+			}
+			for (Music p : fb.getMusic()) {
+				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
+			}
+			for (Game p : fb.getGames()) {
+				interests.add(new Interest("book", 	getGenreByID(p.getId()), p.getId(), p.getName()));
+			}
+			for (Interest interest : interests) {
+				System.out.println(interest.getName());
+				System.out.println(interest.getKind());
+				System.out.println(interest.getGenre());
+			}
+			person = new FacebookPerson(firstname, name, home, location,
+					birthdate, currLocation, education, employer, interests, picURL);
+
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -97,11 +129,35 @@ public class FacebookParser {
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			// } catch (JSONException e) {
+			// // TODO Auto-generated catch block
+			// e.printStackTrace();
 		}
 		return person;
 
 	}
-	
+
+	private String getGenreByID(String id) {
+		JSONArray fqlRes;
+		try {
+			fqlRes = fb.executeFQL("SELECT genre  FROM page  WHERE page_id='"
+					+ id + "'");
+			if (fqlRes.length() == 1) {
+				Object g = fqlRes.getJSONObject(0).get("genre");
+				return g.toString();
+			}	
+
+		} catch (FacebookException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
 	private Institution parseInstitution(String id) {
 		Page p;
 		try {
@@ -146,6 +202,5 @@ public class FacebookParser {
 		}
 		return fields;
 	}
-
 
 }

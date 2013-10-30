@@ -17,22 +17,22 @@ public class Person {
 	private String lastname;
 	private String imageURL;
 	private Date birthdate;
-	private List<String> interest;
 	private Institution currentLocation;
 	private Institution home;
 	private Institution location;
 	private List<Institution> education;
 	private List<Institution> employer;
+	private List<Interest> interests;
 
 	public Person(String firstname, String lastname, Institution home,
 			Institution location, Date birthdate, Institution currentLocation,
 			List<Institution> education, List<Institution> employer,
-			List<String> interest, String imageURL) {
+			List<Interest> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.home = home;
-		this.interest = interest;
+		this.interests = interest;
 		this.birthdate = birthdate;
 		this.location = location;
 		this.currentLocation = currentLocation;
@@ -96,7 +96,7 @@ public class Person {
 	/* GUI Functions */
 
 	public String getFormattedBirthday() {
-		return getBirthdate().toLocaleString();
+		return sdfToDate2.format(birthdate).toString();
 	}
 
 	public String getFormattedLocs(List<Institution> i) {
@@ -116,8 +116,8 @@ public class Person {
 		}
 	}
 
-	public List<String> getInterest() {
-		return interest;
+	public List<Interest> getInterest() {
+		return interests;
 	}
 
 	public String getImageURL() {
