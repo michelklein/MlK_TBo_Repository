@@ -56,9 +56,6 @@
 				$("#attr_age_user").html(json.formattedBirthday);
 				console.debug(data);
 			});
-			$(function() {
-				$("[data-toggle='tooltip']").tooltip();
-			});
 		</script>
 
 		<div id="header">
@@ -112,11 +109,11 @@
 				<div id="attr_age_caption" class="col-md-1">Age:</div>
 				<div id="attr_age_user" class="col-md-2"></div>
 				<div class="col-md-6">
-					<div class="progress">
+					<div class="progress" data-toggle="tooltip" data-html="true"
+							data-original-title="Default tooltip">
 						<div id="progress_age" class="progress-bar" role="progressbar"
 							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
-							style="width: 0%;" data-toggle="tooltip" data-html="true"
-							data-original-title="Default tooltip">
+							style="width: 0%;" >
 							<span class="sr-only"></span>
 						</div>
 					</div>
@@ -150,7 +147,7 @@
 									json.ageCompResult.value + "%");
 							$("#progress_age > .sr-only").html(
 									json.ageCompResult.value + "%");
-							$("#progress_age").attr('data-original-title',
+							$(".progress").attr('data-original-title',
 									json.ageCompResult.HTML);
 							if(json.ageCompResult.value == 0) {
 								$("#progress_age > .sr-only").addClass("noResult");
@@ -158,6 +155,7 @@
 								$("#progress_age > .sr-only").removeClass("noResult");
 							}
 						});
+						$("[data-toggle='tooltip']").tooltip();
 					});
 		</script>
 
