@@ -63,26 +63,29 @@ public class CelebritiesFetcher {
 		String surname = "";
 		String date = "";
 		String tn = "";
+		String profession="";
 		Institution home = null;
 		List<Interest> interests = new ArrayList<Interest>();
 		ResultSet resSet = getCelebrityBasicInfo(name);
 
 		while (resSet.hasNext()) {
 			QuerySolution s = resSet.nextSolution();
+			System.out.println(s);
 			givenName = gll(s, "givenName");
 			surname = gll(s, "surname");
 			date = gll(s, "date");
 			tn = g(s, "thumbnail");
+			profession =gll(s, "profession");
+			System.out.println(profession);
 			ResultSet resSet2 = getInstitutionInfos(s.get("birthPlace"));
-			while (resSet.hasNext()) {
-				QuerySolution s2 = resSet.nextSolution();
-				home = new Institution(gll(s, "label"), gll(s, "long"), gll(s,
+			while (resSet2.hasNext()) {
+				QuerySolution s2 = resSet2.nextSolution();
+				home = new Institution(gll(s2, "label"), gll(s2, "long"), gll(s2,
 						"lat"));
 			}
 			break;
 		}
-		// is he an actor?
-		if (true) {
+		if (profession.contains("actor")) {
 			resSet = getMovies(name);
 			while (resSet.hasNext()) {
 				QuerySolution s = resSet.nextSolution();
@@ -130,7 +133,6 @@ public class CelebritiesFetcher {
 				.append("FILTER (?name='" + celName + "'@en)")
 				.append("} LIMIT 10");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-
 		return rs;
 
 	}
