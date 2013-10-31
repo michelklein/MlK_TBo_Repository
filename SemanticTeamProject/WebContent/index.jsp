@@ -87,7 +87,7 @@
 
 		<div id="content">
 			<div class="row">
-				<div class="col-md-4 col-md-offset-1">
+				<div class="col-md-5 col-md-offset-1">
 					<div id="fbUser">
 						<div class="panel-header-own">
 							<img id="fbUserImage" src="images/defaultProfile.png"
@@ -97,7 +97,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-md-offset-2">
+				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
 							<span id="celebrityFirstname" class="header-name header-bold"></span>
@@ -113,9 +113,9 @@
 				<div id="attr_age_user" class="col-md-2"></div>
 				<div class="col-md-6">
 					<div class="progress">
-						<div id="progress_age" class="progress-bar"
-							role="progressbar" aria-valuenow="60" aria-valuemin="0"
-							aria-valuemax="100" style="width: 0%;" data-toggle="tooltip" data-html="true"
+						<div id="progress_age" class="progress-bar" role="progressbar"
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+							style="width: 0%;" data-toggle="tooltip" data-html="true"
 							data-original-title="Default tooltip">
 							<span class="sr-only"></span>
 						</div>
@@ -137,18 +137,29 @@
 						$.getJSON("fetchData?op=celebrity&name="
 								+ $typeahead.val(), function(data) {
 							var json = data;
-							$("#celebrityImage").attr('src', json.imageURL);
-							$("#celebrityFirstname").html(json.firstname);
-							$("#celebrityLastname").html(json.lastname);
+							console.debug(data);
+							$("#celebrityImage").attr('src',
+									json.celebrity.imageURL);
+							$("#celebrityFirstname").html(
+									json.celebrity.firstname);
+							$("#celebrityLastname").html(
+									json.celebrity.lastname);
 							$("#attr_age_celebrity").html(
-									json.formattedBirthday);
-							$("#progress_age").width("60%");
-							$("#progress_age > .sr-only").html("60%");
-							$("#progress_age").attr('data-original-title', 'erster Test ob das ab <b>geht</b>!!!');
+									json.celebrity.formattedBirthday);
+							$("#progress_age").width(
+									json.ageCompResult.value + "%");
+							$("#progress_age > .sr-only").html(
+									json.ageCompResult.value + "%");
+							$("#progress_age").attr('data-original-title',
+									json.ageCompResult.HTML);
+							if(json.ageCompResult.value == 0) {
+								$("#progress_age > .sr-only").addClass("noResult");
+							} else {
+								$("#progress_age > .sr-only").removeClass("noResult");
+							}
 						});
 					});
 		</script>
-
 
 	</tag:loggedin>
 	<div class="loadingModal">

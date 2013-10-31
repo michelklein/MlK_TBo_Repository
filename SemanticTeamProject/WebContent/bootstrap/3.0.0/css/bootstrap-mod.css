@@ -157,9 +157,13 @@ img {
 
 .sr-only {
 	overflow: visible;
+	font-size: 18px;
 	position: relative;
-	top: 1px;
-	font-size: 16px;
+}
+
+.noResult {
+	color: black;
+	margin-left: 5px;
 }
 
 .input-group {
@@ -173,6 +177,13 @@ img {
 
 .tooltip {
 	font-size: 16px !important;
+	float: left !important;
+	text-align: left !important;
+}
+
+.tooltip-inner {
+	float: left !important;
+	text-align: left !important;
 }
 
 .progress-bar {

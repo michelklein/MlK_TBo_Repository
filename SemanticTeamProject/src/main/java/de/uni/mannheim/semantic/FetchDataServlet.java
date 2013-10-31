@@ -8,7 +8,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
- 
 import de.uni.mannheim.semantic.comparison.AgeComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
@@ -50,27 +49,25 @@ public class FetchDataServlet extends HttpServlet {
 			FacebookParser fbParser = new FacebookParser(facebook);
 			FacebookPerson fbPerson = fbParser.parseFacebookPerson();
 			json = fbPerson.toJsonString();
-			for (Interest i : fbPerson.getInterest()) {
-				System.out.println(i.getName());
-				for (String s : i.getGenre()) {
-					System.out.println("___" + s);
-				}
-			}
+//			for (Interest i : fbPerson.getInterest()) {
+//				System.out.println(i.getName());
+//				for (String s : i.getGenre()) {
+//					System.out.println("___" + s);
+//				}
+//			}
 
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");
 			CelPerson celebrity = CelebritiesFetcher.get().createCel(
 					celebrityName);
 			if (celebrity != null) {
-					for (Interest i : celebrity.getInterest()) {
-						System.out.println(i.getName());
-						for (String s : i.getGenre()) {
-							System.out.println("___" + s);
-						}
-					}
+//					for (Interest i : celebrity.getInterest()) {
+//						System.out.println(i.getName());
+//						for (String s : i.getGenre()) {
+//							System.out.println("___" + s);
+//						}
+//					}
 					
-					// comparison
-					// TODO: cache facebook data
 					Facebook facebook = (Facebook) request.getSession()
 							.getAttribute("facebook");
 					FacebookParser fbParser = new FacebookParser(facebook);

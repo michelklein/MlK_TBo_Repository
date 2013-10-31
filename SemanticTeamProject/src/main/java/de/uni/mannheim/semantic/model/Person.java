@@ -7,11 +7,11 @@ import java.util.List;
 
 import facebook4j.internal.org.json.JSONObject;
 
-public class Person {
+public class Person extends AbstractToJson {
 	private static SimpleDateFormat sdfToDate = new SimpleDateFormat(
 			"yyyy-MM-dd");
 	private static SimpleDateFormat sdfToDate2 = new SimpleDateFormat(
-			"dd.MM.yyyy");
+			"EEEE, dd.MM.yyyy");
 
 	private String firstname;
 	private String lastname;
@@ -124,9 +124,5 @@ public class Person {
 		return imageURL;
 	}
 	
-	public String toJsonString() {
-		JSONObject json = new JSONObject(this);
-		return json.toString();
-	}
 
 }
