@@ -87,7 +87,7 @@
 
 		<div id="content">
 			<div class="row">
-				<div class="col-md-4 col-md-offset-1">
+				<div class="col-md-5 col-md-offset-1">
 					<div id="fbUser">
 						<div class="panel-header-own">
 							<img id="fbUserImage" src="images/defaultProfile.png"
@@ -97,7 +97,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-4 col-md-offset-2">
+				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
 							<span id="celebrityFirstname" class="header-name header-bold"></span>
@@ -154,6 +154,8 @@
 									json.ageCompResult.HTML);
 							if(json.ageCompResult.value == 0) {
 								$("#progress_age > .sr-only").addClass("noResult");
+							} else {
+								$("#progress_age > .sr-only").removeClass("noResult");
 							}
 						});
 					});
