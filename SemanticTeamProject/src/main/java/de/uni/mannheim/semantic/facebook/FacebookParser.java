@@ -190,6 +190,9 @@ public class FacebookParser {
 			if (location != null) {
 				Location loc = geocoding.getLocation(location.getLongitude(),
 						location.getLatitude());
+				if(loc == null) {
+					loc = geocoding.getLocation(location.getCity());
+				}
 				return new Institution(name, loc);
 			}
 		} catch (FacebookException e) {
