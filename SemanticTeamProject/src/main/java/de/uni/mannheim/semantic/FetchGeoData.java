@@ -71,7 +71,10 @@ public class FetchGeoData {
 		return getLocation(Double.valueOf(longitude), Double.valueOf(latitude));
 	}
 
-	public Location getLocation(double longitude, double latitude) {
+	public Location getLocation(Double longitude, Double latitude) {
+		if (longitude == null || latitude == null) {
+			return null;
+		}
 		final Geocoder geocoder = new Geocoder();
 		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder()
 				.setLocation(
