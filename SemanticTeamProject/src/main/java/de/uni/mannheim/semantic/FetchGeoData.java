@@ -31,13 +31,17 @@ import de.uni.mannheim.semantic.util.Util;
 
 public class FetchGeoData {
 
-	// public static final void main(String[] argv) throws IOException,
-	// XPathExpressionException, ParserConfigurationException,
-	// SAXException {
-	// Geocoding sample = new Geocoding();
-	// Location location = sample.getLocation(7.2914, 50.7699);
-	// Util.print(location);
-	// }
+	public static final void main(String[] argv) throws IOException,
+			XPathExpressionException, ParserConfigurationException,
+			SAXException {
+		FetchGeoData sample = new FetchGeoData();
+		Location location = sample.getLocation(7.2914, 50.7699);
+		Util.print(location);
+
+		location = sample.getLocation("Thal,_Styria");
+		Util.print(location);
+	}
+
 	//
 	// public static void test() {
 	// final Geocoder geocoder = new Geocoder();
@@ -52,8 +56,16 @@ public class FetchGeoData {
 	// }
 	// }
 
+	public Location getLocation(String name) {
+		final Geocoder geocoder = new Geocoder();
+		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder()
+				.setAddress(name).setLanguage("en").getGeocoderRequest();
+		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+		return getLocationForGeoResponse(geocoderResponse, null, null);
+	}
+
 	public Location getLocation(String longitude, String latitude) {
-		if(longitude == null || latitude == null) {
+		if (longitude == null || latitude == null) {
 			return null;
 		}
 		return getLocation(Double.valueOf(longitude), Double.valueOf(latitude));
@@ -67,11 +79,17 @@ public class FetchGeoData {
 								.valueOf(longitude))).setLanguage("en")
 				.getGeocoderRequest();
 		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
+		return getLocationForGeoResponse(geocoderResponse, longitude, latitude);
+	}
 
+	private Location getLocationForGeoResponse(
+			GeocodeResponse geocoderResponse, Double longitude, Double latitude) {
 		String placeName = null;
 		String postalCode = null;
 		String state = null;
 		String country = null;
+		Double lgn = longitude;
+		Double lat = latitude;
 
 		for (GeocoderResult result : geocoderResponse.getResults()) {
 			for (GeocoderAddressComponent address : result
@@ -86,13 +104,21 @@ public class FetchGeoData {
 				} else if (address.getTypes().contains("postal_code")) {
 					postalCode = address.getLongName();
 				}
+				if (lgn == null) {
+					lgn = result.getGeometry().getLocation().getLng()
+							.doubleValue();
+				}
+				if (lat == null) {
+					lat = result.getGeometry().getLocation().getLat()
+							.doubleValue();
+				}
 			}
 			if (placeName != null && postalCode != null && state != null
-					&& country != null) {
+					&& country != null && lat != null && lgn != null) {
 				break;
 			}
 		}
-		return new Location(longitude, latitude, placeName, null, country,
+		return new Location(lgn, lat, placeName, null, country,
 				state, postalCode);
 	}
 

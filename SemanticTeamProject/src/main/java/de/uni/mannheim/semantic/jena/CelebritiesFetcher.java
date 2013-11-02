@@ -24,6 +24,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import com.hp.hpl.jena.sparql.pfunction.library.container;
 
 import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.model.CelPerson;
@@ -73,13 +74,10 @@ public class CelebritiesFetcher {
 			surname = gll(s, "surname");
 			date = gll(s, "date");
 			tn = g(s, "thumbnail");
-			ResultSet resSet2 = getInstitutionInfos(s.get("birthPlace"));
-			while (resSet.hasNext()) {
-				QuerySolution s2 = resSet.nextSolution();
-				Location location = geocoding.getLocation(gll(s, "long"),
-						gll(s, "lat"));
-				home = new Institution(gll(s, "label"), location);
-			}
+			String resName = s.get("birthPlace").toString().substring(
+					s.get("birthPlace").toString().lastIndexOf("/") + 1);
+			Location location = geocoding.getLocation(resName);
+			home = new Institution(gll(s, "label"), location);
 			break;
 		}
 		// is he an actor?
@@ -92,7 +90,6 @@ public class CelebritiesFetcher {
 					label = label.substring(0, label.indexOf("("));
 				interests.add(new Interest("movie", "cover_url",
 						getGenreFromFile(label), "id", label));
-
 			}
 		} else {
 
@@ -117,7 +114,8 @@ public class CelebritiesFetcher {
 				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
 				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
 				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
-				.append("SELECT  * WHERE {")
+				.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>")
+				.append("SELECT * WHERE {")
 				.append("OPTIONAL { ?p foaf:name ?name.}")
 				.append("OPTIONAL { ?p foaf:givenName ?givenName.}")
 				.append("OPTIONAL { ?p foaf:surname ?surname.}")
@@ -129,6 +127,7 @@ public class CelebritiesFetcher {
 				.append("OPTIONAL { ?p dbpprop:successor ?successor.}")
 				.append("OPTIONAL { ?p ont:birthName ?birthName.}")
 				.append("FILTER (?name='" + celName + "'@en)")
+				.append("FILTER(NOT EXISTS { ?birthPlace a dbpedia-owl:Country} )")
 				.append("} LIMIT 10");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
 

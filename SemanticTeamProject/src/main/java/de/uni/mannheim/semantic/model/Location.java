@@ -9,9 +9,10 @@ public class Location {
 	private String state;
 	private String continent;
 	private String postalCode;
-	
-	public Location(Double longitude, Double latitude, String name, String continent,
-			String country, String state, String postalCode) {
+	private String formattedLocation;
+
+	public Location(Double longitude, Double latitude, String name,
+			String continent, String country, String state, String postalCode) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.name = name;
@@ -19,6 +20,8 @@ public class Location {
 		this.state = state;
 		this.continent = continent;
 		this.postalCode = postalCode;
+		formattedLocation = String.format("%s %s, %s", postalCode, name,
+				country);
 	}
 
 	public Double getLongitude() {
@@ -78,7 +81,11 @@ public class Location {
 	}
 
 	public String toString() {
-		return name;
+		return formattedLocation;
 	}
-	
+
+	public String getFormattedLocation() {
+		return formattedLocation;
+	}
+
 }

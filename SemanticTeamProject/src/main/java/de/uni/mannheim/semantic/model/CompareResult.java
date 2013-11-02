@@ -10,7 +10,7 @@ public class CompareResult extends AbstractToJson {
 	/** The description describing the achieved result */
 	private String description;
 	/** Indicates if the compare result is valid or not. */
-	private boolean valid = false;
+	private boolean valid = true;
 	
 	/** Maybe this result consists of subresults */
 	private List<CompareResult> subresults;
@@ -64,9 +64,9 @@ public class CompareResult extends AbstractToJson {
 		String value = "-";
 		for(CompareResult rs : getSubrestults()) {
 			if(rs.isValid()) {
-				value = String.valueOf(rs.getValue());
+				value = rs.getValue() + "%";
 			}
-			builder.append("<tr>").append("<td><li>").append("</li></td><td style=\"padding-right: 10px;\">").append(rs.getDescription()).append(":</td><td style=\"text-align: right;\">").append(value).append("%</td></tr>");
+			builder.append("<tr>").append("<td><li>").append("</li></td><td style=\"padding-right: 10px;\">").append(rs.getDescription()).append(":</td><td style=\"text-align: right;\">").append(value).append("</td></tr>");
 		}
 		builder.append("<tr>").append("<td style=\"padding-top: 10px;\"><li>").append("</li></td><td style=\"padding-top: 10px;\"><b>").append(getDescription()).append(":</b></td><td style=\"padding-top: 10px;\"><b>").append(getValue()).append("%</b></td></tr>");
 		return builder.toString();

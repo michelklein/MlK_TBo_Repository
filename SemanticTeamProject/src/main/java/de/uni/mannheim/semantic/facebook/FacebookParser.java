@@ -163,7 +163,7 @@ public class FacebookParser {
 		JSONArray fqlRes;
 		try {
 			fqlRes = fb
-					.executeFQL("SELECT pid, object_id, src_big FROM photo WHERE object_id IN (SELECT cover_object_id FROM album WHERE owner=me() AND type='profile')");
+						.executeFQL("SELECT pid, object_id, src_big FROM photo WHERE object_id IN (SELECT cover_object_id FROM album WHERE owner=me() AND type='profile')");
 
 			if (fqlRes.length() == 1) {
 				Object g = fqlRes.getJSONObject(0).get("src_big");

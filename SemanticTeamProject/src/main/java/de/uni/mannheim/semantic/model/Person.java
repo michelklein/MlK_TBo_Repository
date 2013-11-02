@@ -96,6 +96,10 @@ public class Person extends AbstractToJson {
 	public String getFormattedBirthday() {
 		return sdfToDate2.format(birthdate).toString();
 	}
+	
+	public String getFormattedHometown() {
+		return home.getLocation().getFormattedLocation();
+	}
 
 	public String getFormattedLocs(List<Institution> i) {
 		String result = "";

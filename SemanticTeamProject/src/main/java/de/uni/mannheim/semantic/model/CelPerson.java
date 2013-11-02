@@ -10,7 +10,6 @@ public class CelPerson extends Person {
 			List<Institution> education, List<Institution> employer, List<Interest> interest, String picURL) {
 		super(firstname, name, home, location, birthdate, currLocation, education,
 				employer, interest,picURL);
-		// TODO Auto-generated constructor stub
 	}
 	
 	

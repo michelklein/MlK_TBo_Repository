@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import de.uni.mannheim.semantic.comparison.AgeComparator;
+import de.uni.mannheim.semantic.comparison.LocationComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CelPerson;
@@ -27,6 +28,7 @@ public class FetchDataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private AgeComparator ageComparator = new AgeComparator();
+	private LocationComparator locationComparator = new LocationComparator();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -75,9 +77,10 @@ public class FetchDataServlet extends HttpServlet {
 							.getAttribute("facebook");
 					FacebookParser fbParser = new FacebookParser(facebook);
 					FacebookPerson fbPerson = fbParser.parseFacebookPerson();
-					CompareResult result = ageComparator.compare(
+					CompareResult ageResult = ageComparator.compare(
 							fbPerson.getBirthdate(), celebrity.getBirthdate());
-					MatchingContainer comp = new MatchingContainer(celebrity, result);
+					CompareResult hometownResult = locationComparator.compare(fbPerson.getHome().getLocation(), celebrity.getHome().getLocation());
+					MatchingContainer comp = new MatchingContainer(celebrity, ageResult, hometownResult);
 					json = comp.toJsonString();
 			}
 		} else if ("celebrityList".equals(method)) {

@@ -54,6 +54,7 @@
 				$("#userFirstname").html(json.firstname);
 				$("#userLastname").html(json.lastname);
 				$("#attr_age_user").html(json.formattedBirthday);
+				$("#attr_hometown_user").html(json.formattedHometown);
 				console.debug(data);
 			});
 		</script>
@@ -106,10 +107,10 @@
 				</div>
 			</div>
 			<div class="row">
-				<div id="attr_age_caption" class="col-md-1">Age:</div>
+				<div id="attr_caption" class="col-md-1">Age:</div>
 				<div id="attr_age_user" class="col-md-2"></div>
 				<div class="col-md-6">
-					<div class="progress" data-toggle="tooltip" data-html="true"
+					<div class="progress progress_age" data-toggle="tooltip" data-html="true"
 							data-original-title="Default tooltip">
 						<div id="progress_age" class="progress-bar" role="progressbar"
 							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
@@ -119,6 +120,21 @@
 					</div>
 				</div>
 				<div id="attr_age_celebrity" class="col-md-2 textAlignRight"></div>
+			</div>
+			<div class="row">
+				<div id="attr_caption" class="col-md-1">Hometown:</div>
+				<div id="attr_hometown_user" class="col-md-2"></div>
+				<div class="col-md-6">
+					<div class="progress progress_hometown" data-toggle="tooltip" data-html="true"
+							data-original-title="Default tooltip">
+						<div id="progress_hometown" class="progress-bar" role="progressbar"
+							aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"
+							style="width: 0%;" >
+							<span class="sr-only"></span>
+						</div>
+					</div>
+				</div>
+				<div id="attr_hometown_celebrity" class="col-md-2 textAlignRight"></div>
 			</div>
 		</div>
 
@@ -147,14 +163,27 @@
 									json.ageCompResult.value + "%");
 							$("#progress_age > .sr-only").html(
 									json.ageCompResult.value + "%");
-							$(".progress").attr('data-original-title',
+							$(".progress_age").attr('data-original-title',
 									json.ageCompResult.HTML);
+							$("#attr_hometown_celebrity").html(
+									json.celebrity.formattedHometown);
+							$("#progress_hometown").width(
+									json.hometownResult.value + "%");
+							$("#progress_hometown > .sr-only").html(
+									json.hometownResult.value + "%");
+							$(".progress_hometown").attr('data-original-title',
+									json.hometownResult.HTML);
+							
 							if(json.ageCompResult.value == 0) {
 								$("#progress_age > .sr-only").addClass("noResult");
 							} else {
 								$("#progress_age > .sr-only").removeClass("noResult");
 							}
+							
+							
+							
 						});
+						
 						$("[data-toggle='tooltip']").tooltip();
 					});
 		</script>

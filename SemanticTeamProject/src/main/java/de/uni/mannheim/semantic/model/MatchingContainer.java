@@ -5,11 +5,13 @@ public class MatchingContainer extends AbstractToJson {
 
 	private CelPerson celebrity;
 	private CompareResult ageCompResult;
+	private CompareResult hometownResult;
 	
-	public MatchingContainer(CelPerson celebrity, CompareResult ageCompResult) {
+	public MatchingContainer(CelPerson celebrity, CompareResult ageCompResult, CompareResult hometownResult) {
 		super();
 		this.celebrity = celebrity;
 		this.ageCompResult = ageCompResult;
+		this.hometownResult = hometownResult;
 	}
 	
 	public CelPerson getCelebrity() {
@@ -23,6 +25,14 @@ public class MatchingContainer extends AbstractToJson {
 	}
 	public void setAgeCompResult(CompareResult result) {
 		this.ageCompResult = result;
+	}
+
+	public CompareResult getHometownResult() {
+		return hometownResult;
+	}
+
+	public void setHometownResult(CompareResult hometownResult) {
+		this.hometownResult = hometownResult;
 	}
 	
 	
