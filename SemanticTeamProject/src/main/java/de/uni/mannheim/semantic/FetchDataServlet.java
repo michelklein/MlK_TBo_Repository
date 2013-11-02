@@ -61,12 +61,12 @@ public class FetchDataServlet extends HttpServlet {
 			CelPerson celebrity = CelebritiesFetcher.get().createCel(
 					celebrityName);
 			if (celebrity != null) {
-//					for (Interest i : celebrity.getInterest()) {
-//						System.out.println(i.getName());
-//						for (String s : i.getGenre()) {
-//							System.out.println("___" + s);
-//						}
-//					}
+					for (Interest i : celebrity.getInterest()) {
+						System.out.println(i.getName());
+						for (String s : i.getGenre()) {
+							System.out.println("___" + s);
+						}
+					}
 					
 					Facebook facebook = (Facebook) request.getSession()
 							.getAttribute("facebook");
