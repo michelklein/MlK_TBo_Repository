@@ -2,13 +2,12 @@ package de.uni.mannheim.semantic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
+ 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import de.uni.mannheim.semantic.comparison.AgeComparator;
 import de.uni.mannheim.semantic.comparison.LocationComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
@@ -52,12 +51,12 @@ public class FetchDataServlet extends HttpServlet {
 			FacebookParser fbParser = new FacebookParser(facebook);
 			FacebookPerson fbPerson = fbParser.parseFacebookPerson();
 			json = fbPerson.toJsonString();
-			for (Interest i : fbPerson.getInterest()) {
-				System.out.println(i.getName());
-				for (String s : i.getGenre()) {
-					System.out.println("___" + s);
-				}
-			}
+//			for (Interest i : fbPerson.getInterest()) {
+//				System.out.println(i.getName());
+//				for (String s : i.getGenre()) {
+//					System.out.println("___" + s);
+//				}
+//			}
 
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");
@@ -71,8 +70,6 @@ public class FetchDataServlet extends HttpServlet {
 						}
 					}
 					
-					// comparison
-					// TODO: cache facebook data
 					Facebook facebook = (Facebook) request.getSession()
 							.getAttribute("facebook");
 					FacebookParser fbParser = new FacebookParser(facebook);
