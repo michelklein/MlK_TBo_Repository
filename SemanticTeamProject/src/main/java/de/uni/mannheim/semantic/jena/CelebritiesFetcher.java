@@ -8,9 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -27,20 +25,22 @@ import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
-import de.uni.mannheim.semantic.facebook.FacebookParser;
+import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.model.CelPerson;
-import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Interest;
+import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
 import de.uni.mannheim.semantic.util.PropertiesUtils;
-import facebook4j.internal.org.json.JSONObject;
 
 public class CelebritiesFetcher {
 
+	private FetchGeoData geocoding = new FetchGeoData();
+
 	public static void main(String[] args) throws IOException {
 		// CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
-		CelebritiesFetcher.get().getMovies("Arnold Schwarzenegger");
+		// CelebritiesFetcher.get().getMovies("Arnold Schwarzenegger");
+		getPlacesFromLinkedGeoData();
 		// CelebritiesFetcher.get().getMovieInfo("The Terminator");
 	}
 
@@ -76,8 +76,9 @@ public class CelebritiesFetcher {
 			ResultSet resSet2 = getInstitutionInfos(s.get("birthPlace"));
 			while (resSet.hasNext()) {
 				QuerySolution s2 = resSet.nextSolution();
-				home = new Institution(gll(s, "label"), gll(s, "long"), gll(s,
-						"lat"));
+				Location location = geocoding.getLocation(gll(s, "long"),
+						gll(s, "lat"));
+				home = new Institution(gll(s, "label"), location);
 			}
 			break;
 		}
@@ -265,6 +266,41 @@ public class CelebritiesFetcher {
 	private String g(QuerySolution s, String string) {
 		RDFNode x = s.get(string);
 		return x.toString();
+	}
+
+	public static void getPlacesFromLinkedGeoData() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PREFIX lgd:<http://linkedgeodata.org/> ")
+				.append("PREFIX lgdo:<http://linkedgeodata.org/ontology/> ")
+				.append("PREFIX lgdp:<http://linkedgeodata.org/property/>")
+				.append("PREFIX lgdoogdb: <http://linkedgeodata.org/ontology/openGeoDB>")
+				.append("PREFIX lgdpogdb: <http://linkedgeodata.org/property/openGeoDB>")
+				.append("SELECT * FROM <http://linkedgeodata.org> WHERE {")
+				.append("?place a lgdo:Place .")
+				.append("OPTIONAL { ?place lgdpogdb:name ?name . }")
+				.append("OPTIONAL { ?place lgdoogdb:lat ?lat . }")
+				.append("OPTIONAL { ?place lgdoogdb:lon ?lon . }")
+				.append("OPTIONAL { ?place lgdpogdb:postal_codes ?postal . }")
+				.append("OPTIONAL { ?place lgdoogdb:telephone_area_code ?tel . }")
+				.append("OPTIONAL { ?place lgdo:population ?population . }")
+				.append("OPTIONAL { ?place lgdoogdb:is_in_loc_id ?inLocId . }")
+				.append("OPTIONAL { ?place lgdp:is_in ?in . }}")
+				.append("LIMIT 100");
+
+		Query query = QueryFactory.create(builder.toString());
+
+		// Remote execution.
+		QueryExecution qexec = QueryExecutionFactory.sparqlService(
+				"http://linkedgeodata.org/sparql", query);
+		// Set the DBpedia specific timeout.
+		((QueryEngineHTTP) qexec).addParam("timeout", "10000");
+
+		// Execute.
+		ResultSet rs = qexec.execSelect();
+		ResultSetFormatter.out(System.out, rs, query);
+		// System.out.println(result);
+		qexec.close();
+
 	}
 
 	public List<Person> getCelebritiePersons() {

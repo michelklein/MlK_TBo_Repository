@@ -18,7 +18,9 @@ public class AgeComparator extends AbstractComparator<Date> {
 
 	@Override
 	public CompareResult compare(Date o1, Date o2) {
-		CompareResult result = new CompareResult();
+		this.o1 = o1;
+		this.o2 = o2;
+		result = new CompareResult();
 		result.setDescription("Overall");
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(o1);
@@ -82,13 +84,6 @@ public class AgeComparator extends AbstractComparator<Date> {
 			age--;
 		}
 		return age;
-	}
-
-	private void compareHelper(int val1, int val2, int percent,
-			String description, CompareResult result) {
-		int tempResult = val1 == val2 ? percent : 0;
-		result.setValue(result.getValue() + tempResult);
-		result.getSubrestults().add(new CompareResult(tempResult, description));
 	}
 
 }

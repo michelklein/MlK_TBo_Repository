@@ -14,9 +14,9 @@ import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CelPerson;
 import de.uni.mannheim.semantic.model.CompareResult;
-import de.uni.mannheim.semantic.model.MatchingContainer;
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Interest;
+import de.uni.mannheim.semantic.model.MatchingContainer;
 import facebook4j.Facebook;
 
 /**

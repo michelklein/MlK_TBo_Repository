@@ -1,6 +1,5 @@
 package de.uni.mannheim.semantic.facebook;
 
-import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -11,28 +10,18 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.jena.atlas.json.JSON;
-import org.apache.jena.atlas.lib.ListUtils;
-
+import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
-import facebook4j.Book;
 import facebook4j.Category;
 import facebook4j.Checkin;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
-import facebook4j.Game;
 import facebook4j.IdNameEntity;
-import facebook4j.Movie;
-import facebook4j.Music;
 import facebook4j.Page;
-import facebook4j.PictureSize;
-import facebook4j.Reading;
 import facebook4j.ResponseList;
-import facebook4j.Television;
-import facebook4j.User;
 import facebook4j.User.Education;
 import facebook4j.User.Work;
 import facebook4j.internal.org.json.JSONArray;
@@ -41,6 +30,7 @@ import facebook4j.internal.org.json.JSONObject;
 
 public class FacebookParser {
 	private Facebook fb;
+	private FetchGeoData geocoding = new FetchGeoData();
 
 	public FacebookParser(Facebook f) {
 		fb = f;
@@ -133,7 +123,6 @@ public class FacebookParser {
 			// e.printStackTrace();
 		}
 		return person;
-
 	}
 
 	private Interest createInterestByID(Category c) {
@@ -199,8 +188,9 @@ public class FacebookParser {
 			String name = p.getName();
 			facebook4j.Place.Location location = p.getLocation();
 			if (location != null) {
-				return new Institution(name, location.getLongitude(),
+				Location loc = geocoding.getLocation(location.getLongitude(),
 						location.getLatitude());
+				return new Institution(name, loc);
 			}
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
@@ -209,33 +199,33 @@ public class FacebookParser {
 		return null;
 	}
 
-	public static void TBoSuperDuperPrinter(Object p) {
-		try {
-			for (Field field : getInheritedFields(p.getClass())) {
-				field.setAccessible(true);
-				String fname = field.getName();
-				Object value;
-
-				value = field.get(p);
-
-				System.out.println("Field: " + fname + " : " + value);
-
-			}
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-
-	public static List<Field> getInheritedFields(Class<?> type) {
-		List<Field> fields = new ArrayList<Field>();
-		for (Class<?> c = type; c != null; c = c.getSuperclass()) {
-			fields.addAll(Arrays.asList(c.getDeclaredFields()));
-		}
-		return fields;
-	}
+	// public static void TBoSuperDuperPrinter(Object p) {
+	// try {
+	// for (Field field : getInheritedFields(p.getClass())) {
+	// field.setAccessible(true);
+	// String fname = field.getName();
+	// Object value;
+	//
+	// value = field.get(p);
+	//
+	// System.out.println("Field: " + fname + " : " + value);
+	//
+	// }
+	// } catch (IllegalArgumentException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// } catch (IllegalAccessException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// public static List<Field> getInheritedFields(Class<?> type) {
+	// List<Field> fields = new ArrayList<Field>();
+	// for (Class<?> c = type; c != null; c = c.getSuperclass()) {
+	// fields.addAll(Arrays.asList(c.getDeclaredFields()));
+	// }
+	// return fields;
+	// }
 
 }

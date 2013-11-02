@@ -5,5 +5,46 @@ import de.uni.mannheim.semantic.model.CompareResult;
 public abstract class AbstractComparator<T extends Object> {
 
 	public abstract CompareResult compare(T o1, T o2);
+
+	protected T o1;
+	protected T o2;
+	protected CompareResult result;
 	
+	protected void compareHelper(int val1, int val2, int percent,
+			String description, CompareResult result) {
+		int tempResult = val1 == val2 ? percent : 0;
+		result.setValue(result.getValue() + tempResult);
+		result.getSubrestults().add(new CompareResult(tempResult, description));
+	}
+
+	protected void compareHelper(String val1, String val2, int percent,
+			String description, CompareResult result) {
+
+		if (val1 == null || val2 == null) {
+			result.getSubrestults().add(new CompareResult(0, description));
+		}
+
+		int tempResult = val1.equalsIgnoreCase(val2) ? percent : 0;
+		result.setValue(result.getValue() + tempResult);
+		result.getSubrestults().add(new CompareResult(tempResult, description));
+	}
+	
+	public void print() {
+		printDates(o1, o2);
+		printResult(result);
+		System.out.println("\n\n");
+	}
+
+	public void printDates(T o1, T o2) {
+		System.out.println(String.format("Compare: %s and %s", o1, o2));
+	}
+
+	public void printResult(CompareResult result) {
+		System.out.println(String.format("%s: %s", result.getDescription(),
+				result.getValue()));
+		for (CompareResult rs : result.getSubrestults()) {
+			printResult(rs);
+		}
+	}
+
 }

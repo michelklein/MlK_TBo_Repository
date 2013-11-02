@@ -9,7 +9,9 @@ public class CompareResult extends AbstractToJson {
 	private int value = 0;
 	/** The description describing the achieved result */
 	private String description;
-
+	/** Indicates if the compare result is valid or not. */
+	private boolean valid = false;
+	
 	/** Maybe this result consists of subresults */
 	private List<CompareResult> subresults;
 
@@ -17,6 +19,13 @@ public class CompareResult extends AbstractToJson {
 		super();
 		this.value = value;
 		this.description = description;
+	}
+	
+	public CompareResult(int value, String description, boolean valid) {
+		super();
+		this.value = value;
+		this.description = description;
+		this.valid = valid;
 	}
 
 	public CompareResult() {
@@ -44,12 +53,20 @@ public class CompareResult extends AbstractToJson {
 	public void setDescription(String description) {
 		this.description = description;
 	}
+	
+	public boolean isValid() {
+		return valid;
+	}
 
 	public String getHTML() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<table border=\"0\" style=\"color:white;\">");
+		String value = "-";
 		for(CompareResult rs : getSubrestults()) {
-			builder.append("<tr>").append("<td><li>").append("</li></td><td style=\"padding-right: 10px;\">").append(rs.getDescription()).append(":</td><td style=\"text-align: right;\">").append(rs.getValue()).append("%</td></tr>");
+			if(rs.isValid()) {
+				value = String.valueOf(rs.getValue());
+			}
+			builder.append("<tr>").append("<td><li>").append("</li></td><td style=\"padding-right: 10px;\">").append(rs.getDescription()).append(":</td><td style=\"text-align: right;\">").append(value).append("%</td></tr>");
 		}
 		builder.append("<tr>").append("<td style=\"padding-top: 10px;\"><li>").append("</li></td><td style=\"padding-top: 10px;\"><b>").append(getDescription()).append(":</b></td><td style=\"padding-top: 10px;\"><b>").append(getValue()).append("%</b></td></tr>");
 		return builder.toString();

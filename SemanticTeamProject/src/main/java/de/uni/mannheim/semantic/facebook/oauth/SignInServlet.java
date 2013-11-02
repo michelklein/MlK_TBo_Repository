@@ -1,7 +1,5 @@
 package de.uni.mannheim.semantic.facebook.oauth;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.util.Properties;
 

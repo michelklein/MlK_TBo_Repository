@@ -7,8 +7,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import de.uni.mannheim.semantic.GUIObjectContainer;
-import de.uni.mannheim.semantic.facebook.FacebookParser;
 import facebook4j.Facebook;
 import facebook4j.FacebookException;
 

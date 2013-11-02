@@ -1,6 +1,5 @@
 package de.uni.mannheim.semantic.model;
 
-import java.util.List;
 import java.util.Set;
 
 public class Interest {

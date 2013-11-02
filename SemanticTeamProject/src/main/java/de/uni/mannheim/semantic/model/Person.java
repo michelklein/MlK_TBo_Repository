@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import facebook4j.internal.org.json.JSONObject;
-
 public class Person extends AbstractToJson {
 	private static SimpleDateFormat sdfToDate = new SimpleDateFormat(
 			"yyyy-MM-dd");

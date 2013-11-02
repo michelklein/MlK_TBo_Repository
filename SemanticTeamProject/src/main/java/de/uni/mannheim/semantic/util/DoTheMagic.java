@@ -14,7 +14,6 @@ import de.uni.mannheim.semantic.model.CelPerson;
 import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Interest;
 import facebook4j.Facebook;
-import facebook4j.FacebookException;
 
 public class DoTheMagic extends HttpServlet {
 	private static final long serialVersionUID = 6305643034487441839L;
