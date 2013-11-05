@@ -1,17 +1,21 @@
 package de.uni.mannheim.semantic.model;
 
+import java.util.List;
+
 
 public class MatchingContainer extends AbstractToJson {
 
 	private CelPerson celebrity;
 	private CompareResult ageCompResult;
-	private CompareResult hometownResult;
+	private CompareResult LocResult;
+	private List<CompareResult> movieResult;
 	
-	public MatchingContainer(CelPerson celebrity, CompareResult ageCompResult, CompareResult hometownResult) {
+	public MatchingContainer(CelPerson celebrity, CompareResult ageCompResult, CompareResult locResult,List<CompareResult> movieResult) {
 		super();
 		this.celebrity = celebrity;
 		this.ageCompResult = ageCompResult;
-		this.hometownResult = hometownResult;
+		this.LocResult = locResult;
+		this.setMovieResult(movieResult);
 	}
 	
 	public CelPerson getCelebrity() {
@@ -27,12 +31,20 @@ public class MatchingContainer extends AbstractToJson {
 		this.ageCompResult = result;
 	}
 
-	public CompareResult getHometownResult() {
-		return hometownResult;
+	public CompareResult getLocResult() {
+		return LocResult;
 	}
 
-	public void setHometownResult(CompareResult hometownResult) {
-		this.hometownResult = hometownResult;
+	public void setLocResult(CompareResult LocResult) {
+		this.LocResult = LocResult;
+	}
+
+	public List<CompareResult> getMovieResult() {
+		return movieResult;
+	}
+
+	public void setMovieResult(List<CompareResult> movieResult) {
+		this.movieResult = movieResult;
 	}
 	
 	

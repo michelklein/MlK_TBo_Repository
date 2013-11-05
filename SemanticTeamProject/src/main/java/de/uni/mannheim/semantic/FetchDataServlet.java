@@ -2,14 +2,18 @@ package de.uni.mannheim.semantic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
- 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import de.uni.mannheim.semantic.comparison.AgeComparator;
 import de.uni.mannheim.semantic.comparison.LocationComparator;
+import de.uni.mannheim.semantic.comparison.MovieComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CelPerson;
@@ -28,6 +32,7 @@ public class FetchDataServlet extends HttpServlet {
 
 	private AgeComparator ageComparator = new AgeComparator();
 	private LocationComparator locationComparator = new LocationComparator();
+	private MovieComparator movieComparator = new MovieComparator();
 
 	/**
 	 * @see HttpServlet#HttpServlet()
@@ -77,7 +82,15 @@ public class FetchDataServlet extends HttpServlet {
 					CompareResult ageResult = ageComparator.compare(
 							fbPerson.getBirthdate(), celebrity.getBirthdate());
 					CompareResult hometownResult = locationComparator.compare(fbPerson.getHome().getLocation(), celebrity.getHome().getLocation());
-					MatchingContainer comp = new MatchingContainer(celebrity, ageResult, hometownResult);
+					
+					
+					
+					List<CompareResult> movieR = movieComparator.compareList(fbPerson.getInterest(), celebrity.getInterest());
+					
+					
+					
+					
+					MatchingContainer comp = new MatchingContainer(celebrity, ageResult, hometownResult,movieR);
 					json = comp.toJsonString();
 			}
 		} else if ("celebrityList".equals(method)) {
