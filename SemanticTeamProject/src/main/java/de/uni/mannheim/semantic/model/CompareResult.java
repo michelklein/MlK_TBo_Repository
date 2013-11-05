@@ -31,7 +31,7 @@ public class CompareResult extends AbstractToJson {
 	public CompareResult() {
 	}
 
-	public List<CompareResult> getSubrestults() {
+	public List<CompareResult> getSubresults() {
 		if (subresults == null) {
 			subresults = new ArrayList<CompareResult>();
 		}
@@ -62,7 +62,7 @@ public class CompareResult extends AbstractToJson {
 		StringBuilder builder = new StringBuilder();
 		builder.append("<table border=\"0\" style=\"color:white;\">");
 		String value = "-";
-		for(CompareResult rs : getSubrestults()) {
+		for(CompareResult rs : getSubresults()) {
 			if(rs.isValid()) {
 				value = rs.getValue() + "%";
 			}

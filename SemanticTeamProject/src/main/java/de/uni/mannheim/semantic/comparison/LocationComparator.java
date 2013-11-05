@@ -11,7 +11,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 	private static final int COUNTRY_PERCENT = 10;
 	private static final int STATE_PERCENT = 15;
 	private static final int POSTAL_CODE_PERCENT = 25;
-	private static final int MAX_DISTANCE = 250;
+	private static final int MAX_DISTANCE = EARTH_RADIUS / 2;
 
 	@Override
 	public CompareResult compare(Location o1, Location o2) {
@@ -29,7 +29,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 			float distancePercent = ((float) (100f / MAX_DISTANCE) * difference) / 100;
 			percent = DISTANCE_PERCENT * distancePercent;
 		}
-		result.getSubrestults().add(
+		result.getSubresults().add(
 				new CompareResult((int) percent, "Distance"));
 		result.setValue((int) (result.getValue() + percent));
 

@@ -32,25 +32,29 @@ public class AgeComparator extends AbstractComparator<Date> {
 		int age2 = getAge(cal2);
 		int div = age1 - age2;
 		div = div < 0 ? div * -1 : div;
-		double divide = (double) (100 - div) / 100;
-		double agePercent = AGE_PERCENT * divide;
-		result.getSubrestults().add(new CompareResult((int) agePercent, "Age"));
-		result.setValue((int) (result.getValue() + agePercent));
-
+		if (age1 > 100 || age2 > 100) {
+			result.getSubresults().add(new CompareResult(0, "Age"));
+		} else {
+			double divide = (double) (100 - div) / 100;
+			double agePercent = AGE_PERCENT * divide;
+			result.getSubresults().add(
+					new CompareResult((int) agePercent, "Age"));
+			result.setValue((int) (result.getValue() + agePercent));
+		}
 		// century comparison
 		int year1 = cal1.get(Calendar.YEAR);
 		int year2 = cal2.get(Calendar.YEAR);
 		String century1 = String.valueOf(year1).substring(0, 2);
 		String century2 = String.valueOf(year2).substring(0, 2);
 		int tempResult = century1.equals(century2) ? CENTURY_PERCENT : 0;
-		result.getSubrestults().add(new CompareResult(tempResult, "Century"));
+		result.getSubresults().add(new CompareResult(tempResult, "Century"));
 		result.setValue(result.getValue() + tempResult);
 
 		// decade comparison
 		String decade1 = String.valueOf(year1).substring(0, 3);
-		String decade2 = String.valueOf(year2).substring(0,3);
+		String decade2 = String.valueOf(year2).substring(0, 3);
 		tempResult = decade1.equals(decade2) ? DECADE_PERCENT : 0;
-		result.getSubrestults().add(new CompareResult(tempResult, "Decade"));
+		result.getSubresults().add(new CompareResult(tempResult, "Decade"));
 		result.setValue(result.getValue() + tempResult);
 
 		// year comparison
