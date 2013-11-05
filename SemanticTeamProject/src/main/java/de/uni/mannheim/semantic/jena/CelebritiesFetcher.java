@@ -40,6 +40,7 @@ public class CelebritiesFetcher {
 
 	public static void main(String[] args) throws IOException {
 		// CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
+		CelebritiesFetcher.get().createCel("Arnold Schwarzenegger");
 	}
 
 	private static CelebritiesFetcher instance;

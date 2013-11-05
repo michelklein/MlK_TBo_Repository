@@ -11,7 +11,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 	private static final int COUNTRY_PERCENT = 10;
 	private static final int STATE_PERCENT = 15;
 	private static final int POSTAL_CODE_PERCENT = 25;
-	private static final int MAX_DISTANCE = 250;
+	private static final int MAX_DISTANCE = EARTH_RADIUS / 2;
 
 	@Override
 	public CompareResult compare(Location o1, Location o2) {
