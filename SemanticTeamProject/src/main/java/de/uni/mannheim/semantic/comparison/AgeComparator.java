@@ -37,8 +37,7 @@ public class AgeComparator extends AbstractComparator<Date> {
 		} else {
 			double divide = (double) (100 - div) / 100;
 			double agePercent = AGE_PERCENT * divide;
-			result.getSubresults().add(
-					new CompareResult((int) agePercent, "Age"));
+			result.getSubresults().add(new CompareResult(0, "Age"));
 			result.setValue((int) (result.getValue() + agePercent));
 		}
 		// century comparison
