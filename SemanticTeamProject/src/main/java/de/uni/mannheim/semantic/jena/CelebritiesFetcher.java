@@ -40,7 +40,7 @@ public class CelebritiesFetcher {
 
 	public static void main(String[] args) throws IOException {
 		// CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
-		CelebritiesFetcher.get().createCel("Arnold Schwarzenegger");
+		CelebritiesFetcher.get().getCelebrityLocations("Konrad Adenauer");
 	}
 
 	private static CelebritiesFetcher instance;
@@ -180,7 +180,51 @@ public class CelebritiesFetcher {
 				.append("}");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
 		return rs;
+	}
 
+	private ResultSet getCelebrityLocations(String celName) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
+				.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>")
+				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
+				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+				.append("SELECT DISTINCT ?birthPlace ?deathPlace ")
+				.append("WHERE { ?p a dbpedia-owl:Person. ?p rdfs:label ?name.")
+				.append("OPTIONAL {{?p dbpedia-owl:birthPlace ?birthPlace.}")
+				.append("UNION {?p dbpprop:birthPlace ?birthPlace.} ")
+				// .append("?birthPlace rdfs:label ?bname")
+				.append("}")
+				.append("OPTIONAL {{?p dbpedia-owl:deathPlace ?deathPlace.}")
+				.append("UNION {?p dbpprop:deathPlace ?deathPlace.} ")
+				// .append("?deathPlace rdfs:label ?dname")
+				.append("}")
+				.append("FILTER (?name='" + celName + "'@en)")
+				.append("FILTER(NOT EXISTS {?birthPlace a dbpedia-owl:Country}) ")
+				.append("FILTER(NOT EXISTS {?deathPlace a dbpedia-owl:Country})")
+				// .append("FILTER langMatches(lang(?bname), 'EN' ) ")
+				// .append("FILTER langMatches(lang(?dname), 'EN' )")
+				.append("}");
+		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
+
+		while (rs.hasNext()) {
+			QuerySolution s = rs.nextSolution();
+			RDFNode birthPlace = s.get("birthPlace");
+			System.out.println(geocoding.getLocation(getNodeName(birthPlace)));
+			RDFNode deathPlace = s.get("deathPlace");
+			System.out.println(geocoding.getLocation(getNodeName(deathPlace)));
+		}
+
+		return rs;
+	}
+	
+	private String getNodeName(RDFNode node) {
+		if(node.isResource()) {
+			return node.asResource().getLocalName();
+		} else if (node.isLiteral()) {
+			return node.asNode().getLiteralLexicalForm();
+		}
+		
+		return null;
 	}
 
 	private ResultSet getMovies(String sameAs) {
