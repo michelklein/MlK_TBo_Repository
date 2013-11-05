@@ -32,6 +32,11 @@ public class AgeComparatorTest {
 		d2 = df.parse("02.02.1993");
 		result = ageComparator.compare(d1, d2);
 		print(result, d1, d2);
+		
+		d1 = df.parse("12.01.1989");
+		d2 = df.parse("05.01.1876");
+		result = ageComparator.compare(d1, d2);
+		print(result, d1, d2);
 
 		assertTrue(true);
 	}
