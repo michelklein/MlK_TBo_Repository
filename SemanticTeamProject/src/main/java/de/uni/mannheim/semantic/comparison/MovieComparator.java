@@ -14,10 +14,9 @@ public class MovieComparator extends AbstractComparator<String> {
 	public CompareResult compare(String o1, String o2) {
 		// TODO Auto-generated method stub
 
-		result = new CompareResult();
-		result.setDescription("TBo Desc");
-		result.getSubresults().add(new CompareResult(10, "Zehn"));
-		result.getSubresults().add(new CompareResult(20, "Zwanzig"));
+		result = new CompareResult(0, "Overall", o1, o2);
+		result.getSubresults().add(new CompareResult(10, "Zehn", o1, o2));
+		result.getSubresults().add(new CompareResult(20, "Zwanzig", o1, o2));
 		result.setValue(30);
 
 		return result;
@@ -34,27 +33,18 @@ public class MovieComparator extends AbstractComparator<String> {
 		}
 
 		for (String g : genreList) {
-			CompareResult cr = new CompareResult(0, g);
+			CompareResult cr = new CompareResult(0, g, g, g);
 			resultList.add(cr);
 			for (Interest i : cList) {
 				if (i.getGenre().contains(g)) {
 					CompareResult sr = new CompareResult(100 / cList.size(),
-							i.getName());
-					
+							i.getName(), o1, o2);
+
 					cr.getSubresults().add(sr);
 				}
 			}
 		}
 
-		// CompareResult overall = new CompareResult(30, "TBo Desc");
-		// resultList.add(overall);
-		// resultList.add(overall);
-		// resultList.add(overall);
-		// resultList.add(overall);
-		// overall.getSubresults().add(new CompareResult(10, "Zehn"));
-		// overall.getSubresults().add(new CompareResult(20, "Zwanzig"));
-		// overall.getSubresults().add(new CompareResult(5, "FŸnf"));
-		// overall.getSubresults().add(new CompareResult(30, "DREICHZICH"));
 		return resultList;
 	}
 }

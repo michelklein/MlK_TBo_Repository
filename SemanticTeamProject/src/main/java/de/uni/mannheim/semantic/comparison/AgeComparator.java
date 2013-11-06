@@ -20,8 +20,7 @@ public class AgeComparator extends AbstractComparator<Date> {
         public CompareResult compare(Date o1, Date o2) {
                 this.o1 = o1;
                 this.o2 = o2;
-                result = new CompareResult();
-                result.setDescription("Overall");
+            	result = new CompareResult(0, "Overall", o1, o2);
                 Calendar cal1 = Calendar.getInstance();
                 cal1.setTime(o1);
                 Calendar cal2 = Calendar.getInstance();
@@ -33,12 +32,12 @@ public class AgeComparator extends AbstractComparator<Date> {
                 int div = age1 - age2;
                 div = div < 0 ? div * -1 : div;
                 if (age1 > 100 || age2 > 100) {
-                        result.getSubresults().add(new CompareResult(0, "Age"));
+                        result.getSubresults().add(new CompareResult(0, "Age",o1,o2));
                 } else {
                         double divide = (double) (100 - div) / 100;
                         double agePercent = AGE_PERCENT * divide;
                         result.getSubresults().add(
-                                        new CompareResult((int) agePercent, "Age"));
+                                        new CompareResult((int) agePercent, "Age",o1,o2));
                         result.setValue((int) (result.getValue() + agePercent));
                 }
                 // century comparison
@@ -47,14 +46,14 @@ public class AgeComparator extends AbstractComparator<Date> {
                 String century1 = String.valueOf(year1).substring(0, 2);
                 String century2 = String.valueOf(year2).substring(0, 2);
                 int tempResult = century1.equals(century2) ? CENTURY_PERCENT : 0;
-                result.getSubresults().add(new CompareResult(tempResult, "Century"));
+                result.getSubresults().add(new CompareResult(tempResult, "Century",o1,o2));
                 result.setValue(result.getValue() + tempResult);
 
                 // decade comparison
                 String decade1 = String.valueOf(year1).substring(0, 3);
                 String decade2 = String.valueOf(year2).substring(0, 3);
                 tempResult = decade1.equals(decade2) ? DECADE_PERCENT : 0;
-                result.getSubresults().add(new CompareResult(tempResult, "Decade"));
+                result.getSubresults().add(new CompareResult(tempResult, "Decade",o1,o2));
                 result.setValue(result.getValue() + tempResult);
 
                 // year comparison

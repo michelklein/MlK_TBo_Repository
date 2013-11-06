@@ -87,7 +87,6 @@ public class Location {
 	public String toString() {
 		return formattedLocation;
 	}
-
 	public String getFormattedLocation() {
 		return formattedLocation;
 	}

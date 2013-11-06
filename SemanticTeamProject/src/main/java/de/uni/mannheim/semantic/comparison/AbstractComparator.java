@@ -14,20 +14,20 @@ public abstract class AbstractComparator<T extends Object> {
 			String description, CompareResult result) {
 		int tempResult = val1 == val2 ? percent : 0;
 		result.setValue(result.getValue() + tempResult);
-		result.getSubresults().add(new CompareResult(tempResult, description));
+		result.getSubresults().add(new CompareResult(tempResult, description,o1,o2));
 	}
 
 	protected void compareHelper(String val1, String val2, int percent,
 			String description, CompareResult result) {
 
 		if (val1 == null || val2 == null) {
-			result.getSubresults().add(new CompareResult(0, description));
+			result.getSubresults().add(new CompareResult(0, description,o1,o2));
 		} else {
 
 			int tempResult = val1.equalsIgnoreCase(val2) ? percent : 0;
 			result.setValue(result.getValue() + tempResult);
 			result.getSubresults().add(
-					new CompareResult(tempResult, description));
+					new CompareResult(tempResult, description,o1,o2));
 		}
 	}
 

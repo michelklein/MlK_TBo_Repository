@@ -60,30 +60,34 @@
 								$("#attr_hometown_user").html(
 										data.formattedHometown);
 
-								var first = true;
-								$
-										.each(
-												data.allGenres,
-												function() {
-													if (first) {
-														$("#movies")
-																.append(
-																		"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
-														first = false;
-													} else {
-														$("#movies")
-																.append(
-																		"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
-																				+ this
-																				+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
-													}
-													$("#movies")
-															.append(
-																	"<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
-												});
+								$("#movies")
+										.append(
+												"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
+								$.each(data.allGenres, function() {
+									buildDyn("#movies", this);
+								});
+								$("#locations")
+										.append(
+												"<div class='row'><div class='col-md-1 attr_caption'>Locations:</div></div>");
+								$.each(data.locations, function() {
+									buildDyn("#locations",
+											this.formattedLocation);
+								});
 
 								console.debug(data);
 							});
+
+			function buildDyn(id, data) {
+				$(id)
+						.append(
+								"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
+										+ data
+										+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
+				$(id)
+						.append(
+								"<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
+
+			}
 		</script>
 
 		<div id="header">
@@ -145,80 +149,13 @@
 			</div>
 
 
-			<!-- Location -->
-			<div class="row">
-				<div id="attr_caption" class="col-md-1">Location:</div>
-				<div id="attr_loc1_user" class="col-md-2"></div>
-				<div class="col-md-6">
-					<div class="progress progress_loc1" data-toggle="tooltip"
-						data-html="true" data-original-title="Default tooltip">
-						<div id="progress_loc1" class="progress-bar">
-							<span class="sr-only"></span>
-						</div>
-					</div>
-				</div>
-				<div id="attr_loc1_celebrity" class="col-md-2 textAlignRight"></div>
-			</div>
-			<div class="row">
-				<div id="attr_loc2_user" class="col-md-3"></div>
-				<div class="col-md-6">
-					<div class="progress progress_loc2" data-toggle="tooltip"
-						data-html="true" data-original-title="Default tooltip">
-						<div id="progress_loc2" class="progress-bar">
-							<span class="sr-only"></span>
-						</div>
-					</div>
-				</div>
-				<div id="attr_loc2_celebrity" class="col-md-2 textAlignRight"></div>
-			</div>
-			<div class="row">
-				<div id="attr_loc3_user" class="col-md-3"></div>
-				<div class="col-md-6">
-					<div class="progress progress_loc3" data-toggle="tooltip"
-						data-html="true" data-original-title="Default tooltip">
-						<div id="progress_loc3" class="progress-bar">
-							<span class="sr-only"></span>
-						</div>
-					</div>
-				</div>
-				<div id="attr_loc3_celebrity" class="col-md-2 textAlignRight"></div>
-			</div>
-			<div class="row">
-				<div id="attr_loc_user" class="col-md-3"></div>
-				<div class="col-md-6">
-					<div class="progress progress_loc4" data-toggle="tooltip"
-						data-html="true" data-original-title="Default tooltip">
-						<div id="progress_loc4" class="progress-bar">
-							<span class="sr-only"></span>
-						</div>
-					</div>
-				</div>
-				<div id="attr_loc4_celebrity" class="col-md-2 textAlignRight"></div>
-			</div>
 
-
-
-
-
-
-
-
-			<!-- Movies -->
+			<div id="locations"></div>
 			<div id="movies"></div>
 
 
 
 
-
-
-
-
-			<div class="row">
-				<div id="attr_caption" class="col-md-1">Movies:</div>
-				<div id="attr_movie1_user" class="col-md-2"></div>
-				<div class="col-md-6" id="progress_movie"></div>
-			</div>
-			<div id="attr_movie1_celebrity" class="col-md-2 textAlignRight"></div>
 		</div>
 		</div>
 
@@ -263,72 +200,71 @@
 				$(".progress_age").attr('data-original-title',
 						json.ageCompResult.HTML);
 
-				$("#attr_loc1_celebrity").html(json.celebrity.formattedloc);
-				$("#progress_loc1").width(json.locResult.value + "%");
-				$("#progress_loc1 > .sr-only").html(json.locResult.value + "%");
-				$(".progress_loc1").attr('data-original-title',
-						json.locResult.HTML);
+				createDynMatch("#movies", json.movieResult);
+				createDynMatch("#locations", json.locations);
+				function createDynMatch(id, baseData) {
 
-				$("#movies").empty();
-				$("#movies")
-						.append(
-								"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
-				$
-						.each(
-								json.movieResult,
-								function() {
-									if (this.sum != 0) {
-										$("#movies")
-												.append(
-														"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
-																+ this.description
-																+ "</div><div class='col-md-6'><div class='progress'></div></div>");
+					$(id).empty();
+					$(id)
+							.append(
+									"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
+					$
+							.each(
+									baseData,
+									function() {
+										if (this.sum != 0) {
+											$(id)
+													.append(
+															"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
+																	+ this.description
+																	+ "</div><div class='col-md-6'><div class='progress'></div></div>");
 
-										$
-												.each(
-														this.subresults,
-														function() {
+											$
+													.each(
+															this.subresults,
+															function() {
 
-															$("#movies")
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.append(
-																			"<div class='progress-bar' data-toggle='tooltip' data-html='true' data-original-title='Default tooltip' style='width:0%'><span class='sr-only'>"
-																					+ this.value
-																					+ "%"
-																					+ "</span></div>");
-															$("#movies")
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.width(
-																			this.value
-																					+ "%");
-															$("#movies")
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.children()
-																	.last()
-																	.attr(
-																			'data-original-title',
-																			this.description);
+																$(id)
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.append(
+																				"<div class='progress-bar' data-toggle='tooltip' data-html='true' data-original-title='Default tooltip' style='width:0%'><span class='sr-only'>"
+																						+ this.value
+																						+ "%"
+																						+ "</span></div>");
+																$(id)
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.width(
+																				this.value
+																						+ "%");
+																$(id)
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.children()
+																		.last()
+																		.attr(
+																				'data-original-title',
+																				this.description);
 
-														});
-									}
-								});
+															});
+										}
+									});
+				}
 
 				if (json.ageCompResult.value == 0) {
 					$("#progress_age > .sr-only").addClass("noResult");

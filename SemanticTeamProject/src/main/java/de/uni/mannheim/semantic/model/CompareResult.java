@@ -14,13 +14,18 @@ public class CompareResult extends AbstractToJson {
 	/** Indicates if the compare result is valid or not. */
 	private boolean valid = true;
 
+	private Object o1;
+	private Object o2;
+
 	/** Maybe this result consists of subresults */
 	private List<CompareResult> subresults;
 
-	public CompareResult(int value, String description) {
+	public CompareResult(int value, String description, Object o1, Object o2) {
 		super();
 		this.value = value;
 		this.description = description;
+		this.o1 = o1;
+		this.o2 = o2;
 	}
 
 	public CompareResult(int value, String description, boolean valid) {
@@ -30,8 +35,6 @@ public class CompareResult extends AbstractToJson {
 		this.valid = valid;
 	}
 
-	public CompareResult() {
-	}
 
 	public List<CompareResult> getSubresults() {
 		if (subresults == null) {
@@ -91,5 +94,11 @@ public class CompareResult extends AbstractToJson {
 				.append(getValue()).append("%</b></td></tr>");
 		return builder.toString();
 	}
-
+	
+	public String getO1(){
+		return o1.toString();
+	}
+	public String getO2(){
+		return o2.toString();
+	}
 }
