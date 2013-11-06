@@ -11,10 +11,9 @@ import java.util.List;
 import java.util.Set;
 
 import de.uni.mannheim.semantic.FetchGeoData;
-import de.uni.mannheim.semantic.model.FacebookPerson;
-import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
+import de.uni.mannheim.semantic.model.Person;
 import facebook4j.Category;
 import facebook4j.Checkin;
 import facebook4j.Facebook;
@@ -36,12 +35,9 @@ public class FacebookParser {
 		fb = f;
 	}
 
-	public FacebookPerson parseFacebookPerson() {
-		Institution home = null;
-		Institution location = null;
-		Institution currLocation = null;
-		FacebookPerson person = null;
-
+	public Person parseFacebookPerson() {
+		Person person = null;
+		List<Location> locations = new ArrayList<Location>();
 		try {
 			// Picture
 			// String picURL = fb.getPictureURL(PictureSize.large).toString();
@@ -53,12 +49,20 @@ public class FacebookParser {
 			// Home
 			IdNameEntity hometown = fb.getMe().getHometown();
 			if (hometown != null) {
-				home = parseInstitution(hometown.getId(), Location.BIRTHPLACE);
+				Location loc = parseLocation(hometown.getId(),
+						Location.BIRTHPLACE);
+				if (loc != null) {
+					locations.add(loc);
+				}
 			}
 
 			IdNameEntity locationTmp = fb.getMe().getLocation();
 			if (locationTmp != null) {
-				location = parseInstitution(locationTmp.getId(), Location.CURRENT_LOCATION);
+				Location loc = parseLocation(locationTmp.getId(),
+						Location.CURRENT_LOCATION);
+				if (loc != null) {
+					locations.add(loc);
+				}
 			}
 
 			// Interest
@@ -70,25 +74,38 @@ public class FacebookParser {
 			// CurrLocation
 			ResponseList<Checkin> checkins = fb.getCheckins();
 			if (checkins != null && checkins.size() > 0) {
-				currLocation = parseInstitution(checkins.get(0).getId(), Location.CURRENT_LOCATION);
+				Location loc = parseLocation(checkins.get(0).getId(),
+						Location.CURRENT_LOCATION);
+				if (loc != null) {
+					locations.add(loc);
+				}
 			}
 
 			// education
-			List<Institution> education = new ArrayList<Institution>();
 			List<Education> educations = fb.getMe().getEducation();
 			if (educations != null) {
 				for (Education i : educations) {
-					education.add(parseInstitution(i.getSchool().getId(), Location.EDUCATIONPLACE));
+					if (locationTmp != null) {
+						Location loc = parseLocation(i.getSchool().getId(),
+								Location.EDUCATIONPLACE);
+						if (loc != null) {
+							locations.add(loc);
+						}
+					}
 				}
 			}
 
 			// employer
-			List<Institution> employer = new ArrayList<Institution>();
 			List<Work> work = fb.getMe().getWork();
 			if (work != null) {
 				for (Work w : work) {
-					employer.add(parseInstitution(w.getEmployer().getId(), Location.WORKPLACE));
-
+					if (locationTmp != null) {
+						Location loc = parseLocation(w.getEmployer().getId(),
+								Location.WORKPLACE);
+						if (loc != null) {
+							locations.add(loc);
+						}
+					}
 				}
 			}
 
@@ -105,9 +122,8 @@ public class FacebookParser {
 				interests.add(createInterestByID(c));
 				// TBoSuperDuperPrinter(createInterestByID(c));
 			}
-			person = new FacebookPerson(firstname, name, home, location,
-					birthdate, currLocation, education, employer, interests,
-					picURL);
+			person = new Person(firstname, name, birthdate, locations,
+					interests, picURL);
 			// TBoSuperDuperPrinter(person);
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
@@ -163,7 +179,7 @@ public class FacebookParser {
 		JSONArray fqlRes;
 		try {
 			fqlRes = fb
-						.executeFQL("SELECT pid, object_id, src_big FROM photo WHERE object_id IN (SELECT cover_object_id FROM album WHERE owner=me() AND type='profile')");
+					.executeFQL("SELECT pid, object_id, src_big FROM photo WHERE object_id IN (SELECT cover_object_id FROM album WHERE owner=me() AND type='profile')");
 
 			if (fqlRes.length() == 1) {
 				Object g = fqlRes.getJSONObject(0).get("src_big");
@@ -181,19 +197,19 @@ public class FacebookParser {
 
 	}
 
-	private Institution parseInstitution(String id, String description) {
+	private Location parseLocation(String id, String description) {
 		Page p;
 		try {
 			p = fb.getPage(id);
-			String name = p.getName();
 			facebook4j.Place.Location location = p.getLocation();
 			if (location != null) {
 				Location loc = geocoding.getLocation(location.getLongitude(),
 						location.getLatitude(), description);
-				if(loc == null) {
-					loc = geocoding.getLocation(location.getCity(), description);
+				if (loc == null) {
+					loc = geocoding
+							.getLocation(location.getCity(), description);
 				}
-				return new Institution(name, loc);
+				return loc;
 			}
 		} catch (FacebookException e) {
 			// TODO Auto-generated catch block
