@@ -3,8 +3,6 @@ package de.uni.mannheim.semantic.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.hp.hpl.jena.sparql.algebra.OpAsQuery.SubExprForVar;
-
 public class CompareResult extends AbstractToJson {
 
 	/** The achieved result in percent */
@@ -14,8 +12,8 @@ public class CompareResult extends AbstractToJson {
 	/** Indicates if the compare result is valid or not. */
 	private boolean valid = true;
 
-	private Object o1;
-	private Object o2;
+	protected Object o1;
+	protected Object o2;
 
 	/** Maybe this result consists of subresults */
 	private List<CompareResult> subresults;
@@ -27,14 +25,6 @@ public class CompareResult extends AbstractToJson {
 		this.o1 = o1;
 		this.o2 = o2;
 	}
-
-	public CompareResult(int value, String description, boolean valid) {
-		super();
-		this.value = value;
-		this.description = description;
-		this.valid = valid;
-	}
-
 
 	public List<CompareResult> getSubresults() {
 		if (subresults == null) {

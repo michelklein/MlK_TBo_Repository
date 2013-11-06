@@ -49,5 +49,9 @@ public class Interest {
 	public void setName(String name) {
 		this.name = name;
 	}
+	
+	public String getCoverURL() {
+		return cover_url;
+	}
 
 }
