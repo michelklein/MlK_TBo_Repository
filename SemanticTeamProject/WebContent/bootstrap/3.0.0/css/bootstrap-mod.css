@@ -18,6 +18,11 @@ body.loading {
 	overflow: hidden;
 }
 
+body{
+	border-radius: 6px;
+	margin: 30px;
+}
+
 /* Anytime the body has the loading class, our
    modal element will be visible */
 body.loading .loadingModal {
@@ -45,26 +50,33 @@ body.loading .loadingModal {
 	border-bottom: 1px solid rgba(0, 0, 0, 0.2);
 }
 
+html{
+	background: url("images/stripes4.png") repeat scroll 0 0
+		rgba(0, 0, 0, 0.8);
+}
+
 .headerText {
 	margin-left: 10px;
 	padding-top: 28px;
 	margin-top: 0px;
 	color: white;
-	text-shadow: -1px 0 0 #000000, 1px 1px 0 #000000, 
-			2px -1px 0 #000000, 3px 0 0 #000000;
+	text-shadow: -1px 0 0 #000000, 1px 1px 0 #000000, 2px -1px 0 #000000,
+		3px 0 0 #000000;
 }
 
-h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small, .h3 small, .h4 small, .h5 small, .h6 small {
+h1 small,h2 small,h3 small,h4 small,h5 small,h6 small,.h1 small,.h2 small,.h3 small,.h4 small,.h5 small,.h6 small
+	{
 	color: #B2B2B2 !important;
 }
 
 #content {
-	margin-top: 30px;
+	padding-top: 30px;
 	display: none;
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 	font-weight: 200;
 	line-height: 1.1;
 	font-size: 18px;
+	
 }
 
 #logout {
@@ -80,11 +92,18 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
 }
 
 .twitter-typeahead {
-	width: 100%;
+	width: 500px;
+}
+
+.form-control {
+	font-size: 28px;
+	height: 50px;
+	text-align: right;
 }
 
 .tt-dropdown-menu {
 	width: 100%;
+	text-align: right;
 }
 
 .tt-hint {
@@ -101,15 +120,16 @@ h1 small, h2 small, h3 small, h4 small, h5 small, h6 small, .h1 small, .h2 small
 	background: white;
 }
 
-#search-celebrity {
+#search-celebrity123 {
 	border-radius: 4px 0px 0px 4px !important;
 }
 
 .twitter-typeahead .tt-hint {
 	display: block;
 	padding: 8px 12px;
-	font-size: 14px;
+	font-size: 28px;
 	border: 1px solid transparent;
+	text-align: right;
 }
 
 img {
@@ -189,8 +209,8 @@ img {
 .progress-bar {
 	background: url("images/stripes4.png") repeat scroll 0 0
 		rgba(0, 0, 0, 0.76);
-		margin-right: 2px;
-		transition: width 3s ease 0s;
+	margin-right: 2px;
+	transition: width 3s ease 0s;
 }
 
 .tooltip-inner {

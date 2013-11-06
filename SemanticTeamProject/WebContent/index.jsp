@@ -90,16 +90,16 @@
 			}
 		</script>
 
-		<div id="header">
+		<!-- <div id="header">
 
 
-		
+
 
 			<h1 class="headerText">
 				Celebritie comparison <small> You and your favourites</small>
 			</h1>
 		</div>
-
+ -->
 		<div id="content">
 			<div class="row">
 				<div class="col-md-5 col-md-offset-1">
@@ -115,26 +115,13 @@
 				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
-							<span id="celebrityFirstname" class="header-name header-bold"></span>
-							<span id="celebrityLastname" class="header-name"></span>
-							
-								<div id="search-bar">
-				<div class="input-group">
-					<input id="search-celebrity" type="text" class="form-control"
-						data-provide="typeahead" data-items="4"
-						placeholder="Type in your celebrity ..."> <span
-						class="input-group-addon"> <span
-						class="glyphicon glyphicon-search"></span>
-					</span><span class="input-group-addon"> <span
-						class="glyphicon glyphicon-refresh"
-						onclick="location.href='./magic'"></span>
-					</span><span class="input-group-addon"> <span
-						class="glyphicon glyphicon-off" onclick="location.href='./logout'"></span>
-					</span>
-				</div>
-			</div>
-							
-							<img
+							<!-- 
+							<span id="celebrityFirstname" class="header-name header-bold">First</span>
+							<span id="celebrityLastname" class="header-name">Last</span>
+							 -->
+							<input id="search-celebrity" type="text" class="form-control"
+								data-provide="typeahead" data-items="4"
+								placeholder="Type in your celebrity ..."> <img
 								id="celebrityImage" src="images/defaultProfile.png"
 								class="img-rounded imageRight">
 						</div>
@@ -188,8 +175,8 @@
 				var json = data;
 				console.debug(data);
 				$("#celebrityImage").attr('src', json.celebrity.imageURL);
-				$("#celebrityFirstname").html(json.celebrity.firstname);
-				$("#celebrityLastname").html(json.celebrity.lastname);
+				//$("#celebrityFirstname").html(json.celebrity.firstname);
+				//$("#celebrityLastname").html(json.celebrity.lastname);
 				$("#attr_age_celebrity").html(json.celebrity.formattedBirthday);
 
 				$.each(json.ageCompResult.subresults, function() {
@@ -226,31 +213,31 @@
 															this.subresults,
 															function() {
 																if (this.value != 0) {
-																$(id)
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.append(
-																				"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
-																						+ this.value
-																						+ "%"
-																						+ "</span></div>");
-																$(id)
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.width(
-																				this.value
-																						+ "%");
-																
+																	$(id)
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.append(
+																					"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																							+ this.value
+																							+ "%"
+																							+ "</span></div>");
+																	$(id)
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.width(
+																					this.value
+																							+ "%");
+
 																}
 															});
 										}
