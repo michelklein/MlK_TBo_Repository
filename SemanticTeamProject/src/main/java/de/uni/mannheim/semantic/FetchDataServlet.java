@@ -17,6 +17,7 @@ import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CompareResult;
 import de.uni.mannheim.semantic.model.Interest;
+import de.uni.mannheim.semantic.model.InterestCompareResult;
 import de.uni.mannheim.semantic.model.MatchingContainer;
 import de.uni.mannheim.semantic.model.Person;
 import facebook4j.Facebook;
@@ -84,7 +85,7 @@ public class FetchDataServlet extends HttpServlet {
 						.compare(fbPerson.getLocations(),
 								celebrity.getLocations());
 
-				List<CompareResult> movieR = movieComparator.compare(
+				List<InterestCompareResult> movieR = movieComparator.compare(
 						fbPerson.getInterest(), celebrity.getInterest());
 
 				MatchingContainer comp = new MatchingContainer(celebrity,

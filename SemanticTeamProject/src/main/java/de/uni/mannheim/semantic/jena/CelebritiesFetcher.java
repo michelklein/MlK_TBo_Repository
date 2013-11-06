@@ -34,7 +34,7 @@ import de.uni.mannheim.semantic.util.PropertiesUtils;
 public class CelebritiesFetcher {
 
 	private FetchGeoData geocoding = new FetchGeoData();
-
+	private static final String COVER_URL_DUMMY = "http://www.ernieputto.de/filmstuff4/batman_begins/batman_begins_poster_us2.jpg";
 	public static void main(String[] args) throws IOException {
 
 		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
@@ -119,7 +119,7 @@ public class CelebritiesFetcher {
 					if (!oldLabel.equals(label)) {
 						System.out.println("new " + label);
 						g = new HashSet<String>();
-						Interest i = new Interest("music", "cover_url", g,
+						Interest i = new Interest("music", COVER_URL_DUMMY, g,
 								"id", label);
 						interests.add(i);
 						oldLabel = label;
@@ -143,7 +143,7 @@ public class CelebritiesFetcher {
 					label = label.trim();
 					label = label + " (" + year + ")";
 
-					Interest i = new Interest("movie", "cover_url",
+					Interest i = new Interest("movie", COVER_URL_DUMMY,
 							getGenreFromFile(label), "id", label);
 					interests.add(i);
 
@@ -674,7 +674,7 @@ public class CelebritiesFetcher {
 				"Alfred Wolfsohn", "Klaus Wunderlich", "Martin Wuttke",
 				"William Wyler", "Dana Wynter", "Natalia Wšrner", "Jerry Zaks",
 				"Frank Zander", "Ruth Zechlin", "Michael Zittel",
-				"Rolf Zuckowski", "GŸnter de Bruyn" };
+				"Rolf Zuckowski", "GŸnter de Bruyn","Arnold Schwarzenegger" };
 		return new ArrayList<String>(Arrays.asList(persons));
 	}
 
