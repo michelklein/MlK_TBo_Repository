@@ -11,17 +11,19 @@ import de.uni.mannheim.semantic.model.Location;
 
 public class LocationComparatorTest {
 
+	private String description = "Test-Location";
+	
 	@Test
 	public void test() {
 		LocationComparator locationComparator = new LocationComparator();
 		FetchGeoData geoDataFetcher = new FetchGeoData();
 
-		Location hennef = geoDataFetcher.getLocation(7.2914, 50.7699);
-		Location siegburg = geoDataFetcher.getLocation(7.2234, 50.8027);
-		Location kšln = geoDataFetcher.getLocation(7.0416, 50.8998);
-		Location berlin = geoDataFetcher.getLocation(13.2905, 52.4827);
-		Location mannheim = geoDataFetcher.getLocation(8.5316, 49.5121);
-		Location californien = geoDataFetcher.getLocation(-76.5312, 38.3006);
+		Location hennef = geoDataFetcher.getLocation(7.2914, 50.7699,description);
+		Location siegburg = geoDataFetcher.getLocation(7.2234, 50.8027,description);
+		Location kšln = geoDataFetcher.getLocation(7.0416, 50.8998,description);
+		Location berlin = geoDataFetcher.getLocation(13.2905, 52.4827,description);
+		Location mannheim = geoDataFetcher.getLocation(8.5316, 49.5121,description);
+		Location californien = geoDataFetcher.getLocation(-76.5312, 38.3006,description);
 
 		// compare hennef with hennef
 		CompareResult compareResult = locationComparator

@@ -10,19 +10,19 @@ import de.uni.mannheim.semantic.model.Location;
 public class FetchGeoDataTest {
 	
 	private FetchGeoData fetcher = new FetchGeoData();
-	
+	private String description = "Test-Location";
 	@Test
 	public void testGetLocationString() {
-		Location location = fetcher.getLocation(null);
+		Location location = fetcher.getLocation(null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("");
+		location = fetcher.getLocation("",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("213wddas32");
+		location = fetcher.getLocation("213wddas32",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("Hennef");
+		location = fetcher.getLocation("Hennef",description);
 		assertEquals("Germany", location.getCountry());
 		assertEquals("53773", location.getPostalCode());
 		assertEquals("North Rhine-Westphalia", location.getState());
@@ -33,34 +33,34 @@ public class FetchGeoDataTest {
 
 	@Test
 	public void testGetLocationStringString() {
-		Location location = fetcher.getLocation(null, "");
+		Location location = fetcher.getLocation(null, "",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("", "");
+		location = fetcher.getLocation("", "",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("", null);
+		location = fetcher.getLocation("", null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("7.283333000000001", null);
+		location = fetcher.getLocation("7.283333000000001", null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(null, "50.773");
+		location = fetcher.getLocation(null, "50.773",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("7.283333000000001", "");
+		location = fetcher.getLocation("7.283333000000001", "",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("", "50.773");
+		location = fetcher.getLocation("", "50.773",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("0", "0");
+		location = fetcher.getLocation("0", "0",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("-123124121.123", "-123332223.122");
+		location = fetcher.getLocation("-123124121.123", "-123332223.122",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("7.283333000000001", "50.773");
+		location = fetcher.getLocation("7.283333000000001", "50.773",description);
 		assertEquals("Germany", location.getCountry());
 		assertEquals("53773", location.getPostalCode());
 		assertEquals("North Rhine-Westphalia", location.getState());
@@ -70,26 +70,26 @@ public class FetchGeoDataTest {
 
 	@Test
 	public void testGetLocationDoubleDouble() {
-		Location location = fetcher.getLocation(new Double(23), null);
+		Location location = fetcher.getLocation(new Double(23), null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(null, new Double(42));
+		location = fetcher.getLocation(null, new Double(42),description);
 		assertNull(location);
 		
 		
-		location = fetcher.getLocation(7.283333000000001, null);
+		location = fetcher.getLocation(7.283333000000001, null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(null, 50.773);
+		location = fetcher.getLocation(null, 50.773,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(0.0, 0.0);
+		location = fetcher.getLocation(0.0, 0.0,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(-123124121.123, -123332223.122);
+		location = fetcher.getLocation(-123124121.123, -123332223.122,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(7.283333000000001, 50.773);
+		location = fetcher.getLocation(7.283333000000001, 50.773,description);
 		assertEquals("Germany", location.getCountry());
 		assertEquals("53773", location.getPostalCode());
 		assertEquals("North Rhine-Westphalia", location.getState());

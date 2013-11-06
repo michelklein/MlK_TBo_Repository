@@ -14,7 +14,7 @@ import de.uni.mannheim.semantic.model.Location;
 
 public class FetchGeoData {
 
-	public Location getLocation(String name) {
+	public Location getLocation(String name, String description) {
 		if (name == null) {
 			return null;
 		}
@@ -22,24 +22,29 @@ public class FetchGeoData {
 		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder()
 				.setAddress(name).setLanguage("en").getGeocoderRequest();
 		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-		if (geocoderResponse != null && geocoderResponse.getResults() != null && geocoderResponse.getResults().size() > 0) {
+		if (geocoderResponse != null && geocoderResponse.getResults() != null
+				&& geocoderResponse.getResults().size() > 0) {
 			GeocoderGeometry geometry = geocoderResponse.getResults().get(0)
 					.getGeometry();
-			return getLocation(geometry.getLocation().getLng().doubleValue(), geometry.getLocation().getLat().doubleValue());
+			return getLocation(geometry.getLocation().getLng().doubleValue(),
+					geometry.getLocation().getLat().doubleValue(), description);
 		} else {
 			return null;
 		}
 	}
 
-	public Location getLocation(String longitude, String latitude) {
+	public Location getLocation(String longitude, String latitude,
+			String description) {
 		if (longitude == null || latitude == null || longitude == ""
 				|| latitude == "") {
 			return null;
 		}
-		return getLocation(Double.valueOf(longitude), Double.valueOf(latitude));
+		return getLocation(Double.valueOf(longitude), Double.valueOf(latitude),
+				description);
 	}
 
-	public Location getLocation(Double longitude, Double latitude) {
+	public Location getLocation(Double longitude, Double latitude,
+			String description) {
 		if (longitude == null || latitude == null) {
 			return null;
 		}
@@ -50,11 +55,13 @@ public class FetchGeoData {
 								.valueOf(longitude))).setLanguage("en")
 				.getGeocoderRequest();
 		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-		return getLocationForGeoResponse(geocoderResponse, longitude, latitude);
+		return getLocationForGeoResponse(geocoderResponse, longitude, latitude,
+				description);
 	}
 
 	private Location getLocationForGeoResponse(
-			GeocodeResponse geocoderResponse, Double longitude, Double latitude) {
+			GeocodeResponse geocoderResponse, Double longitude,
+			Double latitude, String description) {
 		String placeName = null;
 		String postalCode = null;
 		String state = null;
@@ -62,10 +69,10 @@ public class FetchGeoData {
 		Double lgn = longitude;
 		Double lat = latitude;
 
-		if(geocoderResponse.getStatus().equals(GeocoderStatus.ZERO_RESULTS)) {
+		if (geocoderResponse.getStatus().equals(GeocoderStatus.ZERO_RESULTS)) {
 			return null;
 		}
-		
+
 		for (GeocoderResult result : geocoderResponse.getResults()) {
 			for (GeocoderAddressComponent address : result
 					.getAddressComponents()) {
@@ -94,7 +101,7 @@ public class FetchGeoData {
 			}
 		}
 		return new Location(lgn, lat, placeName, null, country, state,
-				postalCode);
+				postalCode, description);
 	}
 
 }

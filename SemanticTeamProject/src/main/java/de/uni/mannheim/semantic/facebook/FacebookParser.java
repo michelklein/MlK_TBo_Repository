@@ -53,12 +53,12 @@ public class FacebookParser {
 			// Home
 			IdNameEntity hometown = fb.getMe().getHometown();
 			if (hometown != null) {
-				home = parseInstitution(hometown.getId());
+				home = parseInstitution(hometown.getId(), Location.BIRTHPLACE);
 			}
 
 			IdNameEntity locationTmp = fb.getMe().getLocation();
 			if (locationTmp != null) {
-				location = parseInstitution(locationTmp.getId());
+				location = parseInstitution(locationTmp.getId(), Location.CURRENT_LOCATION);
 			}
 
 			// Interest
@@ -70,7 +70,7 @@ public class FacebookParser {
 			// CurrLocation
 			ResponseList<Checkin> checkins = fb.getCheckins();
 			if (checkins != null && checkins.size() > 0) {
-				currLocation = parseInstitution(checkins.get(0).getId());
+				currLocation = parseInstitution(checkins.get(0).getId(), Location.CURRENT_LOCATION);
 			}
 
 			// education
@@ -78,7 +78,7 @@ public class FacebookParser {
 			List<Education> educations = fb.getMe().getEducation();
 			if (educations != null) {
 				for (Education i : educations) {
-					education.add(parseInstitution(i.getSchool().getId()));
+					education.add(parseInstitution(i.getSchool().getId(), Location.EDUCATIONPLACE));
 				}
 			}
 
@@ -87,7 +87,7 @@ public class FacebookParser {
 			List<Work> work = fb.getMe().getWork();
 			if (work != null) {
 				for (Work w : work) {
-					employer.add(parseInstitution(w.getEmployer().getId()));
+					employer.add(parseInstitution(w.getEmployer().getId(), Location.WORKPLACE));
 
 				}
 			}
@@ -181,7 +181,7 @@ public class FacebookParser {
 
 	}
 
-	private Institution parseInstitution(String id) {
+	private Institution parseInstitution(String id, String description) {
 		Page p;
 		try {
 			p = fb.getPage(id);
@@ -189,9 +189,9 @@ public class FacebookParser {
 			facebook4j.Place.Location location = p.getLocation();
 			if (location != null) {
 				Location loc = geocoding.getLocation(location.getLongitude(),
-						location.getLatitude());
+						location.getLatitude(), description);
 				if(loc == null) {
-					loc = geocoding.getLocation(location.getCity());
+					loc = geocoding.getLocation(location.getCity(), description);
 				}
 				return new Institution(name, loc);
 			}

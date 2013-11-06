@@ -2,6 +2,12 @@ package de.uni.mannheim.semantic.model;
 
 public class Location {
 
+	public static final String BIRTHPLACE = "Birthplace";
+	public static final String DEATHPLACE = "Deathplace";
+	public static final String WORKPLACE = "Workplace";
+	public static final String EDUCATIONPLACE = "Educationplace";
+	public static final String CURRENT_LOCATION = "Current Location";
+	
 	private Double longitude;
 	private Double latitude;
 	private String name;
@@ -12,7 +18,8 @@ public class Location {
 	private String formattedLocation;
 
 	public Location(Double longitude, Double latitude, String name,
-			String continent, String country, String state, String postalCode) {
+			String continent, String country, String state, String postalCode,
+			String description) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.name = name;
@@ -20,8 +27,13 @@ public class Location {
 		this.state = state;
 		this.continent = continent;
 		this.postalCode = postalCode;
-		formattedLocation = String.format("%s %s, %s", postalCode, name,
-				country);
+		if (description != null) {
+			formattedLocation = String.format("%s: %s %s, %s", description, postalCode, name,
+					country);
+		} else {
+			formattedLocation = String.format("%s %s, %s", postalCode, name,
+					country);
+		}
 	}
 
 	public Double getLongitude() {

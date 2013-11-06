@@ -39,7 +39,8 @@ public class CelebritiesFetcher {
 	private FetchGeoData geocoding = new FetchGeoData();
 
 	public static void main(String[] args) throws IOException {
-		// CelebritiesFetcher.get().getCelebrity("Arnold Schwarzenegger");
+		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
+		CelebritiesFetcher.get().getCelebrityLocations("Arnold Schwarzenegger");
 		CelebritiesFetcher.get().getCelebrityLocations("Konrad Adenauer");
 	}
 
@@ -76,13 +77,13 @@ public class CelebritiesFetcher {
 			surname = gll(s, "surname");
 			date = gll(s, "date");
 			tn = g(s, "thumbnail");
-			String resName = s
-					.get("birthPlace")
-					.toString()
-					.substring(
-							s.get("birthPlace").toString().lastIndexOf("/") + 1);
-			Location location = geocoding.getLocation(resName);
-			home = new Institution(gll(s, "label"), location);
+//			String resName = s
+//					.get("birthPlace")
+//					.toString()
+//					.substring(
+//							s.get("birthPlace").toString().lastIndexOf("/") + 1);
+//			Location location = geocoding.getLocation(resName);
+//			home = new Institution(gll(s, "label"), location);
 			if (first) {
 				givenName = gll(s, "givenName");
 				surname = gll(s, "surname");
@@ -182,48 +183,39 @@ public class CelebritiesFetcher {
 		return rs;
 	}
 
-	private ResultSet getCelebrityLocations(String celName) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-				.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>")
-				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("SELECT DISTINCT ?birthPlace ?deathPlace ")
-				.append("WHERE { ?p a dbpedia-owl:Person. ?p rdfs:label ?name.")
-				.append("OPTIONAL {{?p dbpedia-owl:birthPlace ?birthPlace.}")
-				.append("UNION {?p dbpprop:birthPlace ?birthPlace.} ")
-				// .append("?birthPlace rdfs:label ?bname")
-				.append("}")
-				.append("OPTIONAL {{?p dbpedia-owl:deathPlace ?deathPlace.}")
-				.append("UNION {?p dbpprop:deathPlace ?deathPlace.} ")
-				// .append("?deathPlace rdfs:label ?dname")
-				.append("}")
-				.append("FILTER (?name='" + celName + "'@en)")
-				.append("FILTER(NOT EXISTS {?birthPlace a dbpedia-owl:Country}) ")
-				.append("FILTER(NOT EXISTS {?deathPlace a dbpedia-owl:Country})")
-				// .append("FILTER langMatches(lang(?bname), 'EN' ) ")
-				// .append("FILTER langMatches(lang(?dname), 'EN' )")
-				.append("}");
-		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
+	private List<Location> getCelebrityLocations(String celebrityName) {
+		List<Location> locations = new ArrayList<Location>();
+		ResultSet rs = execute("http://dbpedia.org/sparql",
+				QueryHelper.getBirthplaceDeathplaceQuery(celebrityName));
 
+		// extract birthplace and deathplace
 		while (rs.hasNext()) {
+			Location loc = null;
 			QuerySolution s = rs.nextSolution();
-			RDFNode birthPlace = s.get("birthPlace");
-			System.out.println(geocoding.getLocation(getNodeName(birthPlace)));
-			RDFNode deathPlace = s.get("deathPlace");
-			System.out.println(geocoding.getLocation(getNodeName(deathPlace)));
+			RDFNode birthPlaceNode = s.get("bname");
+			if (birthPlaceNode != null)
+				loc = geocoding.getLocation(getNodeName(birthPlaceNode),
+						Location.BIRTHPLACE);
+			RDFNode deathPlaceNode = s.get("dname");
+			if (deathPlaceNode != null)
+				loc = geocoding.getLocation(getNodeName(deathPlaceNode),
+						Location.DEATHPLACE);
+
+			if (loc != null) {
+				locations.add(loc);
+			}
 		}
 
-		return rs;
+		return locations;
 	}
-	
+
 	private String getNodeName(RDFNode node) {
-		if(node.isResource()) {
+		if (node.isResource()) {
 			return node.asResource().getLocalName();
 		} else if (node.isLiteral()) {
 			return node.asNode().getLiteralLexicalForm();
 		}
-		
+
 		return null;
 	}
 
@@ -293,28 +285,6 @@ public class CelebritiesFetcher {
 			System.out.println("IO Error Occurred: " + e.toString());
 		}
 		return g;
-	}
-
-	private ResultSet getInstitutionInfos(RDFNode rdfNode) {
-
-		String resName = rdfNode.toString().substring(
-				rdfNode.toString().lastIndexOf("/") + 1);
-		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				// .append("PREFIX bif: <http://www.openlinksw.com/schema/sparql/extensions#>")
-				.append("Prefix geo: <http://www.w3.org/2003/01/geo/wgs84_pos#>")
-				.append("prefix dbpedia2: <http://dbpedia.org/property/>")
-				.append("SELECT DISTINCT *").append("WHERE {")
-				.append("?p geo:long ?long.").append("?p geo:lat ?lat.")
-				.append("?p rdfs:label ?label.")
-				.append("FILTER (?label='" + resName + "'@en)")
-				.append("}LIMIT 1");
-		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-
-		return rs;
-
 	}
 
 	private String gll(QuerySolution s, String string) {
