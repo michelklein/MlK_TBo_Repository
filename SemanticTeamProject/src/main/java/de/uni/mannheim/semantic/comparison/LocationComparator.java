@@ -6,11 +6,15 @@ import de.uni.mannheim.semantic.model.Location;
 public class LocationComparator extends AbstractComparator<Location> {
 
 	private static final int EARTH_RADIUS = 6371;
-	private static final int DISTANCE_PERCENT = 50;
+	private static final int DISTANCE_PERCENT = 40;
 	private static final int COUNTRY_PERCENT = 10;
 	private static final int STATE_PERCENT = 15;
 	private static final int POSTAL_CODE_PERCENT = 25;
-	private static final int MAX_DISTANCE = EARTH_RADIUS / 2;
+	private static final int TIMEZONE_PERCENT = 10;
+	private static final int MAX_DISTANCE = 20000;
+	private static final int MAX_TIMEZONE_DIFFERNCE = 24;
+
+	private PostalCodeComparator postalCodeComparator = new PostalCodeComparator();
 
 	@Override
 	public CompareResult compare(Location o1, Location o2) {
@@ -18,7 +22,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 		this.o2 = o2;
 		result = new CompareResult();
 		result.setDescription("Overall");
-		
+
 		// Distance
 		float distance = calculateDistance(o1, o2);
 		float percent = 0;
@@ -28,20 +32,30 @@ public class LocationComparator extends AbstractComparator<Location> {
 			float distancePercent = ((float) (100f / MAX_DISTANCE) * difference) / 100;
 			percent = DISTANCE_PERCENT * distancePercent;
 		}
-		result.getSubresults().add(
-				new CompareResult((int) percent, "Distance"));
+		result.getSubresults()
+				.add(new CompareResult((int) percent, "Distance"));
 		result.setValue((int) (result.getValue() + percent));
 
 		// country
 		compareHelper(o1.getCountry(), o2.getCountry(), COUNTRY_PERCENT,
 				"Country", result);
 		// state
-		compareHelper(o1.getState(), o2.getState(), STATE_PERCENT,
-				"State", result);
-		// postal code
-		compareHelper(o1.getPostalCode(), o2.getPostalCode(), POSTAL_CODE_PERCENT,
-				"Postal Code", result);
+		compareHelper(o1.getState(), o2.getState(), STATE_PERCENT, "State",
+				result);
 
+		// postal code
+		CompareResult postalCodeResult = postalCodeComparator.compare(
+				o1.getPostalCode(), o2.getPostalCode());
+		result.getSubresults().add(postalCodeResult);
+		result.setValue((int) (result.getValue() + postalCodeResult.getValue()));
+
+		// time zone
+		int difference = o1.getOffsetUTC() - o2.getOffsetUTC();
+		percent = (((float) MAX_TIMEZONE_DIFFERNCE - (float) difference) / (float) MAX_TIMEZONE_DIFFERNCE);
+		float timeZoneValue = percent * TIMEZONE_PERCENT;
+		result.getSubresults()
+				.add(new CompareResult((int) timeZoneValue, "Timezone"));
+		result.setValue((int) (result.getValue() + timeZoneValue));
 		return result;
 	}
 
@@ -62,6 +76,35 @@ public class LocationComparator extends AbstractComparator<Location> {
 		float c = (float) (2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
 		float d = EARTH_RADIUS * c;
 		return d;
+	}
+
+	private class PostalCodeComparator extends AbstractComparator<String> {
+
+		@Override
+		public CompareResult compare(String o1, String o2) {
+			result = new CompareResult();
+			result.setDescription("Postal Code");
+			int count = sameLetters(o1, o2);
+			float ko = (float) count / (float) o1.length();
+			result.setValue((int) (POSTAL_CODE_PERCENT * ko));
+			return result;
+		}
+
+		private int sameLetters(String o1, String o2) {
+			int count = 0;
+			if (o1.length() != o2.length()) {
+				return count;
+			}
+			for (int i = 0; i < o1.length(); i++) {
+				if (o1.charAt(i) == o2.charAt(i)) {
+					count++;
+				} else {
+					return count;
+				}
+			}
+			return count;
+		}
+
 	}
 
 }

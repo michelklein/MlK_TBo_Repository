@@ -9,7 +9,7 @@ public abstract class AbstractComparator<T extends Object> {
 	protected T o1;
 	protected T o2;
 	protected CompareResult result;
-	
+
 	protected void compareHelper(int val1, int val2, int percent,
 			String description, CompareResult result) {
 		int tempResult = val1 == val2 ? percent : 0;
@@ -22,20 +22,22 @@ public abstract class AbstractComparator<T extends Object> {
 
 		if (val1 == null || val2 == null) {
 			result.getSubresults().add(new CompareResult(0, description));
-		}
+		} else {
 
-		int tempResult = val1.equalsIgnoreCase(val2) ? percent : 0;
-		result.setValue(result.getValue() + tempResult);
-		result.getSubresults().add(new CompareResult(tempResult, description));
+			int tempResult = val1.equalsIgnoreCase(val2) ? percent : 0;
+			result.setValue(result.getValue() + tempResult);
+			result.getSubresults().add(
+					new CompareResult(tempResult, description));
+		}
 	}
-	
+
 	public void print() {
-		printDates(o1, o2);
+		printObjects(o1, o2);
 		printResult(result);
 		System.out.println("\n\n");
 	}
 
-	public void printDates(T o1, T o2) {
+	public void printObjects(T o1, T o2) {
 		System.out.println(String.format("Compare: %s and %s", o1, o2));
 	}
 

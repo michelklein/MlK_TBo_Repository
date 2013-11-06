@@ -10,23 +10,23 @@ public class Location {
 	
 	private Double longitude;
 	private Double latitude;
+	private Integer offsetUTC;
 	private String name;
 	private String country;
 	private String state;
-	private String continent;
 	private String postalCode;
 	private String formattedLocation;
 
 	public Location(Double longitude, Double latitude, String name,
-			String continent, String country, String state, String postalCode,
+			String country, String state, String postalCode, Integer offsetUTC,
 			String description) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.name = name;
 		this.country = country;
 		this.state = state;
-		this.continent = continent;
 		this.postalCode = postalCode;
+		this.offsetUTC = offsetUTC;
 		if (description != null) {
 			formattedLocation = String.format("%s: %s %s, %s", description, postalCode, name,
 					country);
@@ -76,14 +76,6 @@ public class Location {
 		this.state = state;
 	}
 
-	public String getContinent() {
-		return continent;
-	}
-
-	public void setContinent(String continent) {
-		this.continent = continent;
-	}
-
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -131,7 +123,10 @@ public class Location {
 			return false;
 		return true;
 	}
-	
+
+	public Integer getOffsetUTC() {
+		return offsetUTC;
+	}
 	
 
 }
