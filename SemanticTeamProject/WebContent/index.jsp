@@ -112,8 +112,7 @@
 				<div class="col-md-6">
 
 					<div class="progress progress_age" data-toggle="tooltip"
-						data-html="true">
-					</div>
+						data-html="true"></div>
 				</div>
 				<div id="attr_age_celebrity" class="col-md-2 textAlignRight"></div>
 			</div>
@@ -183,9 +182,7 @@
 				<div id="attr_movie1_user" class="col-md-2"></div>
 				<div class="col-md-6">
 					<div class="progress progress_movie1" data-toggle="tooltip"
-						data-html="true" data-original-title="Default tooltip">
-						
-					</div>
+						data-html="true" data-original-title="Default tooltip"></div>
 				</div>
 				<div id="attr_movie1_celebrity" class="col-md-2 textAlignRight"></div>
 			</div>
@@ -202,62 +199,63 @@
 						var $typeahead = $(this);
 						$.getJSON("fetchData?op=celebrity&name="
 								+ $typeahead.val(), function(data) {
-							var json = data;
-							console.debug(data);
-							$("#celebrityImage").attr('src',
-									json.celebrity.imageURL);
-							$("#celebrityFirstname").html(
-									json.celebrity.firstname);
-							$("#celebrityLastname").html(
-									json.celebrity.lastname);
-							$("#attr_age_celebrity").html(
-									json.celebrity.formattedBirthday);
-							
-							
-							$.each(json.ageCompResult.subresults, function() {
-								if (this.value != 0) 
-								$(".progress_age").append("<div class='progress-bar' style='width:"+this.value + "%'><span class='sr-only'>"+this.value + "%"+"</span></div>");
-							});
-							$(".progress_age").attr('data-original-title',
-									json.ageCompResult.HTML);
-							
-							
-							
-							
-							
-							
-							$("#attr_loc1_celebrity").html(
-									json.celebrity.formattedloc);
-							$("#progress_loc1").width(
-									json.locResult.value + "%");
-							$("#progress_loc1 > .sr-only").html(
-									json.locResult.value + "%");
-							$(".progress_loc1").attr('data-original-title',
-									json.locResult.HTML);
-							
-							
-							$.each(json.movieResult[0].subresults, function() {
-								if (this.value != 0) 
-								$(".progress_movie1").append("<div class='progress-bar' style='width:"+this.value + "%'><span class='sr-only'>"+this.value + "%"+"</span></div>");
-							});
-							
-								$(".progress_movie1").attr('data-original-title',
-									json.movieResult.HTML);
-							
-
-							if (json.ageCompResult.value == 0) {
-								$("#progress_age > .sr-only").addClass(
-										"noResult");
-							} else {
-								$("#progress_age > .sr-only").removeClass(
-										"noResult");
-							}
-
+							doShit(data);
 						});
 
-						$("[data-toggle='tooltip']").tooltip();
-						setTimeout(function() {$("#progress-bar").addClass('progress-bar')}, 1); 
 					});
+
+			function doShit(data) {
+				var json = data;
+				console.debug(data);
+				$("#celebrityImage").attr('src', json.celebrity.imageURL);
+				$("#celebrityFirstname").html(json.celebrity.firstname);
+				$("#celebrityLastname").html(json.celebrity.lastname);
+				$("#attr_age_celebrity").html(json.celebrity.formattedBirthday);
+
+				$.each(json.ageCompResult.subresults, function() {
+					if (this.value != 0){
+						$(".progress_age").append(
+								"<div class='progress-bar'  style='width:0%'><span class='sr-only'>"
+										+ this.value + "%" + "</span></div>");
+						$(".progress_age div:last").width(this.value+"%");
+					}
+				});
+				$(".progress_age").attr('data-original-title',
+						json.ageCompResult.HTML);
+
+				$("#attr_loc1_celebrity").html(json.celebrity.formattedloc);
+				$("#progress_loc1").width(json.locResult.value + "%");
+				$("#progress_loc1 > .sr-only").html(json.locResult.value + "%");
+				$(".progress_loc1").attr('data-original-title',
+						json.locResult.HTML);
+
+				$.each(json.movieResult[0].subresults, function() {
+					if (this.value != 0)
+						$(".progress_movie1").append(
+								"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+										+ this.value + "%" + "</span></div>");
+											
+											$(".progress_movie1").last().animate({ width: '10%' }, 'slow');
+											
+				});
+
+				$(".progress_movie1").attr('data-original-title',
+						json.movieResult.HTML);
+
+				if (json.ageCompResult.value == 0) {
+					$("#progress_age > .sr-only").addClass("noResult");
+				} else {
+					$("#progress_age > .sr-only").removeClass("noResult");
+				}
+				$("[data-toggle='tooltip']").tooltip();
+
+				$(".progress-bar").each(function() {
+					$(this).removeClass('progress-bar').fadeIn(500, function() {
+						$(this).addClass('progress-bar');
+					});
+
+				});
+			}
 		</script>
 
 	</tag:loggedin>
