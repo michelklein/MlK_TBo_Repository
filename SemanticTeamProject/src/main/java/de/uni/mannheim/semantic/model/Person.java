@@ -18,9 +18,9 @@ public class Person extends AbstractToJson {
 	private String imageURL;
 	private Date birthdate;
 	private List<Interest> interests;
-	List<Location> locations;
+	private Set<Location> locations;
 
-	public Person(String firstname, String lastname, Date birthdate, List<Location> locations,
+	public Person(String firstname, String lastname, Date birthdate, Set<Location> locations,
 			List<Interest> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
@@ -31,7 +31,7 @@ public class Person extends AbstractToJson {
 		this.locations = locations;
 	}
 	
-	public Person(String firstname, String lastname, String birthdate, List<Location> locations,
+	public Person(String firstname, String lastname, String birthdate, Set<Location> locations,
 			List<Interest> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
@@ -59,6 +59,9 @@ public class Person extends AbstractToJson {
 		return birthdate;
 	}
 
+	public Set<Location> getLocations() {
+		return locations;
+	}
 
 	/* GUI Functions */
 

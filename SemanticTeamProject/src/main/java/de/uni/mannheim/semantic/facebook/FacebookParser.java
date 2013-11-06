@@ -37,7 +37,7 @@ public class FacebookParser {
 
 	public Person parseFacebookPerson() {
 		Person person = null;
-		List<Location> locations = new ArrayList<Location>();
+		Set<Location> locations = new HashSet<Location>();
 		try {
 			// Picture
 			// String picURL = fb.getPictureURL(PictureSize.large).toString();

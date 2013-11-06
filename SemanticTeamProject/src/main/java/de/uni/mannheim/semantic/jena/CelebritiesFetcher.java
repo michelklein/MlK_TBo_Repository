@@ -37,7 +37,7 @@ public class CelebritiesFetcher {
 
 	public static void main(String[] args) throws IOException {
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-		List<Location> celebrityLocations = CelebritiesFetcher.get()
+		Set<Location> celebrityLocations = CelebritiesFetcher.get()
 				.getCelebrityLocations("Arnold Schwarzenegger");
 		System.out.println("Arnold");
 		for (Location loc : celebrityLocations) {
@@ -189,8 +189,8 @@ public class CelebritiesFetcher {
 		return rs;
 	}
 
-	private List<Location> getCelebrityLocations(String celebrityName) {
-		List<Location> locations = new ArrayList<Location>();
+	private Set<Location> getCelebrityLocations(String celebrityName) {
+		Set<Location> locations = new HashSet<Location>();
 		ResultSet rs = execute("http://dbpedia.org/sparql",
 				QueryHelper.getBirthplaceDeathplaceQuery(celebrityName));
 
