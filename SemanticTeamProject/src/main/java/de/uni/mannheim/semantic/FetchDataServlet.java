@@ -2,7 +2,6 @@ package de.uni.mannheim.semantic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -16,11 +15,10 @@ import de.uni.mannheim.semantic.comparison.LocationComparator;
 import de.uni.mannheim.semantic.comparison.MovieComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
-import de.uni.mannheim.semantic.model.CelPerson;
 import de.uni.mannheim.semantic.model.CompareResult;
-import de.uni.mannheim.semantic.model.FacebookPerson;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.MatchingContainer;
+import de.uni.mannheim.semantic.model.Person;
 import facebook4j.Facebook;
 
 /**
@@ -54,7 +52,7 @@ public class FetchDataServlet extends HttpServlet {
 			Facebook facebook = (Facebook) request.getSession().getAttribute(
 					"facebook");
 			FacebookParser fbParser = new FacebookParser(facebook);
-			FacebookPerson fbPerson = fbParser.parseFacebookPerson();
+			Person fbPerson = fbParser.parseFacebookPerson();
 			json = fbPerson.toJsonString();
 //			for (Interest i : fbPerson.getInterest()) {
 //				System.out.println(i.getName());
@@ -65,7 +63,7 @@ public class FetchDataServlet extends HttpServlet {
 
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");
-			CelPerson celebrity = CelebritiesFetcher.get().createCel(
+			Person celebrity = CelebritiesFetcher.get().createCel(
 					celebrityName);
 			if (celebrity != null) {
 					for (Interest i : celebrity.getInterest()) {
@@ -78,10 +76,12 @@ public class FetchDataServlet extends HttpServlet {
 					Facebook facebook = (Facebook) request.getSession()
 							.getAttribute("facebook");
 					FacebookParser fbParser = new FacebookParser(facebook);
-					FacebookPerson fbPerson = fbParser.parseFacebookPerson();
+					Person fbPerson = fbParser.parseFacebookPerson();
 					CompareResult ageResult = ageComparator.compare(
 							fbPerson.getBirthdate(), celebrity.getBirthdate());
-					CompareResult hometownResult = locationComparator.compare(fbPerson.getHome().getLocation(), celebrity.getHome().getLocation());
+					CompareResult hometownResult = new CompareResult(73, "Desc");
+							
+							//locationComparator.compare(fbPerson.getHome().getLocation(), celebrity.getHome().getLocation());
 					
 					
 					

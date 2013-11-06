@@ -24,11 +24,8 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import com.hp.hpl.jena.sparql.pfunction.library.container;
 
 import de.uni.mannheim.semantic.FetchGeoData;
-import de.uni.mannheim.semantic.model.CelPerson;
-import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
@@ -40,8 +37,18 @@ public class CelebritiesFetcher {
 
 	public static void main(String[] args) throws IOException {
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-		CelebritiesFetcher.get().getCelebrityLocations("Arnold Schwarzenegger");
-		CelebritiesFetcher.get().getCelebrityLocations("Konrad Adenauer");
+		List<Location> celebrityLocations = CelebritiesFetcher.get()
+				.getCelebrityLocations("Arnold Schwarzenegger");
+		System.out.println("Arnold");
+		for (Location loc : celebrityLocations) {
+			System.out.println(loc.toString());
+		}
+		celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
+				"Konrad Adenauer");
+		System.out.println("Konni");
+		for (Location loc : celebrityLocations) {
+			System.out.println(loc.toString());
+		}
 	}
 
 	private static CelebritiesFetcher instance;
@@ -57,8 +64,8 @@ public class CelebritiesFetcher {
 		return instance;
 	}
 
-	public CelPerson createCel(String name) {
-		CelPerson p = null;
+	public Person createCel(String name) {
+		Person p = null;
 		String givenName = "";
 		String surname = "";
 		String date = "";
@@ -67,7 +74,6 @@ public class CelebritiesFetcher {
 		String personIdent = "";
 		RDFNode birthplace = null;
 		boolean first = true;
-		Institution home = null;
 		List<Interest> interests = new ArrayList<Interest>();
 		ResultSet resSet = getCelebrityBasicInfo(name);
 
@@ -77,13 +83,13 @@ public class CelebritiesFetcher {
 			surname = gll(s, "surname");
 			date = gll(s, "date");
 			tn = g(s, "thumbnail");
-//			String resName = s
-//					.get("birthPlace")
-//					.toString()
-//					.substring(
-//							s.get("birthPlace").toString().lastIndexOf("/") + 1);
-//			Location location = geocoding.getLocation(resName);
-//			home = new Institution(gll(s, "label"), location);
+			// String resName = s
+			// .get("birthPlace")
+			// .toString()
+			// .substring(
+			// s.get("birthPlace").toString().lastIndexOf("/") + 1);
+			// Location location = geocoding.getLocation(resName);
+			// home = new Institution(gll(s, "label"), location);
 			if (first) {
 				givenName = gll(s, "givenName");
 				surname = gll(s, "surname");
@@ -139,8 +145,8 @@ public class CelebritiesFetcher {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 			try {
-				p = new CelPerson(givenName, surname, home, null,
-						df.parse(date), null, null, null, interests, tn);
+				p = new Person(givenName, surname, df.parse(date),
+						getCelebrityLocations(name), interests, tn);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -193,13 +199,34 @@ public class CelebritiesFetcher {
 			Location loc = null;
 			QuerySolution s = rs.nextSolution();
 			RDFNode birthPlaceNode = s.get("bname");
-			if (birthPlaceNode != null)
+			if (birthPlaceNode != null) {
 				loc = geocoding.getLocation(getNodeName(birthPlaceNode),
 						Location.BIRTHPLACE);
+				if (loc != null) {
+					locations.add(loc);
+				}
+			}
 			RDFNode deathPlaceNode = s.get("dname");
-			if (deathPlaceNode != null)
+			if (deathPlaceNode != null) {
 				loc = geocoding.getLocation(getNodeName(deathPlaceNode),
 						Location.DEATHPLACE);
+				if (loc != null) {
+					locations.add(loc);
+				}
+			}
+		}
+
+		rs = execute("http://dbpedia.org/sparql",
+				QueryHelper.getAlmaMataQuery(celebrityName));
+
+		// extract university locations
+		while (rs.hasNext()) {
+			Location loc = null;
+			QuerySolution s = rs.nextSolution();
+			RDFNode birthPlaceNode = s.get("uniName");
+			if (birthPlaceNode != null)
+				loc = geocoding.getLocation(getNodeName(birthPlaceNode),
+						Location.EDUCATIONPLACE);
 
 			if (loc != null) {
 				locations.add(loc);
@@ -328,8 +355,8 @@ public class CelebritiesFetcher {
 				lastName = x.asNode().getLiteralLexicalForm();
 				x = soln.get("birthdate"); // Get a result variable by name.
 				date = x.asNode().getLiteralLexicalForm();
-				result.add(new Person(firstName, lastName, null, null, date,
-						null, null, null));
+				result.add(new Person(firstName, lastName, date, null, null,
+						null));
 			}
 			ResultSetFormatter.out(System.out, rs, query);
 			// System.out.println(result);

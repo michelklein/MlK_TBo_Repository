@@ -3,7 +3,9 @@ package de.uni.mannheim.semantic.model;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Person extends AbstractToJson {
 	private static SimpleDateFormat sdfToDate = new SimpleDateFormat(
@@ -15,48 +17,33 @@ public class Person extends AbstractToJson {
 	private String lastname;
 	private String imageURL;
 	private Date birthdate;
-	private Institution currentLocation;
-	private Institution home;
-	private Institution location;
-	private List<Institution> education;
-	private List<Institution> employer;
 	private List<Interest> interests;
+	List<Location> locations;
 
-	public Person(String firstname, String lastname, Institution home,
-			Institution location, Date birthdate, Institution currentLocation,
-			List<Institution> education, List<Institution> employer,
+	public Person(String firstname, String lastname, Date birthdate, List<Location> locations,
 			List<Interest> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.home = home;
 		this.interests = interest;
 		this.birthdate = birthdate;
-		this.location = location;
-		this.currentLocation = currentLocation;
-		this.education = education;
-		this.employer = employer;
 		this.imageURL = imageURL;
+		this.locations = locations;
 	}
-
-	public Person(String firstname, String lastname, Institution home,
-			Institution birthplace, String birthdate, Institution currentLocation,
-			List<Institution> education, List<Institution> employer) {
+	
+	public Person(String firstname, String lastname, String birthdate, List<Location> locations,
+			List<Interest> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
-		this.home = home;
-		this.location = birthplace;
+		this.interests = interest;
+		this.imageURL = imageURL;
+		this.locations = locations;
 		try {
 			this.birthdate = sdfToDate.parse(birthdate);
 		} catch (ParseException e) {
-			// TODO catch and handle exception
 			e.printStackTrace();
 		}
-		this.currentLocation = currentLocation;
-		this.education = education;
-		this.employer = employer;
-
 	}
 
 	public String getFirstname() {
@@ -67,29 +54,11 @@ public class Person extends AbstractToJson {
 		return lastname;
 	}
 
-	public Institution getHome() {
-		return home;
-	}
-
-	public Institution getLocation() {
-		return location;
-	}
 
 	public Date getBirthdate() {
 		return birthdate;
 	}
 
-	public Institution getCurrLocation() {
-		return currentLocation;
-	}
-
-	public List<Institution> getEducation() {
-		return education;
-	}
-
-	public List<Institution> getEmployer() {
-		return employer;
-	}
 
 	/* GUI Functions */
 
@@ -97,17 +66,13 @@ public class Person extends AbstractToJson {
 		return sdfToDate2.format(birthdate).toString();
 	}
 	
-	public String getFormattedHometown() {
-		return home.getLocation().getFormattedLocation();
-	}
-
-	public String getFormattedLocs(List<Institution> i) {
-		String result = "";
-		for (Institution institution : i) {
-			result = result + institution.getName();
-		}
-		return result;
-	}
+//	public String getFormattedLocs(List<Institution> i) {
+//		String result = "";
+//		for (Institution institution : i) {
+//			result = result + institution.getName();
+//		}
+//		return result;
+//	}
 
 	public String toString() {
 		if (birthdate != null) {
@@ -125,6 +90,13 @@ public class Person extends AbstractToJson {
 	public String getImageURL() {
 		return imageURL;
 	}
-	
+	public Set<String> getAllGenres() {
+		Set<String> genreList = new HashSet<String>();
+		for (Interest i : getInterest()) {
+			if(!i.getGenre().equals(""))
+			genreList.addAll(i.getGenre());
+		}
+		return genreList;
+	}
 
 }

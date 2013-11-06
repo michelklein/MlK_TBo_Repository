@@ -5,12 +5,12 @@ import java.util.List;
 
 public class MatchingContainer extends AbstractToJson {
 
-	private CelPerson celebrity;
+	private Person celebrity;
 	private CompareResult ageCompResult;
 	private CompareResult LocResult;
 	private List<CompareResult> movieResult;
 	
-	public MatchingContainer(CelPerson celebrity, CompareResult ageCompResult, CompareResult locResult,List<CompareResult> movieResult) {
+	public MatchingContainer(Person celebrity, CompareResult ageCompResult, CompareResult locResult,List<CompareResult> movieResult) {
 		super();
 		this.celebrity = celebrity;
 		this.ageCompResult = ageCompResult;
@@ -18,10 +18,10 @@ public class MatchingContainer extends AbstractToJson {
 		this.setMovieResult(movieResult);
 	}
 	
-	public CelPerson getCelebrity() {
+	public Person getCelebrity() {
 		return celebrity;
 	}
-	public void setCelebrity(CelPerson celebrity) {
+	public void setCelebrity(Person celebrity) {
 		this.celebrity = celebrity;
 	}
 	public CompareResult getAgeCompResult() {
