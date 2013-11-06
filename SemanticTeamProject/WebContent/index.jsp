@@ -93,21 +93,7 @@
 		<div id="header">
 
 
-			<div id="search-bar">
-				<div class="input-group">
-					<input id="search-celebrity" type="text" class="form-control"
-						data-provide="typeahead" data-items="4"
-						placeholder="Type in your celebrity ..."> <span
-						class="input-group-addon"> <span
-						class="glyphicon glyphicon-search"></span>
-					</span><span class="input-group-addon"> <span
-						class="glyphicon glyphicon-refresh"
-						onclick="location.href='./magic'"></span>
-					</span><span class="input-group-addon"> <span
-						class="glyphicon glyphicon-off" onclick="location.href='./logout'"></span>
-					</span>
-				</div>
-			</div>
+		
 
 			<h1 class="headerText">
 				Celebritie comparison <small> You and your favourites</small>
@@ -130,7 +116,25 @@
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
 							<span id="celebrityFirstname" class="header-name header-bold"></span>
-							<span id="celebrityLastname" class="header-name"></span> <img
+							<span id="celebrityLastname" class="header-name"></span>
+							
+								<div id="search-bar">
+				<div class="input-group">
+					<input id="search-celebrity" type="text" class="form-control"
+						data-provide="typeahead" data-items="4"
+						placeholder="Type in your celebrity ..."> <span
+						class="input-group-addon"> <span
+						class="glyphicon glyphicon-search"></span>
+					</span><span class="input-group-addon"> <span
+						class="glyphicon glyphicon-refresh"
+						onclick="location.href='./magic'"></span>
+					</span><span class="input-group-addon"> <span
+						class="glyphicon glyphicon-off" onclick="location.href='./logout'"></span>
+					</span>
+				</div>
+			</div>
+							
+							<img
 								id="celebrityImage" src="images/defaultProfile.png"
 								class="img-rounded imageRight">
 						</div>
@@ -138,7 +142,7 @@
 				</div>
 			</div>
 			<div class="row">
-				<div id="attr_caption" class="col-md-1">Age:</div>
+				<div class="col-md-1 attr_caption">Birthdate:</div>
 				<div id="attr_age_user" class="col-md-2"></div>
 				<div class="col-md-6">
 
@@ -152,7 +156,6 @@
 
 			<div id="locations"></div>
 			<div id="movies"></div>
-
 
 
 
@@ -201,7 +204,7 @@
 						json.ageCompResult.HTML);
 
 				createDynMatch("#movies", json.movieResult);
-				createDynMatch("#locations", json.locations);
+				createDynMatch("#locations", json.locationResult);
 				function createDynMatch(id, baseData) {
 
 					$(id).empty();
@@ -216,14 +219,13 @@
 											$(id)
 													.append(
 															"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
-																	+ this.description
-																	+ "</div><div class='col-md-6'><div class='progress'></div></div>");
-
+																	+ this.o1
+																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div></div>");
 											$
 													.each(
 															this.subresults,
 															function() {
-
+																if (this.value != 0) {
 																$(id)
 																		.children()
 																		.last()
@@ -232,7 +234,7 @@
 																		.children()
 																		.last()
 																		.append(
-																				"<div class='progress-bar' data-toggle='tooltip' data-html='true' data-original-title='Default tooltip' style='width:0%'><span class='sr-only'>"
+																				"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
 																						+ this.value
 																						+ "%"
 																						+ "</span></div>");
@@ -248,19 +250,8 @@
 																		.width(
 																				this.value
 																						+ "%");
-																$(id)
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.children()
-																		.last()
-																		.attr(
-																				'data-original-title',
-																				this.description);
-
+																
+																}
 															});
 										}
 									});
