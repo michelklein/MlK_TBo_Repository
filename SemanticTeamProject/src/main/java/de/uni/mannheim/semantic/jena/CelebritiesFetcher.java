@@ -36,8 +36,24 @@ public class CelebritiesFetcher {
 	private FetchGeoData geocoding = new FetchGeoData();
 
 	public static void main(String[] args) throws IOException {
+<<<<<<< HEAD
 
 		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
+=======
+		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
+		Set<Location> celebrityLocations = CelebritiesFetcher.get()
+				.getCelebrityLocations("Arnold Schwarzenegger");
+		System.out.println("Arnold");
+		for (Location loc : celebrityLocations) {
+			System.out.println(loc.toString());
+		}
+		celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
+				"Konrad Adenauer");
+		System.out.println("Konni");
+		for (Location loc : celebrityLocations) {
+			System.out.println(loc.toString());
+		}
+>>>>>>> refs/remotes/origin/master
 	}
 
 	private static CelebritiesFetcher instance;
@@ -182,8 +198,8 @@ public class CelebritiesFetcher {
 		return rs;
 	}
 
-	private List<Location> getCelebrityLocations(String celebrityName) {
-		List<Location> locations = new ArrayList<Location>();
+	private Set<Location> getCelebrityLocations(String celebrityName) {
+		Set<Location> locations = new HashSet<Location>();
 		ResultSet rs = execute("http://dbpedia.org/sparql",
 				QueryHelper.getBirthplaceDeathplaceQuery(celebrityName));
 
