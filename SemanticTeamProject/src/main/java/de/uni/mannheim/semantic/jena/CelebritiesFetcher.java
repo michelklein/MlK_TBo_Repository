@@ -38,19 +38,6 @@ public class CelebritiesFetcher {
 	public static void main(String[] args) throws IOException {
 
 		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
-		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-		// List<Location> celebrityLocations = CelebritiesFetcher.get()
-		// .getCelebrityLocations("Arnold Schwarzenegger");
-		// System.out.println("Arnold");
-		// for (Location loc : celebrityLocations) {
-		// System.out.println(loc.toString());
-		// }
-		// celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
-		// "Konrad Adenauer");
-		// System.out.println("Konni");
-		// for (Location loc : celebrityLocations) {
-		// System.out.println(loc.toString());
-		// }
 	}
 
 	private static CelebritiesFetcher instance;
