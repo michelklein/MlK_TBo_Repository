@@ -54,44 +54,42 @@ public class FetchDataServlet extends HttpServlet {
 			FacebookParser fbParser = new FacebookParser(facebook);
 			Person fbPerson = fbParser.parseFacebookPerson();
 			json = fbPerson.toJsonString();
-//			for (Interest i : fbPerson.getInterest()) {
-//				System.out.println(i.getName());
-//				for (String s : i.getGenre()) {
-//					System.out.println("___" + s);
-//				}
-//			}
+			for (Interest i : fbPerson.getInterest()) {
+				System.out.println(i.getName());
+				for (String s : i.getGenre()) {
+					System.out.println("___" + s);
+				}
+			}
 
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");
-			Person celebrity = CelebritiesFetcher.get().createCel(
-					celebrityName);
+			Person celebrity = CelebritiesFetcher.get()
+					.createCel(celebrityName);
 			if (celebrity != null) {
-					for (Interest i : celebrity.getInterest()) {
-						System.out.println(i.getName());
-						for (String s : i.getGenre()) {
-							System.out.println("___" + s);
-						}
+				for (Interest i : celebrity.getInterest()) {
+					System.out.println(i.getName());
+					for (String s : i.getGenre()) {
+						System.out.println("___" + s);
 					}
-					
-					Facebook facebook = (Facebook) request.getSession()
-							.getAttribute("facebook");
-					FacebookParser fbParser = new FacebookParser(facebook);
-					Person fbPerson = fbParser.parseFacebookPerson();
-					CompareResult ageResult = ageComparator.compare(
-							fbPerson.getBirthdate(), celebrity.getBirthdate());
-					CompareResult hometownResult = new CompareResult(73, "Desc");
-							
-							//locationComparator.compare(fbPerson.getHome().getLocation(), celebrity.getHome().getLocation());
-					
-					
-					
-					List<CompareResult> movieR = movieComparator.compareList(fbPerson.getInterest(), celebrity.getInterest());
-					
-					
-					
-					
-					MatchingContainer comp = new MatchingContainer(celebrity, ageResult, hometownResult,movieR);
-					json = comp.toJsonString();
+				}
+
+				Facebook facebook = (Facebook) request.getSession()
+						.getAttribute("facebook");
+				FacebookParser fbParser = new FacebookParser(facebook);
+				Person fbPerson = fbParser.parseFacebookPerson();
+				CompareResult ageResult = ageComparator.compare(
+						fbPerson.getBirthdate(), celebrity.getBirthdate());
+				CompareResult hometownResult = new CompareResult(73, "Desc");
+
+				// locationComparator.compare(fbPerson.getHome().getLocation(),
+				// celebrity.getHome().getLocation());
+
+				List<CompareResult> movieR = movieComparator.compareList(
+						fbPerson.getInterest(), celebrity.getInterest());
+
+				MatchingContainer comp = new MatchingContainer(celebrity,
+						ageResult, hometownResult, movieR);
+				json = comp.toJsonString();
 			}
 		} else if ("celebrityList".equals(method)) {
 			json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();

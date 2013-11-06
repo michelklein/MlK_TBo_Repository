@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Set;
 
 import de.uni.mannheim.semantic.FetchGeoData;
+import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
@@ -112,15 +113,19 @@ public class FacebookParser {
 			List<Interest> interests = new ArrayList<Interest>();
 
 			List<Category> allInts = new ArrayList<Category>();
-			allInts.addAll(fb.getBooks());
+			// allInts.addAll(fb.getBooks());
 			allInts.addAll(fb.getMovies());
-			allInts.addAll(fb.getTelevision());
-			allInts.addAll(fb.getMusic());
-			allInts.addAll(fb.getGames());
+			// allInts.addAll(fb.getTelevision());
+			// allInts.addAll(fb.getMusic());
+			// allInts.addAll(fb.getGames());
 
 			for (Category c : allInts) {
 				interests.add(createInterestByID(c));
 				// TBoSuperDuperPrinter(createInterestByID(c));
+			}
+
+			for (Interest i : interests) {
+				i.getGenre().addAll(CelebritiesFetcher.get().getGenreFromFile(i.getName()));
 			}
 			person = new Person(firstname, name, birthdate, locations,
 					interests, picURL);
@@ -146,7 +151,7 @@ public class FacebookParser {
 		JSONArray fqlRes;
 		try {
 			fqlRes = fb
-					.executeFQL("SELECT pic_cover.source,genre  FROM page  WHERE page_id='"
+					.executeFQL("SELECT pic_cover.source,genre,release_date  FROM page  WHERE page_id='"
 							+ c.getId() + "'");
 			if (fqlRes.length() == 1) {
 
@@ -159,8 +164,11 @@ public class FacebookParser {
 
 				Set<String> genre = new HashSet<String>();
 				genre.addAll(Arrays.asList(jo.getString("genre").split(",")));
+				String name = c.getName();
+				if (!jo.getString("release_date").equals(""))
+					name = name + " (" + jo.getString("release_date").substring(jo.getString("release_date").lastIndexOf("/")+1) + ")";
 				return new Interest(c.getCategory(), url, genre, c.getId(),
-						c.getName());
+						name);
 			}
 
 		} catch (FacebookException e) {

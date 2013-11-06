@@ -39,18 +39,18 @@ public class CelebritiesFetcher {
 
 		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-//		Set<Location> celebrityLocations = CelebritiesFetcher.get()
-//				.getCelebrityLocations("Arnold Schwarzenegger");
-//		System.out.println("Arnold");
-//		for (Location loc : celebrityLocations) {
-//			System.out.println(loc.toString());
-//		}
-//		celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
-//				"Konrad Adenauer");
-//		System.out.println("Konni");
-//		for (Location loc : celebrityLocations) {
-//			System.out.println(loc.toString());
-//		}
+		// Set<Location> celebrityLocations = CelebritiesFetcher.get()
+		// .getCelebrityLocations("Arnold Schwarzenegger");
+		// System.out.println("Arnold");
+		// for (Location loc : celebrityLocations) {
+		// System.out.println(loc.toString());
+		// }
+		// celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
+		// "Konrad Adenauer");
+		// System.out.println("Konni");
+		// for (Location loc : celebrityLocations) {
+		// System.out.println(loc.toString());
+		// }
 	}
 
 	private static CelebritiesFetcher instance;
@@ -130,16 +130,19 @@ public class CelebritiesFetcher {
 				}
 			}
 			if (is(type, "actor")) {
-				System.out.println("getMovies");
 				resSet = getMovies(personIdent);
 				while (resSet.hasNext()) {
-					System.out.println("1");
 					s = resSet.nextSolution();
 					String label = gll(s, "label");
-					String year = gll(s, "year");
-					System.out.println("year"+year);
+					String year = g(s, "year");
+					year = year.substring(year.indexOf("_") - 4,
+							year.indexOf("_"));
+					year = year.trim();
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
+					label = label.trim();
+					label = label + " (" + year + ")";
+
 					Interest i = new Interest("movie", "cover_url",
 							getGenreFromFile(label), "id", label);
 					interests.add(i);
@@ -259,12 +262,12 @@ public class CelebritiesFetcher {
 				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
 				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
 				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				.append("PREFIX dcterms: <http://dublincore.org/documents/2012/06/14/dcmi-terms/>")
+				.append("PREFIX dcterms: <http://purl.org/dc/terms/>")
 				.append("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>")
-				.append("SELECT Distinct ?label WHERE {")
+				.append("SELECT Distinct ?label ?year WHERE {")
 				.append("?p rdfs:label ?label.")
 				.append("?p dcterms:subject ?year.")
-//				.append("?year skos:broader <http://dbpedia.org/resource/Category:Films_by_year>.")
+				.append("?year skos:broader <http://dbpedia.org/resource/Category:Films_by_year>.")
 				.append("?p ont:starring <" + sameAs + ">.")
 				.append("FILTER (LANG(?label)='en')").append("}");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
@@ -304,7 +307,7 @@ public class CelebritiesFetcher {
 		return rs;
 	}
 
-	private Set<String> getGenreFromFile(String ss) {
+	public Set<String> getGenreFromFile(String ss) {
 		Set<String> g = new HashSet<String>();
 		try {
 			String url = PropertiesUtils.class.getClassLoader()
@@ -322,9 +325,6 @@ public class CelebritiesFetcher {
 			System.out.println("IO Error Occurred: " + e.toString());
 		}
 
-		for (String string : g) {
-			System.out.println(string);
-		}
 		return g;
 	}
 
