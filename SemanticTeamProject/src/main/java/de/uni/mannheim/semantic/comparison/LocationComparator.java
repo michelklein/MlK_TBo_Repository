@@ -1,7 +1,6 @@
 package de.uni.mannheim.semantic.comparison;
 
 import de.uni.mannheim.semantic.model.CompareResult;
-import de.uni.mannheim.semantic.model.Institution;
 import de.uni.mannheim.semantic.model.Location;
 
 public class LocationComparator extends AbstractComparator<Location> {
