@@ -46,24 +46,44 @@
 				console.log("ajaxComplete");
 				$("body").removeClass("loading");
 			});
-			$.getJSON("fetchData?op=facebook", function(data) {
-				console.log("Get FB Data");
-				$("#content").show();
-				$("#fbUserImage").attr('src', data.imageURL);
-				$("#userFirstname").html(data.firstname);
-				$("#userLastname").html(data.lastname);
-				$("#attr_age_user").html(data.formattedBirthday);
-				$("#attr_hometown_user").html(data.formattedHometown);
-				
-				
-				
-				$.each(data.allGenres, function() {
-					$("#movies").append("<div class='row'><div class='col-md-1'>Movies:</div><div class='col-md-2'>"+this+"</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
-					$("#movies").append("<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
-				});
-				
-				console.debug(data);
-			});
+			$
+					.getJSON(
+							"fetchData?op=facebook",
+							function(data) {
+								console.log("Get FB Data");
+								$("#content").show();
+								$("#fbUserImage").attr('src', data.imageURL);
+								$("#userFirstname").html(data.firstname);
+								$("#userLastname").html(data.lastname);
+								$("#attr_age_user")
+										.html(data.formattedBirthday);
+								$("#attr_hometown_user").html(
+										data.formattedHometown);
+
+								var first = true;
+								$
+										.each(
+												data.allGenres,
+												function() {
+													if (first) {
+														$("#movies")
+																.append(
+																		"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
+														first = false;
+													} else {
+														$("#movies")
+																.append(
+																		"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
+																				+ this
+																				+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
+													}
+													$("#movies")
+															.append(
+																	"<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
+												});
+
+								console.debug(data);
+							});
 		</script>
 
 		<div id="header">
@@ -185,25 +205,35 @@
 
 			<!-- Movies -->
 			<div id="movies"></div>
+
+
+
+
+
+
+
+
 			<div class="row">
 				<div id="attr_caption" class="col-md-1">Movies:</div>
 				<div id="attr_movie1_user" class="col-md-2"></div>
-				<div class="col-md-6" id="progress_movie">
-				</div>
+				<div class="col-md-6" id="progress_movie"></div>
 			</div>
 			<div id="attr_movie1_celebrity" class="col-md-2 textAlignRight"></div>
 		</div>
 		</div>
 
 		<script type="text/javascript">
-		  $.ajaxSetup({ cache: false });
-		  
-		  
-			$('#search-celebrity').typeahead({
-				name : 'celebrities',
-				prefetch : 'fetchData?op=celebrityList&' + new Date().getTime(),
-				limit : 20,
-			}).on(
+			$.ajaxSetup({
+				cache : false
+			});
+
+			$('#search-celebrity').typeahead(
+					{
+						name : 'celebrities',
+						prefetch : 'fetchData?op=celebrityList&'
+								+ new Date().getTime(),
+						limit : 20,
+					}).on(
 					'typeahead:selected',
 					function($e) {
 						var $typeahead = $(this);
@@ -213,9 +243,7 @@
 						});
 
 					});
-		
-			
-			
+
 			function constructMatching(data) {
 				var json = data;
 				console.debug(data);
@@ -241,26 +269,66 @@
 				$(".progress_loc1").attr('data-original-title',
 						json.locResult.HTML);
 
-				
-				
-				
-				
-			
+				$("#movies").empty();
+				$("#movies")
+						.append(
+								"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
+				$
+						.each(
+								json.movieResult,
+								function() {
+									if (this.sum != 0) {
+										$("#movies")
+												.append(
+														"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
+																+ this.description
+																+ "</div><div class='col-md-6'><div class='progress'></div></div>");
 
-				
-				$.each(json.movieResult, function() {
-					$("#progress_movie").append("<div class='progress' data-toggle='tooltip' data-html='true' data-original-title='Default tooltip'></div>");
-				$.each(this.subresults, function() {
-					if (this.value != 0){
-						$("#progress_movie").children().last().append(
-								"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
-										+ this.value + "%" + "</span></div>");
-					$("#progress_movie").children().last().children().last().width(this.value + "%");}
-				});
-				});
+										$
+												.each(
+														this.subresults,
+														function() {
 
-				$(".progress_movie1").attr('data-original-title',
-						json.movieResult.HTML);
+															$("#movies")
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.append(
+																			"<div class='progress-bar' data-toggle='tooltip' data-html='true' data-original-title='Default tooltip' style='width:0%'><span class='sr-only'>"
+																					+ this.value
+																					+ "%"
+																					+ "</span></div>");
+															$("#movies")
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.width(
+																			this.value
+																					+ "%");
+															$("#movies")
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.children()
+																	.last()
+																	.attr(
+																			'data-original-title',
+																			this.description);
+
+														});
+									}
+								});
 
 				if (json.ageCompResult.value == 0) {
 					$("#progress_age > .sr-only").addClass("noResult");

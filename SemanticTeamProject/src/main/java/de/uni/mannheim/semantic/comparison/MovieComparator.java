@@ -38,8 +38,9 @@ public class MovieComparator extends AbstractComparator<String> {
 			resultList.add(cr);
 			for (Interest i : cList) {
 				if (i.getGenre().contains(g)) {
-					CompareResult sr = new CompareResult(100 / fbList.size(),
+					CompareResult sr = new CompareResult(100 / cList.size(),
 							i.getName());
+					
 					cr.getSubresults().add(sr);
 				}
 			}

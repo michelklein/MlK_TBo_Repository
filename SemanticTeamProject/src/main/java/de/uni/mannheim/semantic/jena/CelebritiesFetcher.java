@@ -36,19 +36,21 @@ public class CelebritiesFetcher {
 	private FetchGeoData geocoding = new FetchGeoData();
 
 	public static void main(String[] args) throws IOException {
+
+		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-		List<Location> celebrityLocations = CelebritiesFetcher.get()
-				.getCelebrityLocations("Arnold Schwarzenegger");
-		System.out.println("Arnold");
-		for (Location loc : celebrityLocations) {
-			System.out.println(loc.toString());
-		}
-		celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
-				"Konrad Adenauer");
-		System.out.println("Konni");
-		for (Location loc : celebrityLocations) {
-			System.out.println(loc.toString());
-		}
+		// List<Location> celebrityLocations = CelebritiesFetcher.get()
+		// .getCelebrityLocations("Arnold Schwarzenegger");
+		// System.out.println("Arnold");
+		// for (Location loc : celebrityLocations) {
+		// System.out.println(loc.toString());
+		// }
+		// celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
+		// "Konrad Adenauer");
+		// System.out.println("Konni");
+		// for (Location loc : celebrityLocations) {
+		// System.out.println(loc.toString());
+		// }
 	}
 
 	private static CelebritiesFetcher instance;
@@ -127,11 +129,15 @@ public class CelebritiesFetcher {
 
 				}
 			}
-			if (is(type, "actorNEVER")) {
+			if (is(type, "actor")) {
+				System.out.println("getMovies");
 				resSet = getMovies(personIdent);
 				while (resSet.hasNext()) {
+					System.out.println("1");
 					s = resSet.nextSolution();
 					String label = gll(s, "label");
+					String year = gll(s, "year");
+					System.out.println("year"+year);
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
 					Interest i = new Interest("movie", "cover_url",
@@ -253,8 +259,12 @@ public class CelebritiesFetcher {
 				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
 				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
 				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
+				.append("PREFIX dcterms: <http://dublincore.org/documents/2012/06/14/dcmi-terms/>")
+				.append("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>")
 				.append("SELECT Distinct ?label WHERE {")
 				.append("?p rdfs:label ?label.")
+				.append("?p dcterms:subject ?year.")
+//				.append("?year skos:broader <http://dbpedia.org/resource/Category:Films_by_year>.")
 				.append("?p ont:starring <" + sameAs + ">.")
 				.append("FILTER (LANG(?label)='en')").append("}");
 		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
@@ -310,6 +320,10 @@ public class CelebritiesFetcher {
 			bf.close();
 		} catch (IOException e) {
 			System.out.println("IO Error Occurred: " + e.toString());
+		}
+
+		for (String string : g) {
+			System.out.println(string);
 		}
 		return g;
 	}
