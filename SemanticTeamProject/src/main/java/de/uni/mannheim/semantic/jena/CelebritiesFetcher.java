@@ -36,24 +36,21 @@ public class CelebritiesFetcher {
 	private FetchGeoData geocoding = new FetchGeoData();
 
 	public static void main(String[] args) throws IOException {
-<<<<<<< HEAD
 
 		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
-=======
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-		Set<Location> celebrityLocations = CelebritiesFetcher.get()
-				.getCelebrityLocations("Arnold Schwarzenegger");
-		System.out.println("Arnold");
-		for (Location loc : celebrityLocations) {
-			System.out.println(loc.toString());
-		}
-		celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
-				"Konrad Adenauer");
-		System.out.println("Konni");
-		for (Location loc : celebrityLocations) {
-			System.out.println(loc.toString());
-		}
->>>>>>> refs/remotes/origin/master
+//		Set<Location> celebrityLocations = CelebritiesFetcher.get()
+//				.getCelebrityLocations("Arnold Schwarzenegger");
+//		System.out.println("Arnold");
+//		for (Location loc : celebrityLocations) {
+//			System.out.println(loc.toString());
+//		}
+//		celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
+//				"Konrad Adenauer");
+//		System.out.println("Konni");
+//		for (Location loc : celebrityLocations) {
+//			System.out.println(loc.toString());
+//		}
 	}
 
 	private static CelebritiesFetcher instance;
