@@ -19,7 +19,12 @@ public class FetchMovieData {
 
 	private static final String API_URL = "http://mymovieapi.com/";
 	private static final Pattern pattern = Pattern.compile("\\d{4}");
-	
+
+	public Interest getMovieByIMDBId(String id) {
+		String imdbId = id.substring(id.lastIndexOf("/") + 1);
+		return getMovieResult(getURL(imdbId));
+	}
+
 	public Interest getMovie(String title) {
 		return getMovie(title, null);
 	}
@@ -29,18 +34,24 @@ public class FetchMovieData {
 			return null;
 		}
 
-		Matcher matcher = pattern.matcher(year);
-		if (year != null && matcher.find()) {
-			int endIndex = matcher.end();
-			String convertedYear = year.substring(endIndex - 4, endIndex);
-			System.out.println(String.format("Convert Year: %s to %s", year, convertedYear));
-			year = convertedYear;
+		if (year != null) {
+			Matcher matcher = pattern.matcher(year);
+			if (matcher.find()) {
+				int endIndex = matcher.end();
+				String convertedYear = year.substring(endIndex - 4, endIndex);
+				System.out.println(String.format("Convert Year: %s to %s",
+						year, convertedYear));
+				year = convertedYear;
+			}
 		}
+		URL url = getURL(title, year);
+		return getMovieResult(url);
+	}
 
+	private Interest getMovieResult(URL url) {
 		try {
 			String line;
 			String result = "";
-			URL url = getURL(title, year);
 			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 			conn.setRequestMethod("GET");
 			BufferedReader rd = new BufferedReader(new InputStreamReader(
@@ -52,14 +63,20 @@ public class FetchMovieData {
 			if (result.contains("error")) {
 				JSONObject json = new JSONObject(result);
 				if (json.has("code")) {
-					System.out.println(json.get("error") + " for movie: " + title);
+					System.out
+							.println(json.get("error") + " for movie: " + url);
 					return null;
 				}
 			}
 			// convert result to json object
-			JSONArray jsonArray = new JSONArray(result);
-			JSONObject json = (JSONObject) jsonArray.get(0);
-			if (!json.has("poster")) {
+			JSONObject json = null;
+			if(result.startsWith("[")) {
+				JSONArray jsonArray = new JSONArray(result);
+				json = (JSONObject) jsonArray.get(0);
+			} else {
+				json = new JSONObject(result);
+			}
+ 			if (!json.has("poster")) {
 				return null;
 			}
 			JSONObject poster = json.getJSONObject("poster");
@@ -75,6 +92,8 @@ public class FetchMovieData {
 					genres.add(genreArray.getString(i));
 				}
 			}
+
+			String title = json.getString("title");
 			return new Interest("movie", imageURL, genres, null, title);
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -96,6 +115,19 @@ public class FetchMovieData {
 								"%s?title=%s&type=json&plot=simple&episode=1&limit=1&yg=1&mt=none&lang=en-US&offset=&aka=simple&release=simple&business=0&tech=0",
 								API_URL, convertTitleForURL(title)));
 			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return url;
+	}
+
+	private URL getURL(String imdbId) {
+		URL url = null;
+		try {
+			url = new URL(
+					String.format(
+							"%s?id=%s&type=json&plot=simple&episode=1&lang=en-US&aka=simple&release=simple&business=0&tech=0",
+							API_URL, imdbId));
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
 		}

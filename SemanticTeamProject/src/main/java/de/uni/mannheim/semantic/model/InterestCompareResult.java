@@ -37,7 +37,7 @@ public class InterestCompareResult extends CompareResult {
 		List<Interest> celebrityInterests = (List<Interest>) o2;
 		StringBuilder builder = new StringBuilder();
 		builder.append("<div>").append(getHTMLForInterestTable(facebookIntersts))
-				.append("<span class=\"glyphicon glyphicon-arrow-right\"></span>")
+				.append("<span class=\"glyphicon glyphicon-arrow-right\" style=\"font-size:20px;float:left;\"></span>")
 				.append(getHTMLForInterestTable(celebrityInterests))
 				.append("</div>");
 		return builder.toString();
@@ -45,7 +45,7 @@ public class InterestCompareResult extends CompareResult {
 
 	private String getHTMLForInterestTable(List<Interest> interests) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<table border=\"0\" style=\"color:white;\">");
+		builder.append("<table border=\"0\" style=\"color:white;float:left;\">");
 		int counter = 0;
 		int columns = getColumnCount(interests.size());
 		boolean rowClosed = false;

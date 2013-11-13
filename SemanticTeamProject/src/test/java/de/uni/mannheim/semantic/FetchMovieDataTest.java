@@ -31,6 +31,9 @@ public class FetchMovieDataTest {
 		painGain = movieFetcher.getMovie(null, null);
 		assertNull(painGain);
 		
+		painGain = movieFetcher.getMovieByIMDBId("http://www.imdb.com/title/tt0054189");
+		assertNotNull(painGain);
+		
 	}
 
 }

@@ -160,7 +160,7 @@ public class CelebritiesFetcher {
 					// label = label + " (" + year + ")";
 
 
-					String imdb = "";
+					String imdb = null;
 					try {
 						String sa = g(s, "p");
 						ResultSet imdbRS = execute(
@@ -183,7 +183,7 @@ public class CelebritiesFetcher {
 					System.out.println(imdb);
 					Interest i = null;
 					if(imdb != null) {
-						// call movieFetcher.getMovie()
+						i = movieFetcher.getMovieByIMDBId(imdb);
 					} else {
 						i = movieFetcher.getMovie(label, year);
 					}
