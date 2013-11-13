@@ -391,18 +391,14 @@ public class CelebritiesFetcher {
 
 			// Execute.
 			ResultSet rs = qexec.execSelect();
-			String firstName = null;
-			String lastName = null;
-			String fullname = null;
+			String name = null;
 			while (rs.hasNext()) {
 
 				QuerySolution soln = rs.nextSolution();
-				firstName = gll(soln, "firstname");
-				lastName = gll(soln, "lastname");
-				fullname = String.format("%s %s", firstName, lastName);
-				if (!celebrities.contains(fullname)) {
+				name = gll(soln, "name");
+				if (!celebrities.contains(name)) {
 //					System.out.println("\"" + fullname + "\",");
-					celebrities.add(fullname);
+					celebrities.add(name);
 				}
 			}
 			// System.out.println(celebrities.size());

@@ -1,7 +1,13 @@
 package de.uni.mannheim.semantic.jena;
 
+import java.io.IOException;
+
 public class QueryHelper {
 
+	public static void main(String[] args) throws IOException {
+		getArtists();
+	}
+	
 	public static String getBirthplaceDeathplaceQuery(String celebrityName) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
@@ -132,12 +138,11 @@ public class QueryHelper {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> ")
 				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("select ?firstname ?lastname ")
+				.append("select DISTINCT ?name ")
 				.append("where {?m a dbpedia-owl:Film.")
 				.append("?m dbpedia-owl:starring ?p.")
-				.append("?m dbpedia-owl:starring ?p. ?p foaf:givenName ?firstname. ")
-				.append("?p foaf:surname ?lastname.")
-				.append("} ORDER BY ASC(?lastname)");
+				.append("?m dbpedia-owl:starring ?p. ?p foaf:name ?name. ")
+				.append("} ORDER BY ASC(?name)");
 
 		return builder.toString();
 	}
