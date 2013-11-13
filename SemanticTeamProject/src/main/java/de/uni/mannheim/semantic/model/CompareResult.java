@@ -8,7 +8,9 @@ public class CompareResult extends AbstractToJson {
 	/** The achieved result in percent */
 	protected int value = 0;
 	/** The description describing the achieved result */
-	protected String description;
+	protected String desc1;
+	protected String desc2;
+	
 	/** Indicates if the compare result is valid or not. */
 	protected boolean valid = true;
 
@@ -18,10 +20,11 @@ public class CompareResult extends AbstractToJson {
 	/** Maybe this result consists of subresults */
 	private List<CompareResult> subresults;
 
-	public CompareResult(int value, String description, Object o1, Object o2) {
+	public CompareResult(int value, String desc1,String desc2, Object o1, Object o2) {
 		super();
 		this.value = value;
-		this.description = description;
+		this.desc1 = desc1;
+		this.desc2 = desc2;
 		this.o1 = o1;
 		this.o2 = o2;
 	}
@@ -41,12 +44,12 @@ public class CompareResult extends AbstractToJson {
 		this.value = value;
 	}
 
-	public String getDescription() {
-		return description;
+	public String getDesc1() {
+		return desc1;
 	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	
+	public String getDesc2() {
+		return desc2;
 	}
 
 	public boolean isValid() {
@@ -73,13 +76,13 @@ public class CompareResult extends AbstractToJson {
 			}
 			builder.append("<tr>").append("<td><li>")
 					.append("</li></td><td style=\"padding-right: 10px;\">")
-					.append(rs.getDescription())
+					.append(rs.getDesc1())
 					.append(":</td><td style=\"text-align: right;\">")
 					.append(value).append("</td></tr>");
 		}
 		builder.append("<tr>").append("<td style=\"padding-top: 10px;\"><li>")
 				.append("</li></td><td style=\"padding-top: 10px;\"><b>")
-				.append(getDescription())
+				.append(getDesc1())
 				.append(":</b></td><td style=\"padding-top: 10px;\"><b>")
 				.append(getValue()).append("%</b></td></tr>");
 		return builder.toString();

@@ -6,9 +6,9 @@ public class InterestCompareResult extends CompareResult {
 
 	private static final int WIDTH_PER_IMAGE = 150;
 
-	public InterestCompareResult(int value, String description,
+	public InterestCompareResult(int value, String desc1, String desc2,
 			List<Interest> facebookIntersts, List<Interest> celebrityInterests) {
-		super(value, description, facebookIntersts, celebrityInterests);
+		super(value, desc1, desc2, facebookIntersts, celebrityInterests);
 	}
 
 	public String getHTML() {
@@ -64,7 +64,8 @@ public class InterestCompareResult extends CompareResult {
 				builder.append("<tr>");
 				rowClosed = false;
 			}
-			builder.append("<td>").append("<img src=\"")
+			builder.append("<td>")
+					.append("<img src=\"")
 					.append(interest.getCoverURL())
 					.append("\" class=\"cover_big\" style=\"margin:2px;\"></td>");
 			counter++;
@@ -94,13 +95,13 @@ public class InterestCompareResult extends CompareResult {
 	}
 
 	public String getO1() {
-		return description;
+		return desc1;
 	}
 
 	public String getO2() {
-		return description;
+		return desc2;
 	}
-	
+
 	public String getDescription() {
 		return "";
 	}

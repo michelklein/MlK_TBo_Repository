@@ -41,7 +41,7 @@ public class LocationsComparatorTest {
 	}
 
 	public void printResult(CompareResult result) {
-		System.out.println(String.format("%s: %s", result.getDescription(),
+		System.out.println(String.format("%s: %s", result.getDesc1(),
 				result.getValue()));
 		for (CompareResult rs : result.getSubresults()) {
 			printResult(rs);

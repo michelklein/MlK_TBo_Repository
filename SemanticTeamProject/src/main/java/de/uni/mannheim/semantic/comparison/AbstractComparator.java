@@ -16,20 +16,20 @@ public abstract class AbstractComparator<T extends Object> {
 			String description, CompareResult result) {
 		int tempResult = val1 == val2 ? percent : 0;
 		result.setValue(result.getValue() + tempResult);
-		result.getSubresults().add(new CompareResult(tempResult, description,o1,o2));
+		result.getSubresults().add(new CompareResult(tempResult, description,description,o1,o2));
 	}
 
 	protected void compareHelper(String val1, String val2, int percent,
 			String description, CompareResult result) {
 
 		if (val1 == null || val2 == null) {
-			result.getSubresults().add(new CompareResult(0, description,o1,o2));
+			result.getSubresults().add(new CompareResult(0, description,description,o1,o2));
 		} else {
 
 			int tempResult = val1.equalsIgnoreCase(val2) ? percent : 0;
 			result.setValue(result.getValue() + tempResult);
 			result.getSubresults().add(
-					new CompareResult(tempResult, description,o1,o2));
+					new CompareResult(tempResult, description,description,o1,o2));
 		}
 	}
 
@@ -44,7 +44,7 @@ public abstract class AbstractComparator<T extends Object> {
 	}
 
 	public void printResult(CompareResult result) {
-		System.out.println(String.format("%s: %s", result.getDescription(),
+		System.out.println(String.format("%s: %s", result.getDesc1(),
 				result.getValue()));
 		for (CompareResult rs : result.getSubresults()) {
 			printResult(rs);

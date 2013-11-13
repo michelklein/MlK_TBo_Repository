@@ -20,7 +20,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 	public CompareResult compare(Location o1, Location o2) {
 		this.o1 = o1;
 		this.o2 = o2;
-		result = new CompareResult(0, o1.getDescription(), o1, o2);
+		result = new CompareResult(0, o1.getDescription(), o2.getDescription(), o1, o2);
 
 		// Distance
 		float distance = calculateDistance(o1, o2);
@@ -32,7 +32,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 			percent = DISTANCE_PERCENT * distancePercent;
 		}
 		result.getSubresults().add(
-				new CompareResult((int) percent, "Distance", o1, o2));
+				new CompareResult((int) percent, "Distance", "Distance", o1, o2));
 		result.setValue((int) (result.getValue() + percent));
 
 		// country
@@ -56,7 +56,7 @@ public class LocationComparator extends AbstractComparator<Location> {
 		percent = (((float) MAX_TIMEZONE_DIFFERNCE - (float) difference) / (float) MAX_TIMEZONE_DIFFERNCE);
 		float timeZoneValue = percent * TIMEZONE_PERCENT;
 		result.getSubresults().add(
-				new CompareResult((int) timeZoneValue, "Timezone", o1, o2));
+				new CompareResult((int) timeZoneValue, "Timezone","Timezone", o1, o2));
 		result.setValue((int) (result.getValue() + timeZoneValue));
 		return result;
 	}
@@ -84,9 +84,9 @@ public class LocationComparator extends AbstractComparator<Location> {
 
 		@Override
 		public CompareResult compare(String o1, String o2) {
-			result = new CompareResult(0, "Postal Code", o1, o2);
+			result = new CompareResult(0, "Postal Code","Postal Code", o1, o2);
 			if (o1 != null && o2 != null) {
-				result = new CompareResult(0, "Postal Code", o1, o2);
+				result = new CompareResult(0, "Postal Code","Postal Code", o1, o2);
 				int count = sameLetters(o1, o2);
 				float ko = (float) count / (float) o1.length();
 				result.setValue((int) (POSTAL_CODE_PERCENT * ko));
