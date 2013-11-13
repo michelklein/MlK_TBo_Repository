@@ -99,6 +99,19 @@ public class QueryHelper {
 		return builder.toString();
 	}
 
+	public static String getIMDBQuery(String sameAs) {
+		sameAs = sameAs.replaceAll("\\(", "%28");
+		sameAs = sameAs.replaceAll("\\)", "%29");
+		StringBuilder builder = new StringBuilder();
+		builder.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
+				.append("PREFIX movie: <http://data.linkedmdb.org/resource/movie/>")
+				.append("SELECT Distinct ?page WHERE {")
+				.append("?film foaf:page ?page.").append("?film a movie:film.")
+				.append("  ?film owl:sameAs <" + sameAs + ">.").append("}");
+		return builder.toString();
+	}
+
 	public static String getAlbumsQuery(String sameAs) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
