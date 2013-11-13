@@ -6,11 +6,11 @@ import java.util.List;
 public class CompareResult extends AbstractToJson {
 
 	/** The achieved result in percent */
-	private int value = 0;
+	protected int value = 0;
 	/** The description describing the achieved result */
-	private String description;
+	protected String description;
 	/** Indicates if the compare result is valid or not. */
-	private boolean valid = true;
+	protected boolean valid = true;
 
 	protected Object o1;
 	protected Object o2;

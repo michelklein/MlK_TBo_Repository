@@ -208,6 +208,12 @@ img {
 .tooltip-inner {
 	float: left !important;
 	text-align: left !important;
+	max-width: 1000px !important;
+	opacity: 1.0 !important;
+}
+
+.tooltip.in {
+    opacity: 1 !important;
 }
 
 .progress-bar {

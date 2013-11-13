@@ -7,10 +7,10 @@ public class MatchingContainer extends AbstractToJson {
 
 	private Person celebrity;
 	private CompareResult ageCompResult;
-	private List<CompareResult> movieResult;
+	private List<InterestCompareResult> movieResult;
 	private List<CompareResult> locationResults;
 	
-	public MatchingContainer(Person celebrity, CompareResult ageCompResult, List<CompareResult> locationResults,List<CompareResult> movieResult) {
+	public MatchingContainer(Person celebrity, CompareResult ageCompResult, List<CompareResult> locationResults,List<InterestCompareResult> movieResult) {
 		super();
 		this.celebrity = celebrity;
 		this.ageCompResult = ageCompResult;
@@ -31,7 +31,7 @@ public class MatchingContainer extends AbstractToJson {
 		this.ageCompResult = result;
 	}
 
-	public List<CompareResult> getMovieResult() {
+	public List<InterestCompareResult> getMovieResult() {
 		return movieResult;
 	}
 
@@ -39,7 +39,7 @@ public class MatchingContainer extends AbstractToJson {
 		return locationResults;
 	}
 	
-	public void setMovieResult(List<CompareResult> movieResult) {
+	public void setMovieResult(List<InterestCompareResult> movieResult) {
 		this.movieResult = movieResult;
 	}
 	
