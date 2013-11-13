@@ -5,12 +5,17 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Pattern;
+
+import com.sun.xml.internal.ws.message.RelatesToHeader;
 
 import de.uni.mannheim.semantic.FetchGeoData;
+import de.uni.mannheim.semantic.FetchMovieData;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
@@ -31,6 +36,8 @@ import facebook4j.internal.org.json.JSONObject;
 public class FacebookParser {
 	private Facebook fb;
 	private FetchGeoData geocoding = new FetchGeoData();
+	private FetchMovieData movieFetcher = new FetchMovieData();
+	private Pattern pattern = Pattern.compile("[-/{}()]");
 
 	public FacebookParser(Facebook f) {
 		fb = f;
@@ -119,15 +126,18 @@ public class FacebookParser {
 			// allInts.addAll(fb.getMusic());
 			// allInts.addAll(fb.getGames());
 
-//		fb.getLikedPage();
-			
+			// fb.getLikedPage();
+
 			for (Category c : allInts) {
-				interests.add(createInterestByID(c));
+				Interest interest = createInterestByID(c);
+				if (interest != null)
+					interests.add(interest);
 				// TBoSuperDuperPrinter(createInterestByID(c));
 			}
 
 			for (Interest i : interests) {
-				i.getGenre().addAll(CelebritiesFetcher.get().getGenreFromFile(i.getName()));
+				i.getGenre().addAll(
+						CelebritiesFetcher.get().getGenreFromFile(i.getName()));
 			}
 			person = new Person(firstname, name, birthdate, locations,
 					interests, picURL);
@@ -167,8 +177,28 @@ public class FacebookParser {
 				Set<String> genre = new HashSet<String>();
 				genre.addAll(Arrays.asList(jo.getString("genre").split(",")));
 				String name = c.getName();
-				if (!jo.getString("release_date").equals(""))
-					name = name + " (" + jo.getString("release_date").substring(jo.getString("release_date").lastIndexOf("/")+1) + ")";
+				String releaseDate = jo.getString("release_date");
+				if (!releaseDate.equals(""))
+					name = name
+							+ " ("
+							+ releaseDate.substring(releaseDate
+									.lastIndexOf("/") + 1) + ")";
+				if ("Movie".equalsIgnoreCase(c.getCategory())) {
+					// get year from release date
+					Interest movie = movieFetcher.getMovie(c.getName(),
+							releaseDate);
+					// replace last part seperated with space from name
+					if (movie == null && pattern.matcher(c.getName()).find()) {
+						String[] split = c.getName().split(" ");
+						StringBuilder builder = new StringBuilder();
+						for (int i = 0; i < split.length - 1; i++) {
+							builder.append(split[i]).append(" ");
+						}
+						movie = movieFetcher.getMovie(builder.toString(),
+								releaseDate);
+					}
+					return movie;
+				}
 				return new Interest(c.getCategory(), url, genre, c.getId(),
 						name);
 			}

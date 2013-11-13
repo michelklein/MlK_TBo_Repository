@@ -26,6 +26,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 import de.uni.mannheim.semantic.FetchGeoData;
+import de.uni.mannheim.semantic.FetchMovieData;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
@@ -34,6 +35,7 @@ import de.uni.mannheim.semantic.util.PropertiesUtils;
 public class CelebritiesFetcher {
 
 	private FetchGeoData geocoding = new FetchGeoData();
+	private FetchMovieData movieFetcher = new FetchMovieData();
 	private static final String COVER_URL_DUMMY = "http://www.ernieputto.de/filmstuff4/batman_begins/batman_begins_poster_us2.jpg";
 
 	public static void main(String[] args) throws IOException {
@@ -155,7 +157,8 @@ public class CelebritiesFetcher {
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
 					label = label.trim();
-					label = label + " (" + year + ")";
+					// label = label + " (" + year + ")";
+
 
 					String imdb = "";
 					try {
@@ -173,9 +176,20 @@ public class CelebritiesFetcher {
 					} catch (Exception e) {
 					}
 
-					Interest i = new Interest("movie", COVER_URL_DUMMY,
-							getGenreFromFile(label), imdb, label);
-					interests.add(i);
+//					Interest i = new Interest("movie", COVER_URL_DUMMY,
+//							getGenreFromFile(label), imdb, label);
+//					interests.add(i);
+
+					System.out.println(imdb);
+					Interest i = null;
+					if(imdb != null) {
+						// call movieFetcher.getMovie()
+					} else {
+						i = movieFetcher.getMovie(label, year);
+					}
+					if (i != null)
+						interests.add(i);
+
 
 				}
 
