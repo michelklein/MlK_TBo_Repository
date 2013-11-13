@@ -8,8 +8,7 @@
 	left: 0;
 	height: 100%;
 	width: 100%;
-	background: rgba(255, 255, 255, .8)
-		url('http://i.stack.imgur.com/FhHRx.gif') 50% 50% no-repeat;
+	background: rgba(255, 255, 255, .8);
 }
 
 /* When the body has the loading class, we turn
@@ -93,7 +92,8 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small,.h1 small,.h2 small,.h3 sm
 }
 
 .twitter-typeahead {
-	width: 500px;
+  top: 15px;
+    width: 400px;
 }
 
 .form-control {
@@ -251,4 +251,33 @@ table {
 .cover_big {
 	height: 120px;
 	margin: 2px;
+}
+
+.preUser {
+	padding: 150px 0 !important;
+}
+
+.centBig {
+	position: absolute;
+	left: 50%;
+	top: 50%;
+	font-size: 60px;
+    -webkit-animation-name: rotate; 
+    -webkit-animation-duration: 2s; 
+    -webkit-animation-iteration-count: infinite;
+    -webkit-animation-timing-function: linear;
+    -moz-animation-name: rotate; 
+    -moz-animation-duration: 2s; 
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+}
+
+@-webkit-keyframes rotate {
+    from {-webkit-transform: rotate(0deg);}
+    to {-webkit-transform: rotate(360deg);}
+}
+
+@-moz-keyframes rotate {
+    from {-moz-transform: rotate(0deg);}
+    to {-moz-transform: rotate(360deg);}
 }

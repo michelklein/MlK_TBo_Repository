@@ -83,7 +83,7 @@
 			</h1>
 		</div>
  -->
-		<div id="content">
+		<div id="content" class="preUser">
 			<div class="row">
 				<div class="col-md-5 col-md-offset-1">
 					<div id="fbUser">
@@ -111,8 +111,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-1">
-				</div>
+				<div class="col-md-1"></div>
 			</div>
 
 
@@ -145,6 +144,7 @@
 					}).on(
 					'typeahead:selected',
 					function($e) {
+
 						$(".twitter-typeahead").hide();
 						var $typeahead = $(this);
 						$.getJSON("fetchData?op=celebrity&name="
@@ -155,6 +155,7 @@
 					});
 
 			function constructMatching(data) {
+				$(".preUser").removeClass("preUser");
 				var json = data;
 				console.debug(data);
 				$("#celebrityImage").attr('src', json.celebrity.imageURL);
@@ -182,11 +183,15 @@
 									baseData,
 									function() {
 										if (this.sum != 0) {
+											var tt = "";
+											if (this.HTMLo1)
+												tt = this.HTMLo1;
+
 											$(id)
 													.append(
 															"<div class='row'><div class='col-md-1 attr_caption_small'>"
 																	+ this.description
-																	+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo1+"'>"
+																	+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+tt+"'>"
 																	+ this.o1
 																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div>");
 											if (!onebar) {
@@ -257,7 +262,9 @@
 													.append(
 															"<div class='col-md-2 textAlignRight attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo2+"'>"
 																	+ this.o2
-																	+ "</div><div class='col-md-1 attr_caption_small'>"+this.description+"</div></div>");
+																	+ "</div><div class='col-md-1 attr_caption_small'>"
+																	+ this.description
+																	+ "</div></div>");
 										}
 									});
 				}
@@ -280,7 +287,7 @@
 
 	</tag:loggedin>
 	<div class="loadingModal">
-		<!-- Place at bottom of page -->
+		<span class="glyphicon glyphicon-refresh centBig"></span>
 	</div>
 </body>
 </html>
