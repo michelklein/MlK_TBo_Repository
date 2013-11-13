@@ -82,9 +82,12 @@ public class LocationComparator extends AbstractComparator<Location> {
 		@Override
 		public CompareResult compare(String o1, String o2) {
 			result = new CompareResult(0, "Postal Code", o1, o2);
-			int count = sameLetters(o1, o2);
-			float ko = (float) count / (float) o1.length();
-			result.setValue((int) (POSTAL_CODE_PERCENT * ko));
+			if(o1 != null && o2 != null) {
+				result = new CompareResult(0, "Postal Code", o1, o2);
+				int count = sameLetters(o1, o2);
+				float ko = (float) count / (float) o1.length();
+				result.setValue((int) (POSTAL_CODE_PERCENT * ko));
+			} 
 			return result;
 		}
 
