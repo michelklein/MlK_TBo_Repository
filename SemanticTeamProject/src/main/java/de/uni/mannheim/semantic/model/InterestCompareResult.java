@@ -11,41 +11,50 @@ public class InterestCompareResult extends CompareResult {
 		super(value, description, facebookIntersts, celebrityInterests);
 	}
 
-	public String getHTML3() {
-		List<Interest> facebookIntersts = (List<Interest>) o1;
-		List<Interest> celebrityInterests = (List<Interest>) o2;
-
-		StringBuilder builder = new StringBuilder();
-		int width = (WIDTH_PER_IMAGE * facebookIntersts.size())
-				+ (WIDTH_PER_IMAGE * celebrityInterests.size());
-		builder.append("<div style=\"width:").append(width).append("px;\">");
-		for (Interest interst : facebookIntersts) {
-			builder.append("<img src=\"").append(interst.getCoverURL())
-					.append("\" height=\"150px\" style=\"margin:2px;\">");
-		}
-		builder.append("<span class=\"glyphicon glyphicon-arrow-right\"></span>");
-		for (Interest interst : celebrityInterests) {
-			builder.append("<img src=\"").append(interst.getCoverURL())
-					.append("\" height=\"150px\" style=\"margin:2px;\">");
-		}
-		builder.append("</div>");
-		return builder.toString();
-	}
-
 	public String getHTML() {
 		List<Interest> facebookIntersts = (List<Interest>) o1;
 		List<Interest> celebrityInterests = (List<Interest>) o2;
 		StringBuilder builder = new StringBuilder();
-		builder.append("<div>").append(getHTMLForInterestTable(facebookIntersts))
-				.append("<span class=\"glyphicon glyphicon-arrow-right\" style=\"font-size:20px;float:left;\"></span>")
+		builder.append("<table>")
+				.append("<tr>")
+				.append("<td>")
+				.append(getHTMLForInterestTable(facebookIntersts))
+				.append("</td><td>")
+				.append("<span class=\"glyphicon glyphicon-arrow-right\" style=\"font-size:20px;float:left;color:white;\"></span>")
+				.append("</td><td>")
 				.append(getHTMLForInterestTable(celebrityInterests))
-				.append("</div>");
+				.append("</td></tr>").append("</table>");
+		return builder.toString();
+	}
+
+	public String getHTMLo1() {
+		List<Interest> facebookIntersts = (List<Interest>) o1;
+		return getHTMLForInterestTableTitle(facebookIntersts);
+	}
+
+	public String getHTMLo2() {
+		List<Interest> celebrityInterests = (List<Interest>) o2;
+		return getHTMLForInterestTableTitle(celebrityInterests);
+	}
+
+	private String getHTMLForInterestTableTitle(List<Interest> interests) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("<table>");
+		for (Interest interest : interests) {
+			builder.append("<tr>").append("<td>")
+					.append(interest.getName().replaceAll("[^\\w\\s]+", ""))
+					.append("</td>").append("<td>").append("<img src=\"")
+					.append(interest.getCoverURL())
+					.append("\" class=\"cover\">").append("</td>")
+					.append("</tr>");
+		}
+		builder.append("</table>");
 		return builder.toString();
 	}
 
 	private String getHTMLForInterestTable(List<Interest> interests) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("<table border=\"0\" style=\"color:white;float:left;\">");
+		builder.append("<table>");
 		int counter = 0;
 		int columns = getColumnCount(interests.size());
 		boolean rowClosed = false;
@@ -57,7 +66,7 @@ public class InterestCompareResult extends CompareResult {
 			}
 			builder.append("<td>").append("<img src=\"")
 					.append(interest.getCoverURL())
-					.append("\" height=\"150px\" style=\"margin:2px;\"></td>");
+					.append("\" class=\"cover\" style=\"margin:2px;\"></td>");
 			counter++;
 			if (counter == columns) {
 				counter = 0;

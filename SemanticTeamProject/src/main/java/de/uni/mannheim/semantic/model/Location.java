@@ -2,14 +2,14 @@ package de.uni.mannheim.semantic.model;
 
 public class Location {
 
-	public static final String BIRTHPLACE = "Birthplace";
-	public static final String DEATHPLACE = "Deathplace";
-	public static final String WORKPLACE = "Workplace";
-	public static final String EDUCATIONPLACE = "Educationplace";
-	public static final String CURRENT_LOCATION = "Current Location";
-	public static final String SHOOTING_LOCATION = "Shooting Location";
-	public static final String BROWSER_LOCATION = "Browser Location";
-	
+	public static final String BIRTHPLACE = "Birth:";
+	public static final String DEATHPLACE = "Death:";
+	public static final String WORKPLACE = "Work:";
+	public static final String EDUCATIONPLACE = "Education:";
+	public static final String CURRENT_LOCATION = "Current:";
+	public static final String SHOOTING_LOCATION = "Shooting:";
+	public static final String BROWSER_LOCATION = "Browser:";
+
 	private Double longitude;
 	private Double latitude;
 	private Integer offsetUTC;
@@ -17,6 +17,7 @@ public class Location {
 	private String country;
 	private String state;
 	private String postalCode;
+	private String description;
 	private String formattedLocation;
 
 	public Location(Double longitude, Double latitude, String name,
@@ -29,13 +30,9 @@ public class Location {
 		this.state = state;
 		this.postalCode = postalCode;
 		this.offsetUTC = offsetUTC;
-		if (description != null) {
-			formattedLocation = String.format("%s:<br>%s %s, %s", description, postalCode, name,
-					country);
-		} else {
-			formattedLocation = String.format("%s %s, %s", postalCode, name,
-					country);
-		}
+		this.description = description;
+		this.formattedLocation = String.format("%s %s, %s", postalCode, name,
+				country);
 	}
 
 	public Double getLongitude() {
@@ -89,6 +86,7 @@ public class Location {
 	public String toString() {
 		return formattedLocation;
 	}
+
 	public String getFormattedLocation() {
 		return formattedLocation;
 	}
@@ -128,6 +126,13 @@ public class Location {
 	public Integer getOffsetUTC() {
 		return offsetUTC;
 	}
-	
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
 }

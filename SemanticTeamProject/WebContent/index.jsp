@@ -59,49 +59,17 @@
 			});
 
 			function fetchUserData(lati, longi) {
-				$
-						.getJSON(
-								"fetchData?op=facebook&lati=" + lati
-										+ "&longi=" + longi,
-								function(data) {
-									console.log("Get FB Data");
-									$("#content").show();
-									$("#fbUserImage")
-											.attr('src', data.imageURL);
-									$("#userFirstname").html(data.firstname);
-									$("#userLastname").html(data.lastname);
-									$("#attr_age_user").html(
-											data.formattedBirthday);
-									$("#attr_hometown_user").html(
-											data.formattedHometown);
+				$.getJSON("fetchData?op=facebook&lati=" + lati + "&longi="
+						+ longi, function(data) {
+					console.log("Get FB Data");
+					$("#content").show();
+					$("#fbUserImage").attr('src', data.imageURL);
+					$("#userFirstname").html(data.firstname);
+					$("#userLastname").html(data.lastname);
 
-									$("#movies")
-											.append(
-													"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
-									$.each(data.allGenres, function() {
-										buildDyn("#movies", this);
-									});
-									$("#locations")
-											.append(
-													"<div class='row'><div class='col-md-1 attr_caption'>Locations:</div></div>");
-									$.each(data.locations, function() {
-										buildDyn("#locations",
-												this.formattedLocation);
-									});
+					console.debug(data);
+				});
 
-									console.debug(data);
-								});
-
-				function buildDyn(id, data) {
-					$(id)
-							.append(
-									"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
-											+ data
-											+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
-					$(id)
-							.append(
-									"<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
-				}
 			}
 		</script>
 
@@ -144,19 +112,10 @@
 					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-md-1 attr_caption">Birthdate:</div>
-				<div id="attr_age_user" class="col-md-2"></div>
-				<div class="col-md-6">
-
-					<div class="progress progress_age" data-toggle="tooltip"
-						data-html="true"></div>
-				</div>
-				<div id="attr_age_celebrity" class="col-md-2 textAlignRight"></div>
-			</div>
 
 
 
+			<div id="date"></div>
 			<div id="locations"></div>
 			<div id="movies"></div>
 
@@ -204,21 +163,13 @@
 
 				$("#attr_age_celebrity").html(json.celebrity.formattedBirthday);
 
-				$.each(json.ageCompResult.subresults, function() {
-					if (this.value != 0) {
-						$(".progress_age").append(
-								"<div class='progress-bar'  style='width:0%'><span class='sr-only'>"
-										+ this.value + "%" + "</span></div>");
-						$(".progress_age div:last").width(this.value + "%");
-					}
-				});
-				$(".progress_age").attr('data-original-title',
-						json.ageCompResult.HTML);
+				createDynMatch("#locations", json.locationResult, "Locations",
+						false);
+				createDynMatch("#movies", json.movieResult, "Interests", true);
 
-				createDynMatch("#locations", json.locationResult, "Locations");
-				createDynMatch("#movies", json.movieResult, "Interests");
+				createDynMatch("#date", json.ageCompResult, "Birthdate", false);
 
-				function createDynMatch(id, baseData, title) {
+				function createDynMatch(id, baseData, title, onebar) {
 
 					$(id).empty();
 					$(id).append(
@@ -231,49 +182,80 @@
 										if (this.sum != 0) {
 											$(id)
 													.append(
-															"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
+															"<div class='row'><div class='col-md-1 attr_caption_small'>"
+																	+ this.description
+																	+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo1+"'>"
 																	+ this.o1
 																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div>");
-											$
-													.each(
-															this.subresults,
-															function() {
-																if (this.value != 0) {
-																	$(id)
-																			.children()
-																			.last()
-																			.children()
-																			.last()
-																			.children()
-																			.last()
-																			.append(
-																					"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
-																							+ this.value
-																							+ "%"
-																							+ "</span></div>");
-																	$(id)
-																			.children()
-																			.last()
-																			.children()
-																			.last()
-																			.children()
-																			.last()
-																			.children()
-																			.last()
-																			.width(
-																					this.value
-																							+ "%");
+											if (!onebar) {
 
-																
-																}
-															});
+												$
+														.each(
+																this.subresults,
+																function() {
+																	if (this.value != 0) {
+																		$(id)
+																				.children()
+																				.last()
+																				.children()
+																				.last()
+																				.children()
+																				.last()
+																				.append(
+																						"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																								+ this.value
+																								+ "%"
+																								+ "</span></div>");
+																		$(id)
+																				.children()
+																				.last()
+																				.children()
+																				.last()
+																				.children()
+																				.last()
+																				.children()
+																				.last()
+																				.width(
+																						this.value
+																								+ "%");
+
+																	}
+																});
+											} else {
+												if (this.value != 0) {
+													$(id)
+															.children()
+															.last()
+															.children()
+															.last()
+															.children()
+															.last()
+															.append(
+																	"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																			+ this.value
+																			+ "%"
+																			+ "</span></div>");
+													$(id)
+															.children()
+															.last()
+															.children()
+															.last()
+															.children()
+															.last()
+															.children()
+															.last()
+															.width(
+																	this.value
+																			+ "%");
+												}
+											}
 											$(id)
-											.children()
-											.last()
-											.append(
-													"<div class='col-md-2 textAlignRight'>"
-															+ this.o2
-															+ "</div></div>");
+													.children()
+													.last()
+													.append(
+															"<div class='col-md-2 textAlignRight attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo2+"'>"
+																	+ this.o2
+																	+ "</div></div>");
 										}
 									});
 				}

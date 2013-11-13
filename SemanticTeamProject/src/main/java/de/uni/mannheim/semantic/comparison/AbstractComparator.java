@@ -1,5 +1,7 @@
 package de.uni.mannheim.semantic.comparison;
 
+import java.util.ArrayList;
+
 import de.uni.mannheim.semantic.model.CompareResult;
 
 public abstract class AbstractComparator<T extends Object> {

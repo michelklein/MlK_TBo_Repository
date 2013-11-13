@@ -2,6 +2,7 @@ package de.uni.mannheim.semantic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
@@ -90,8 +91,9 @@ public class FetchDataServlet extends HttpServlet {
 
 				Person fbPerson = (Person) request.getSession().getAttribute(
 						"facebookUser");
-				CompareResult ageResult = ageComparator.compare(
-						fbPerson.getBirthdate(), celebrity.getBirthdate());
+				List<CompareResult> ageResult = new ArrayList<CompareResult>();
+				ageResult.add(ageComparator.compare(fbPerson.getBirthdate(),
+						celebrity.getBirthdate()));
 
 				List<CompareResult> locationResults = locationsComparator
 						.compare(fbPerson.getLocations(),
