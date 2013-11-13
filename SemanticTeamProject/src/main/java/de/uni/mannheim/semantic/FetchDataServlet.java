@@ -55,24 +55,25 @@ public class FetchDataServlet extends HttpServlet {
 					"facebook");
 			FacebookParser fbParser = new FacebookParser(facebook);
 			Person fbPerson = fbParser.parseFacebookPerson();
-		
-//			for (Interest i : fbPerson.getInterest()) {
-//				System.out.println(i.getName());
-//				for (String s : i.getGenre()) {
-//					System.out.println("___" + s);
-//				}
-//			}
+
+			// for (Interest i : fbPerson.getInterest()) {
+			// System.out.println(i.getName());
+			// for (String s : i.getGenre()) {
+			// System.out.println("___" + s);
+			// }
+			// }
 			String latitude = request.getParameter("lati");
 			String longitude = request.getParameter("longi");
-			if(latitude != null && longitude != null) {
-				Location location = geoFetcher.getLocation(longitude, latitude, Location.BROWSER_LOCATION);
-				if(location != null) {
+			if (latitude != null && longitude != null) {
+				Location location = geoFetcher.getLocation(longitude, latitude,
+						Location.BROWSER_LOCATION);
+				if (location != null) {
 					fbPerson.getLocations().add(location);
 				}
 			}
-			
+
 			request.getSession().setAttribute("facebookUser", fbPerson);
-			
+
 			json = fbPerson.toJsonString();
 
 		} else if ("celebrity".equals(method)) {
@@ -87,7 +88,8 @@ public class FetchDataServlet extends HttpServlet {
 					}
 				}
 
-				Person fbPerson= (Person) request.getSession().getAttribute("facebookUser");
+				Person fbPerson = (Person) request.getSession().getAttribute(
+						"facebookUser");
 				CompareResult ageResult = ageComparator.compare(
 						fbPerson.getBirthdate(), celebrity.getBirthdate());
 
@@ -103,7 +105,8 @@ public class FetchDataServlet extends HttpServlet {
 				json = comp.toJsonString();
 			}
 		} else if ("celebrityList".equals(method)) {
-			json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();
+			// json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();
+			json = CelebritiesFetcher.get().getArtistsAsJson();
 		}
 
 		if (json != null) {

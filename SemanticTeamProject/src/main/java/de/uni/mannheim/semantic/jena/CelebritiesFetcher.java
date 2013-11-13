@@ -379,6 +379,41 @@ public class CelebritiesFetcher {
 		return result;
 	}
 
+	public List<String> getArtists() {
+		List<String> celebrities = new ArrayList<String>();
+		try {
+
+			// Remote execution.
+			QueryExecution qexec = QueryExecutionFactory.sparqlService(
+					"http://dbpedia.org/sparql", QueryHelper.getArtists());
+			// Set the DBpedia specific timeout.
+			((QueryEngineHTTP) qexec).addParam("timeout", "10000");
+
+			// Execute.
+			ResultSet rs = qexec.execSelect();
+			String firstName = null;
+			String lastName = null;
+			String fullname = null;
+			while (rs.hasNext()) {
+
+				QuerySolution soln = rs.nextSolution();
+				firstName = gll(soln, "firstname");
+				lastName = gll(soln, "lastname");
+				fullname = String.format("%s %s", firstName, lastName);
+				if (!celebrities.contains(fullname)) {
+					System.out.println("\"" + fullname + "\",");
+					celebrities.add(fullname);
+				}
+			}
+			// System.out.println(celebrities.size());
+			qexec.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return celebrities;
+	}
+
 	public List<String> getCelebrities() {
 		List<String> celebrities = new ArrayList<String>();
 		try {
@@ -685,6 +720,17 @@ public class CelebritiesFetcher {
 		}
 		return array.toString();
 	}
+	
+	public String getArtistsAsJson() {
+		JsonObject json = new JsonObject();
+		JsonArray array = new JsonArray();
+		for (String celebrity : getArtists()) {
+			json.put("celebritie", celebrity);
+			array.add(celebrity);
+		}
+		return array.toString();
+	}
+
 
 	public String getCelebritiesAsJson() {
 		JsonObject json = new JsonObject();

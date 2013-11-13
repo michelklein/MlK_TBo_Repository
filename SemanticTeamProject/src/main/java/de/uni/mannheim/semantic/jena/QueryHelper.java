@@ -128,4 +128,17 @@ public class QueryHelper {
 		return builder.toString();
 	}
 
+	public static String getArtists() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> ")
+				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+				.append("select ?firstname ?lastname ")
+				.append("where {?m a dbpedia-owl:Film.")
+				.append("?m dbpedia-owl:starring ?p.")
+				.append("?m dbpedia-owl:starring ?p. ?p foaf:givenName ?firstname. ")
+				.append("?p foaf:surname ?lastname.")
+				.append("} ORDER BY ASC(?lastname)");
+
+		return builder.toString();
+	}
 }
