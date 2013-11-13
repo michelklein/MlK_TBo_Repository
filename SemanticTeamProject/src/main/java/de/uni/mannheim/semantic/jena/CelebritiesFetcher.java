@@ -77,7 +77,7 @@ public class CelebritiesFetcher {
 		RDFNode birthplace = null;
 		boolean first = true;
 		List<Interest> interests = new ArrayList<Interest>();
-		ResultSet resSet = getCelebrityBasicInfo(name);
+		ResultSet resSet = execute("http://dbpedia.org/sparql", QueryHelper.getBasicInfoQuery(name));;
 
 		while (resSet.hasNext()) {
 			QuerySolution s = resSet.nextSolution();
@@ -105,7 +105,7 @@ public class CelebritiesFetcher {
 			type.add(g(s, "sc"));
 			if (is(type, "artist")) {
 				System.out.println("artist?");
-				resSet = getAlbums(personIdent);
+				resSet = execute("http://dbpedia.org/sparql", QueryHelper.getAlbumsQuery(personIdent));
 
 				String oldLabel = "";
 				Set<String> g = null;
@@ -130,7 +130,7 @@ public class CelebritiesFetcher {
 				}
 			}
 			if (is(type, "actor")) {
-				resSet = getMovies(personIdent);
+				resSet = execute("http://dbpedia.org/sparql", QueryHelper.getMoviesQuery(personIdent));
 				while (resSet.hasNext()) {
 					s = resSet.nextSolution();
 					String label = gll(s, "label");
@@ -143,6 +143,13 @@ public class CelebritiesFetcher {
 					label = label.trim();
 					label = label + " (" + year + ")";
 
+					
+					
+					
+					String imdb = g(s, "p");
+					
+					System.out.println(imdb);
+					
 					Interest i = new Interest("movie", COVER_URL_DUMMY,
 							getGenreFromFile(label), "id", label);
 					interests.add(i);
@@ -173,30 +180,6 @@ public class CelebritiesFetcher {
 		return false;
 	}
 
-	private ResultSet getCelebrityBasicInfo(String celName) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
-				.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>")
-				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				.append("SELECT DISTINCT * WHERE {")
-				// .append("?p owl:sameAs ?sa.")
-				.append("?p foaf:name ?name.")
-				.append("?p a ?type.")
-				.append("?type rdfs:subClassOf ?sc.")
-				.append("?p foaf:givenName ?givenName.")
-				.append("?p foaf:surname ?surname.")
-				.append("?p ont:thumbnail ?thumbnail.")
-				.append("?p ont:birthPlace ?birthPlace.")
-				.append("?p ont:birthDate ?date.")
-				.append("FILTER (?name='" + celName + "'@en)")
-				.append("FILTER(NOT EXISTS { ?birthPlace a dbpedia-owl:Country} )")
-				.append("}");
-		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-		return rs;
-	}
 
 	private Set<Location> getCelebrityLocations(String celebrityName) {
 		Set<Location> locations = new HashSet<Location>();
@@ -255,40 +238,11 @@ public class CelebritiesFetcher {
 		return null;
 	}
 
-	private ResultSet getMovies(String sameAs) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
-				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				.append("PREFIX dcterms: <http://purl.org/dc/terms/>")
-				.append("PREFIX skos: <http://www.w3.org/2004/02/skos/core#>")
-				.append("SELECT Distinct ?label ?year WHERE {")
-				.append("?p rdfs:label ?label.")
-				.append("?p dcterms:subject ?year.")
-				.append("?year skos:broader <http://dbpedia.org/resource/Category:Films_by_year>.")
-				.append("?p ont:starring <" + sameAs + ">.")
-				.append("FILTER (LANG(?label)='en')").append("}");
-		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-		return rs;
-	}
 
-	private ResultSet getAlbums(String sameAs) {
-		StringBuilder builder = new StringBuilder();
-		builder.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-				.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-				.append("PREFIX owl: <http://www.w3.org/2002/07/owl#>")
-				.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-				.append("SELECT Distinct * WHERE {")
-				.append("?p rdfs:label ?label.")
-				.append("?p ont:artist <" + sameAs + ">.")
-				.append("?p a <http://dbpedia.org/ontology/MusicalWork>.")
-				.append("?p ont:genre ?genre.")
-				.append("FILTER (LANG(?label)='en')").append("}");
-		ResultSet rs = execute("http://dbpedia.org/sparql", builder.toString());
-		return rs;
+
+	private String getAlbumsQuery(String sameAs) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private ResultSet execute(String endPoint, String q) {

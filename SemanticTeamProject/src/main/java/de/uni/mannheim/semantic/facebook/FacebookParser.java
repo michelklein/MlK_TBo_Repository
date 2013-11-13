@@ -119,8 +119,7 @@ public class FacebookParser {
 			// allInts.addAll(fb.getMusic());
 			// allInts.addAll(fb.getGames());
 
-//			fb.getLikedPage();
-			
+//		fb.getLikedPage();
 			
 			for (Category c : allInts) {
 				interests.add(createInterestByID(c));

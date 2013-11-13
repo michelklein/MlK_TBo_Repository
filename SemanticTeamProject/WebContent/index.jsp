@@ -61,8 +61,8 @@
 			function fetchUserData(lati, longi) {
 				$
 						.getJSON(
-								"fetchData?op=facebook&lati=" + lati + "&longi="
-										+ longi,
+								"fetchData?op=facebook&lati=" + lati
+										+ "&longi=" + longi,
 								function(data) {
 									console.log("Get FB Data");
 									$("#content").show();
@@ -130,10 +130,11 @@
 				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
-						
-							<span id="celebrityFirstname" class="header-name header-show header-bold">First</span>
-							<span id="celebrityLastname" class="header-name header-show">Last</span>
-							
+
+							<span id="celebrityFirstname"
+								class="header-name header-show header-bold">First</span> <span
+								id="celebrityLastname" class="header-name header-show">Last</span>
+
 							<input id="search-celebrity" type="text" class="form-control"
 								data-provide="typeahead" data-items="4"
 								placeholder="Type in your celebrity ..."> <img
@@ -168,14 +169,12 @@
 			$.ajaxSetup({
 				cache : false
 			});
-			$( ".header-show" ).click(function() {
+			$(".header-show").click(function() {
 				$(".header-show").hide();
 				$(".twitter-typeahead").fadeIn(1000);
-				
-			
-				});
-			
-			
+
+			});
+
 			$('#search-celebrity').typeahead(
 					{
 						name : 'celebrities',
@@ -200,11 +199,9 @@
 				$("#celebrityImage").attr('src', json.celebrity.imageURL);
 				$("#celebrityFirstname").html(json.celebrity.firstname);
 				$("#celebrityLastname").html(json.celebrity.lastname);
-				
-				
-			
+
 				$(".header-show").show();
-				
+
 				$("#attr_age_celebrity").html(json.celebrity.formattedBirthday);
 
 				$.each(json.ageCompResult.subresults, function() {
@@ -218,14 +215,15 @@
 				$(".progress_age").attr('data-original-title',
 						json.ageCompResult.HTML);
 
-				createDynMatch("#movies", json.movieResult,"Interests");
-				createDynMatch("#locations", json.locationResult,"Locations");
-				function createDynMatch(id, baseData,title) {
+				createDynMatch("#locations", json.locationResult, "Locations");
+				createDynMatch("#movies", json.movieResult, "Interests");
+
+				function createDynMatch(id, baseData, title) {
 
 					$(id).empty();
-					$(id)
-							.append(
-									"<div class='row'><div class='col-md-1 attr_caption'>"+title+":</div></div>");
+					$(id).append(
+							"<div class='row'><div class='col-md-1 attr_caption'>"
+									+ title + ":</div></div>");
 					$
 							.each(
 									baseData,
@@ -235,7 +233,7 @@
 													.append(
 															"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
 																	+ this.o1
-																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div></div>");
+																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div>");
 											$
 													.each(
 															this.subresults,
@@ -266,8 +264,16 @@
 																					this.value
 																							+ "%");
 
+																
 																}
 															});
+											$(id)
+											.children()
+											.last()
+											.append(
+													"<div class='col-md-2 textAlignRight'>"
+															+ this.o2
+															+ "</div></div>");
 										}
 									});
 				}
