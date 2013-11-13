@@ -256,14 +256,16 @@ table {
 .preUser {
 	padding: 150px 0 !important;
 }
-
+.leftAlign{
+		text-align: left !important;
+}
 .centBig {
 	position: absolute;
 	left: 50%;
 	top: 50%;
 	font-size: 60px;
     -webkit-animation-name: rotate; 
-    -webkit-animation-duration: 2s; 
+    -webkit-animation-duration: 1.5s; 
     -webkit-animation-iteration-count: infinite;
     -webkit-animation-timing-function: linear;
     -moz-animation-name: rotate; 

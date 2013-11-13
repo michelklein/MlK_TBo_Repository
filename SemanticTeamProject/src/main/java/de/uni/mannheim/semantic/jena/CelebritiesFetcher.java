@@ -41,16 +41,7 @@ public class CelebritiesFetcher {
 
 	public static void main(String[] args) throws IOException {
 
-		String page = "http://imdb.com/title/tt0118460/(HALLO)";
-
-		page = page.replaceAll("\\(", "%28");
-		page = page.replaceAll("\\)", "%29");
-		System.out.println(page);
-		if (page.contains("imdb.com/title/tt")) {
-			System.out.println("jo");
-		}
-
-		// CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
+		CelebritiesFetcher.get().getAllDates("<http://dbpedia.org/page/Arnold_Schwarzenegger>");
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
 		// Set<Location> celebrityLocations = CelebritiesFetcher.get()
 		// .getCelebrityLocations("Arnold Schwarzenegger");
@@ -64,6 +55,11 @@ public class CelebritiesFetcher {
 		// for (Location loc : celebrityLocations) {
 		// System.out.println(loc.toString());
 		// }
+	}
+
+	private void getAllDates(String string) {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private static CelebritiesFetcher instance;

@@ -82,8 +82,7 @@ public class CompareResult extends AbstractToJson {
 		}
 		builder.append("<tr>").append("<td style=\"padding-top: 10px;\"><li>")
 				.append("</li></td><td style=\"padding-top: 10px;\"><b>")
-				.append(getDesc1())
-				.append(":</b></td><td style=\"padding-top: 10px;\"><b>")
+				.append("Total:</b></td><td style=\"padding-top: 10px;\"><b>")
 				.append(getValue()).append("%</b></td></tr>");
 		return builder.toString();
 	}

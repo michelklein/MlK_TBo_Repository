@@ -190,7 +190,7 @@
 											$(id)
 													.append(
 															"<div class='row'><div class='col-md-1 attr_caption_small'>"
-																	+ this.description
+																	+ this.desc1
 																	+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+tt+"'>"
 																	+ this.o1
 																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div>");
@@ -262,8 +262,8 @@
 													.append(
 															"<div class='col-md-2 textAlignRight attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo2+"'>"
 																	+ this.o2
-																	+ "</div><div class='col-md-1 attr_caption_small'>"
-																	+ this.description
+																	+ "</div><div class='col-md-1 attr_caption_small leftAlign'>"
+																	+ this.desc2
 																	+ "</div></div>");
 										}
 									});

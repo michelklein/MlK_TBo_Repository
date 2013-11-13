@@ -5,10 +5,11 @@ import java.util.List;
 public class InterestCompareResult extends CompareResult {
 
 	private static final int WIDTH_PER_IMAGE = 150;
-
-	public InterestCompareResult(int value, String desc1, String desc2,
+	private String genre;
+	public InterestCompareResult(int value, String genre, String desc1, String desc2,
 			List<Interest> facebookIntersts, List<Interest> celebrityInterests) {
 		super(value, desc1, desc2, facebookIntersts, celebrityInterests);
+		this.genre = genre;
 	}
 
 	public String getHTML() {
@@ -95,11 +96,11 @@ public class InterestCompareResult extends CompareResult {
 	}
 
 	public String getO1() {
-		return desc1;
+		return genre;
 	}
 
 	public String getO2() {
-		return desc2;
+		return genre;
 	}
 
 	public String getDescription() {
