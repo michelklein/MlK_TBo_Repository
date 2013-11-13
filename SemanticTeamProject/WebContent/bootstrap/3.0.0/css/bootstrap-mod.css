@@ -19,8 +19,8 @@ body.loading {
 }
 
 body{
-	border-radius: 6px;
-	margin: 30px;
+	
+	background: none;
 }
 
 /* Anytime the body has the loading class, our
@@ -29,9 +29,11 @@ body.loading .loadingModal {
 	display: block;
 }
 
+
 .loginScreen {
 	width: 100%;
 }
+
 
 .loginButton {
 	font-size: 38px;
@@ -76,6 +78,9 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small,.h1 small,.h2 small,.h3 sm
 	font-weight: 200;
 	line-height: 1.1;
 	font-size: 18px;
+	border-radius: 6px;
+	margin: 30px;
+	background: white;
 	
 }
 
@@ -125,11 +130,8 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small,.h1 small,.h2 small,.h3 sm
 }
 
 .twitter-typeahead .tt-hint {
-	display: block;
-	padding: 8px 12px;
-	font-size: 28px;
-	border: 1px solid transparent;
-	text-align: right;
+	display: none;
+	
 }
 
 img {
@@ -157,7 +159,9 @@ img {
 	color: #999999;
 	font-size: 28px;
 }
-
+.header-show {
+		display: none;
+}
 .attr_caption {
 	font-size: 18px;
 	font-weight: bold;

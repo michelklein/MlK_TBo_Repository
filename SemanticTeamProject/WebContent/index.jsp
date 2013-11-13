@@ -35,58 +35,73 @@
 	</tag:notloggedin>
 
 	<tag:loggedin>
-
 		<script type="text/javascript" language="javascript">
+			if (navigator.geolocation) {
+				$("body").addClass("loading");
+				navigator.geolocation.getCurrentPosition(success, error);
+			} else {
+				alert("Not Supported!");
+			}
+
+			function success(position) {
+				fetchUserData(position.coords.latitude,
+						position.coords.longitude);
+			}
+			function error(msg) {
+				console.log(typeof msg == 'string' ? msg : "error");
+			}
 			$(document).ajaxStart(function() {
 				console.log("ajaxStart");
 				$("body").addClass("loading");
 			});
-
 			$(document).ajaxComplete(function() {
-				console.log("ajaxComplete");
 				$("body").removeClass("loading");
 			});
-			$
-					.getJSON(
-							"fetchData?op=facebook",
-							function(data) {
-								console.log("Get FB Data");
-								$("#content").show();
-								$("#fbUserImage").attr('src', data.imageURL);
-								$("#userFirstname").html(data.firstname);
-								$("#userLastname").html(data.lastname);
-								$("#attr_age_user")
-										.html(data.formattedBirthday);
-								$("#attr_hometown_user").html(
-										data.formattedHometown);
 
-								$("#movies")
-										.append(
-												"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
-								$.each(data.allGenres, function() {
-									buildDyn("#movies", this);
+			function fetchUserData(lati, longi) {
+				$
+						.getJSON(
+								"fetchData?op=facebook&lati=" + lati + "&longi="
+										+ longi,
+								function(data) {
+									console.log("Get FB Data");
+									$("#content").show();
+									$("#fbUserImage")
+											.attr('src', data.imageURL);
+									$("#userFirstname").html(data.firstname);
+									$("#userLastname").html(data.lastname);
+									$("#attr_age_user").html(
+											data.formattedBirthday);
+									$("#attr_hometown_user").html(
+											data.formattedHometown);
+
+									$("#movies")
+											.append(
+													"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
+									$.each(data.allGenres, function() {
+										buildDyn("#movies", this);
+									});
+									$("#locations")
+											.append(
+													"<div class='row'><div class='col-md-1 attr_caption'>Locations:</div></div>");
+									$.each(data.locations, function() {
+										buildDyn("#locations",
+												this.formattedLocation);
+									});
+
+									console.debug(data);
 								});
-								$("#locations")
-										.append(
-												"<div class='row'><div class='col-md-1 attr_caption'>Locations:</div></div>");
-								$.each(data.locations, function() {
-									buildDyn("#locations",
-											this.formattedLocation);
-								});
 
-								console.debug(data);
-							});
-
-			function buildDyn(id, data) {
-				$(id)
-						.append(
-								"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
-										+ data
-										+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
-				$(id)
-						.append(
-								"<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
-
+				function buildDyn(id, data) {
+					$(id)
+							.append(
+									"<div class='row'><div class='col-md-1 attr_caption'></div><div class='col-md-2'>"
+											+ data
+											+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip'	data-html='true' data-original-title='Default tooltip'></div>");
+					$(id)
+							.append(
+									"<div id='attr_loc4_celebrity' class='col-md-2 textAlignRight'></div>");
+				}
 			}
 		</script>
 
@@ -115,10 +130,10 @@
 				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
-							<!-- 
-							<span id="celebrityFirstname" class="header-name header-bold">First</span>
-							<span id="celebrityLastname" class="header-name">Last</span>
-							 -->
+						
+							<span id="celebrityFirstname" class="header-name header-show header-bold">First</span>
+							<span id="celebrityLastname" class="header-name header-show">Last</span>
+							
 							<input id="search-celebrity" type="text" class="form-control"
 								data-provide="typeahead" data-items="4"
 								placeholder="Type in your celebrity ..."> <img
@@ -147,13 +162,20 @@
 
 
 		</div>
-		</div>
+
 
 		<script type="text/javascript">
 			$.ajaxSetup({
 				cache : false
 			});
-
+			$( ".header-show" ).click(function() {
+				$(".header-show").hide();
+				$(".twitter-typeahead").fadeIn(1000);
+				
+			
+				});
+			
+			
 			$('#search-celebrity').typeahead(
 					{
 						name : 'celebrities',
@@ -163,6 +185,7 @@
 					}).on(
 					'typeahead:selected',
 					function($e) {
+						$(".twitter-typeahead").hide();
 						var $typeahead = $(this);
 						$.getJSON("fetchData?op=celebrity&name="
 								+ $typeahead.val(), function(data) {
@@ -175,8 +198,13 @@
 				var json = data;
 				console.debug(data);
 				$("#celebrityImage").attr('src', json.celebrity.imageURL);
-				//$("#celebrityFirstname").html(json.celebrity.firstname);
-				//$("#celebrityLastname").html(json.celebrity.lastname);
+				$("#celebrityFirstname").html(json.celebrity.firstname);
+				$("#celebrityLastname").html(json.celebrity.lastname);
+				
+				
+			
+				$(".header-show").show();
+				
 				$("#attr_age_celebrity").html(json.celebrity.formattedBirthday);
 
 				$.each(json.ageCompResult.subresults, function() {
@@ -190,14 +218,14 @@
 				$(".progress_age").attr('data-original-title',
 						json.ageCompResult.HTML);
 
-				createDynMatch("#movies", json.movieResult);
-				createDynMatch("#locations", json.locationResult);
-				function createDynMatch(id, baseData) {
+				createDynMatch("#movies", json.movieResult,"Interests");
+				createDynMatch("#locations", json.locationResult,"Locations");
+				function createDynMatch(id, baseData,title) {
 
 					$(id).empty();
 					$(id)
 							.append(
-									"<div class='row'><div class='col-md-1 attr_caption'>Interests:</div></div>");
+									"<div class='row'><div class='col-md-1 attr_caption'>"+title+":</div></div>");
 					$
 							.each(
 									baseData,
