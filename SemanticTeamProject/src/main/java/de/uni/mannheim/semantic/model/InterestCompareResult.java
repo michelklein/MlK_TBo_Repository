@@ -1,28 +1,31 @@
 package de.uni.mannheim.semantic.model;
 
+import java.util.List;
+
 public class InterestCompareResult extends CompareResult {
 
 	private static final int WIDTH_PER_IMAGE = 150;
 	
-	public InterestCompareResult(int value, String description,
-			InterestCompareObject o1, InterestCompareObject o2) {
-		super(value, description, o1, o2);
+	public InterestCompareResult(int value, String description, 
+			List<Interest> facebookIntersts, List<Interest> celebrityInterests) {
+		super(value, description, facebookIntersts, celebrityInterests);
 	}
 
 	public String getHTML() {
-		InterestCompareObject ico1 = (InterestCompareObject) o1;
+		List<Interest> facebookIntersts = (List<Interest>) o1;
+		List<Interest> celebrityInterests = (List<Interest>) o2;
 
 		StringBuilder builder = new StringBuilder();
-		int width = (WIDTH_PER_IMAGE * ico1.getPicURLs1().size())
-				+ (WIDTH_PER_IMAGE * ico1.getPicURLs2().size());
+		int width = (WIDTH_PER_IMAGE * facebookIntersts.size())
+				+ (WIDTH_PER_IMAGE * celebrityInterests.size());
 		builder.append("<div style=\"width:").append(width).append("px;\">");
-		for (String picURL : ico1.getPicURLs1()) {
-			builder.append("<img src=\"").append(picURL)
-					.append("\" height=\"150px\" style=\"margin:2px;\">");
+		for (Interest interst : facebookIntersts) {
+			builder.append("<img src=\"").append(interst.getCoverURL())
+			.append("\" height=\"150px\" style=\"margin:2px;\">");
 		}
 		builder.append("<span class=\"glyphicon glyphicon-arrow-right\"></span>");
-		for (String picURL : ico1.getPicURLs2()) {
-			builder.append("<img src=\"").append(picURL)
+		for (Interest interst : celebrityInterests) {
+			builder.append("<img src=\"").append(interst.getCoverURL())
 					.append("\" height=\"150px\" style=\"margin:2px;\">");
 		}
 		builder.append("</div>");
@@ -30,11 +33,19 @@ public class InterestCompareResult extends CompareResult {
 	}
 
 	public String getO1() {
-		return o1.toString();
+		return description;
 	}
 
 	public String getO2() {
-		return o2.toString();
+		return description;
+	}
+	
+	public List<Interest> getFacebookInterests() {
+		return (List<Interest>) o1;
+	}
+	
+	public List<Interest> getCelebrityInterests() {
+		return (List<Interest>) o2;
 	}
 
 }

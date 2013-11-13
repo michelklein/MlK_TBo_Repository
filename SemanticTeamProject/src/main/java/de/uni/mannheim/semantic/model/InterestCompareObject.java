@@ -6,8 +6,8 @@ import java.util.List;
 public class InterestCompareObject {
 
 	private String genre;
-	private List<String> picURLs1;
-	private List<String> picURLs2;
+	private List<Interest> facebookInterests;
+	private List<Interest> celebrityInterests;
 
 	public InterestCompareObject(String genre) {
 		this.genre = genre;
@@ -17,18 +17,18 @@ public class InterestCompareObject {
 		return genre;
 	}
 
-	public List<String> getPicURLs1() {
-		if (picURLs1 == null) {
-			picURLs1 = new ArrayList<String>();
+	public List<Interest> getFacebookInterests() {
+		if (facebookInterests == null) {
+			facebookInterests = new ArrayList<Interest>();
 		}
-		return picURLs1;
+		return facebookInterests;
 	}
 
-	public List<String> getPicURLs2() {
-		if (picURLs2 == null) {
-			picURLs2 = new ArrayList<String>();
+	public List<Interest> getCelebrityInterests() {
+		if (celebrityInterests == null) {
+			celebrityInterests = new ArrayList<Interest>();
 		}
-		return picURLs2;
+		return celebrityInterests;
 	}
 
 	public String toString() {
