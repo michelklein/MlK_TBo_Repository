@@ -26,6 +26,7 @@ import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 import de.uni.mannheim.semantic.FetchGeoData;
+import de.uni.mannheim.semantic.FetchMovieData;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
@@ -34,7 +35,9 @@ import de.uni.mannheim.semantic.util.PropertiesUtils;
 public class CelebritiesFetcher {
 
 	private FetchGeoData geocoding = new FetchGeoData();
+	private FetchMovieData movieFetcher = new FetchMovieData();
 	private static final String COVER_URL_DUMMY = "http://www.ernieputto.de/filmstuff4/batman_begins/batman_begins_poster_us2.jpg";
+
 	public static void main(String[] args) throws IOException {
 
 		CelebritiesFetcher.get().getGenreFromFile("Red Heat (1988)");
@@ -77,7 +80,9 @@ public class CelebritiesFetcher {
 		RDFNode birthplace = null;
 		boolean first = true;
 		List<Interest> interests = new ArrayList<Interest>();
-		ResultSet resSet = execute("http://dbpedia.org/sparql", QueryHelper.getBasicInfoQuery(name));;
+		ResultSet resSet = execute("http://dbpedia.org/sparql",
+				QueryHelper.getBasicInfoQuery(name));
+		;
 
 		while (resSet.hasNext()) {
 			QuerySolution s = resSet.nextSolution();
@@ -105,7 +110,8 @@ public class CelebritiesFetcher {
 			type.add(g(s, "sc"));
 			if (is(type, "artist")) {
 				System.out.println("artist?");
-				resSet = execute("http://dbpedia.org/sparql", QueryHelper.getAlbumsQuery(personIdent));
+				resSet = execute("http://dbpedia.org/sparql",
+						QueryHelper.getAlbumsQuery(personIdent));
 
 				String oldLabel = "";
 				Set<String> g = null;
@@ -130,7 +136,8 @@ public class CelebritiesFetcher {
 				}
 			}
 			if (is(type, "actor")) {
-				resSet = execute("http://dbpedia.org/sparql", QueryHelper.getMoviesQuery(personIdent));
+				resSet = execute("http://dbpedia.org/sparql",
+						QueryHelper.getMoviesQuery(personIdent));
 				while (resSet.hasNext()) {
 					s = resSet.nextSolution();
 					String label = gll(s, "label");
@@ -141,18 +148,14 @@ public class CelebritiesFetcher {
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
 					label = label.trim();
-					label = label + " (" + year + ")";
+					// label = label + " (" + year + ")";
 
-					
-					
-					
 					String imdb = g(s, "p");
-					
+
 					System.out.println(imdb);
-					
-					Interest i = new Interest("movie", COVER_URL_DUMMY,
-							getGenreFromFile(label), "id", label);
-					interests.add(i);
+					Interest i = movieFetcher.getMovie(label, year);
+					if (i != null)
+						interests.add(i);
 
 				}
 
@@ -179,7 +182,6 @@ public class CelebritiesFetcher {
 		}
 		return false;
 	}
-
 
 	private Set<Location> getCelebrityLocations(String celebrityName) {
 		Set<Location> locations = new HashSet<Location>();
@@ -237,8 +239,6 @@ public class CelebritiesFetcher {
 
 		return null;
 	}
-
-
 
 	private String getAlbumsQuery(String sameAs) {
 		// TODO Auto-generated method stub
@@ -628,7 +628,7 @@ public class CelebritiesFetcher {
 				"Alfred Wolfsohn", "Klaus Wunderlich", "Martin Wuttke",
 				"William Wyler", "Dana Wynter", "Natalia Wšrner", "Jerry Zaks",
 				"Frank Zander", "Ruth Zechlin", "Michael Zittel",
-				"Rolf Zuckowski", "GŸnter de Bruyn","Arnold Schwarzenegger" };
+				"Rolf Zuckowski", "GŸnter de Bruyn", "Arnold Schwarzenegger" };
 		return new ArrayList<String>(Arrays.asList(persons));
 	}
 
