@@ -4,8 +4,6 @@ import java.util.Set;
 
 public class Interest {
 
-	private static final String COVER_URL_DUMMY = "http://www.ernieputto.de/filmstuff4/batman_begins/batman_begins_poster_us2.jpg";
-	
 	private String kind;
 	private String cover_url;
 	private Set<String> genre;
@@ -16,9 +14,9 @@ public class Interest {
 			String name) {
 		this.kind = kind;
 		this.cover_url = cover_url;
-		if(this.cover_url == null) {
-			cover_url = COVER_URL_DUMMY;
-		}
+//		if(this.cover_url == null) {
+//			cover_url = COVER_URL_DUMMY;
+//		}
 		this.genre = set;
 		this.id = id;
 		this.name = name;

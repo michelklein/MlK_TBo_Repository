@@ -8,6 +8,7 @@ import java.util.Set;
 
 import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
 
+import de.uni.mannheim.semantic.model.CompareResult;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.InterestCompareObject;
 import de.uni.mannheim.semantic.model.InterestCompareResult;
@@ -19,8 +20,13 @@ import de.uni.mannheim.semantic.model.InterestCompareResult;
  */
 public class InterestsComparator {
 
-	public List<InterestCompareResult> compare(List<Interest> fbInterests,
-			List<Interest> celebrityInterests) {
+	public List<InterestCompareResult> compare(List<Interest> interests1,
+			List<Interest> interests2) {
+		List<Interest> fbInterests = filterInterestsWithCover(interests1);
+		List<Interest> celebrityInterests = filterInterestsWithCover(interests2);
+		if(fbInterests.size() == 0 || celebrityInterests.size() == 0) {
+			return null;
+		}
 		// define the steps per movie
 		int steps = 100 / celebrityInterests.size();
 		List<InterestCompareResult> resultList = new ArrayList<InterestCompareResult>();
@@ -54,17 +60,22 @@ public class InterestsComparator {
 		for (String genre : genreList) {
 			// contains all interests for the current genre
 			List<Interest> interestPerGenre = new ArrayList<Interest>();
+			InterestCompareResult interestCompareResult = new InterestCompareResult(
+					steps * interestPerGenre.size(), genre,
+					genreToInterests.get(genre), interestPerGenre);
 			// add the celebrity interests to the list
 			for (Interest i : celebrityInterests) {
 				if (i.getGenre().contains(genre.trim())) {
 					interestPerGenre.add(i);
+					interestCompareResult.getSubresults()
+							.add(new CompareResult(steps, i.getName(), genre,
+									genre));
 				}
 			}
-			// if there is at least one interest per genre, create one InterstCompareResult
+			// if there is at least one interest per genre, create one
+			// InterstCompareResult
 			if (interestPerGenre.size() > 0) {
-				resultList.add(new InterestCompareResult(
-						steps * interestPerGenre.size(), genre,
-						genreToInterests.get(genre), interestPerGenre));
+				resultList.add(interestCompareResult);
 			}
 		}
 
@@ -84,5 +95,16 @@ public class InterestsComparator {
 		// }
 		// }
 		return resultList;
+	}
+
+	private List<Interest> filterInterestsWithCover(List<Interest> interests) {
+		List<Interest> result = new ArrayList<Interest>();
+		for (Interest i : interests) {
+			if (i.getCoverURL() != null) {
+				result.add(i);
+			}
+		}
+
+		return result;
 	}
 }
