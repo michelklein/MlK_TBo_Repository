@@ -100,6 +100,10 @@ public class InterestCompareResult extends CompareResult {
 	public String getO2() {
 		return description;
 	}
+	
+	public String getDescription() {
+		return "";
+	}
 
 	public List<Interest> getFacebookInterests() {
 		return (List<Interest>) o1;
