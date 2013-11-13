@@ -82,10 +82,10 @@ public class Location {
 	public void setPostalCode(String postalCode) {
 		this.postalCode = postalCode;
 	}
-
-	public String toString() {
-		return formattedLocation;
-	}
+//
+//	public String toString() {
+//		return formattedLocation;
+//	}
 
 	public String getFormattedLocation() {
 		return formattedLocation;

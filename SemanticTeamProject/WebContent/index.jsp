@@ -111,6 +111,8 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-md-1">
+				</div>
 			</div>
 
 
@@ -255,7 +257,7 @@
 													.append(
 															"<div class='col-md-2 textAlignRight attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo2+"'>"
 																	+ this.o2
-																	+ "</div></div>");
+																	+ "</div><div class='col-md-1 attr_caption_small'>"+this.description+"</div></div>");
 										}
 									});
 				}

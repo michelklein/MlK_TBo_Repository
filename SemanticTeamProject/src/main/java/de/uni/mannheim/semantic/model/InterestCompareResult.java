@@ -45,7 +45,7 @@ public class InterestCompareResult extends CompareResult {
 					.append(interest.getName().replaceAll("[^\\w\\s]+", ""))
 					.append("</td>").append("<td>").append("<img src=\"")
 					.append(interest.getCoverURL())
-					.append("\" class=\"cover\">").append("</td>")
+					.append("\" class=\"cover_small\">").append("</td>")
 					.append("</tr>");
 		}
 		builder.append("</table>");
@@ -66,7 +66,7 @@ public class InterestCompareResult extends CompareResult {
 			}
 			builder.append("<td>").append("<img src=\"")
 					.append(interest.getCoverURL())
-					.append("\" class=\"cover\" style=\"margin:2px;\"></td>");
+					.append("\" class=\"cover_big\" style=\"margin:2px;\"></td>");
 			counter++;
 			if (counter == columns) {
 				counter = 0;

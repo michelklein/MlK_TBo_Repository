@@ -243,7 +243,12 @@ table {
 	color: white;
 }
 
-.cover {
-	height: 100px;
+.cover_small {
+	height: 50px;
+	margin: 2px;
+}
+
+.cover_big {
+	height: 120px;
 	margin: 2px;
 }
