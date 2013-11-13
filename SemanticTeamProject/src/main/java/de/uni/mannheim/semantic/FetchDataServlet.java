@@ -18,6 +18,7 @@ import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CompareResult;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.InterestCompareResult;
+import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.MatchingContainer;
 import de.uni.mannheim.semantic.model.Person;
 import facebook4j.Facebook;
@@ -28,7 +29,7 @@ import facebook4j.Facebook;
 @WebServlet("/FetchDataServlet")
 public class FetchDataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
+	private FetchGeoData geoFetcher = new FetchGeoData();
 	private AgeComparator ageComparator = new AgeComparator();
 	private LocationsComparator locationsComparator = new LocationsComparator();
 	private InterestsComparator movieComparator = new InterestsComparator();
@@ -54,13 +55,22 @@ public class FetchDataServlet extends HttpServlet {
 					"facebook");
 			FacebookParser fbParser = new FacebookParser(facebook);
 			Person fbPerson = fbParser.parseFacebookPerson();
-			json = fbPerson.toJsonString();
-			for (Interest i : fbPerson.getInterest()) {
-				System.out.println(i.getName());
-				for (String s : i.getGenre()) {
-					System.out.println("___" + s);
+		
+//			for (Interest i : fbPerson.getInterest()) {
+//				System.out.println(i.getName());
+//				for (String s : i.getGenre()) {
+//					System.out.println("___" + s);
+//				}
+//			}
+			String latitude = request.getParameter("lati");
+			String longitude = request.getParameter("longi");
+			if(latitude != null && longitude != null) {
+				Location location = geoFetcher.getLocation(longitude, latitude, Location.BROWSER_LOCATION);
+				if(location != null) {
+					fbPerson.getLocations().add(location);
 				}
 			}
+			json = fbPerson.toJsonString();
 
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");

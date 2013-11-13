@@ -22,7 +22,7 @@ public class LocationsComparator {
 			size = locations2.size();
 		}
 
-		List<CompareResult> results = new ArrayList<CompareResult>(size);
+		List<CompareResult> results = new ArrayList<CompareResult>();
 		List<Location> comparedLocations = new ArrayList<Location>();
 		
 		for (Location l2 : locations2) {

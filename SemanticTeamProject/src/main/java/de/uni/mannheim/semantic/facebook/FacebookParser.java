@@ -200,7 +200,7 @@ public class FacebookParser {
 					return movie;
 				}
 				return new Interest(c.getCategory(), url, genre, c.getId(),
-						name);
+						name, null);
 			}
 
 		} catch (FacebookException e) {

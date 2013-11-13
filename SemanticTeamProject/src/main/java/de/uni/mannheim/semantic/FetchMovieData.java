@@ -70,13 +70,13 @@ public class FetchMovieData {
 			}
 			// convert result to json object
 			JSONObject json = null;
-			if(result.startsWith("[")) {
+			if (result.startsWith("[")) {
 				JSONArray jsonArray = new JSONArray(result);
 				json = (JSONObject) jsonArray.get(0);
 			} else {
 				json = new JSONObject(result);
 			}
- 			if (!json.has("poster")) {
+			if (!json.has("poster")) {
 				return null;
 			}
 			JSONObject poster = json.getJSONObject("poster");
@@ -94,7 +94,11 @@ public class FetchMovieData {
 			}
 
 			String title = json.getString("title");
-			return new Interest("movie", imageURL, genres, null, title);
+			String location = null;
+			if (json.has("filming_locations")) {
+				location = json.getString("filming_locations");
+			}
+			return new Interest("movie", imageURL, genres, null, title, location);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

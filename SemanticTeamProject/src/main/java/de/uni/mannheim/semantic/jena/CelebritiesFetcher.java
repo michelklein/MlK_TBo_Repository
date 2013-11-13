@@ -24,6 +24,7 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
+import com.sun.j3d.utils.behaviors.picking.Intersect;
 
 import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.FetchMovieData;
@@ -135,7 +136,7 @@ public class CelebritiesFetcher {
 						System.out.println("new " + label);
 						g = new HashSet<String>();
 						Interest i = new Interest("music", COVER_URL_DUMMY, g,
-								"id", label);
+								"id", label, null);
 						interests.add(i);
 						oldLabel = label;
 					} else {
@@ -159,7 +160,6 @@ public class CelebritiesFetcher {
 					label = label.trim();
 					// label = label + " (" + year + ")";
 
-
 					String imdb = null;
 					try {
 						String sa = g(s, "p");
@@ -176,20 +176,19 @@ public class CelebritiesFetcher {
 					} catch (Exception e) {
 					}
 
-//					Interest i = new Interest("movie", COVER_URL_DUMMY,
-//							getGenreFromFile(label), imdb, label);
-//					interests.add(i);
+					// Interest i = new Interest("movie", COVER_URL_DUMMY,
+					// getGenreFromFile(label), imdb, label);
+					// interests.add(i);
 
 					System.out.println(imdb);
 					Interest i = null;
-					if(imdb != null) {
+					if (imdb != null) {
 						i = movieFetcher.getMovieByIMDBId(imdb);
 					} else {
 						i = movieFetcher.getMovie(label, year);
 					}
 					if (i != null)
 						interests.add(i);
-
 
 				}
 
@@ -200,10 +199,21 @@ public class CelebritiesFetcher {
 			try {
 				p = new Person(givenName, surname, df.parse(date),
 						getCelebrityLocations(name), interests, tn);
+				// add shooting locations to celebrity
+				List<Interest> interestList = p.getInterest();
+				for (Interest i : interestList) {
+					if (i.getLocation() != null) {
+						Location location = geocoding.getLocation(i.getName(),
+								Location.SHOOTING_LOCATION);
+						if (location != null) {
+							p.getLocations().add(location);
+						}
+					}
+				}
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
+
 			return p;
 		}
 		return p;

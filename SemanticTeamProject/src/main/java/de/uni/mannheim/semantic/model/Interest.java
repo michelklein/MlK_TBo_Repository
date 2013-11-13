@@ -9,17 +9,16 @@ public class Interest {
 	private Set<String> genre;
 	private String id;
 	private String name;
+	private String location;
 
 	public Interest(String kind, String cover_url, Set<String> set, String id,
-			String name) {
+			String name, String location) {
 		this.kind = kind;
 		this.cover_url = cover_url;
-//		if(this.cover_url == null) {
-//			cover_url = COVER_URL_DUMMY;
-//		}
 		this.genre = set;
 		this.id = id;
 		this.name = name;
+		this.location = location;
 	}
 
 	public String getKind() {
@@ -57,5 +56,15 @@ public class Interest {
 	public String getCoverURL() {
 		return cover_url;
 	}
+
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
+	
+	
 
 }

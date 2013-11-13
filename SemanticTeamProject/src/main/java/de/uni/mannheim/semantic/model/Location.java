@@ -7,6 +7,8 @@ public class Location {
 	public static final String WORKPLACE = "Workplace";
 	public static final String EDUCATIONPLACE = "Educationplace";
 	public static final String CURRENT_LOCATION = "Current Location";
+	public static final String SHOOTING_LOCATION = "Shooting Location";
+	public static final String BROWSER_LOCATION = "Browser Location";
 	
 	private Double longitude;
 	private Double latitude;
