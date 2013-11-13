@@ -30,7 +30,7 @@ public class Location {
 		this.postalCode = postalCode;
 		this.offsetUTC = offsetUTC;
 		if (description != null) {
-			formattedLocation = String.format("%s: %s %s, %s", description, postalCode, name,
+			formattedLocation = String.format("%s:<br>%s %s, %s", description, postalCode, name,
 					country);
 		} else {
 			formattedLocation = String.format("%s %s, %s", postalCode, name,

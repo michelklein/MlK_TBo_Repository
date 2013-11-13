@@ -50,6 +50,9 @@ public class LocationComparator extends AbstractComparator<Location> {
 
 		// time zone
 		int difference = o1.getOffsetUTC() - o2.getOffsetUTC();
+		if(difference < 0) {
+			difference = difference *-1;
+		}
 		percent = (((float) MAX_TIMEZONE_DIFFERNCE - (float) difference) / (float) MAX_TIMEZONE_DIFFERNCE);
 		float timeZoneValue = percent * TIMEZONE_PERCENT;
 		result.getSubresults()

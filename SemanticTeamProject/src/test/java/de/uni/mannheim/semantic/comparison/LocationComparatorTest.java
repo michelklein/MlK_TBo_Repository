@@ -12,12 +12,11 @@ import de.uni.mannheim.semantic.model.Location;
 public class LocationComparatorTest {
 
 	private String description = "Test-Location";
+	private FetchGeoData geoDataFetcher = new FetchGeoData();
+	private LocationComparator locationComparator = new LocationComparator();
 
 	@Test
 	public void test() {
-		LocationComparator locationComparator = new LocationComparator();
-		FetchGeoData geoDataFetcher = new FetchGeoData();
-
 		Location hennef = geoDataFetcher.getLocation(7.2914, 50.7699,
 				description);
 		Location siegburg = geoDataFetcher.getLocation(7.2234, 50.8027,
@@ -30,10 +29,12 @@ public class LocationComparatorTest {
 				description);
 		Location californien = geoDataFetcher.getLocation(-76.5312, 38.3006,
 				description);
-		
-//		Location hennef = new Location(7.2914, 50.7699, "Hennef", "Germany", "NRW", "53773", 1, description);
-//		Location californien = new Location(-76.5312, 38.3006, "California", "USA", "California", "77481", -5, description);
-		
+
+		// Location hennef = new Location(7.2914, 50.7699, "Hennef", "Germany",
+		// "NRW", "53773", 1, description);
+		// Location californien = new Location(-76.5312, 38.3006, "California",
+		// "USA", "California", "77481", -5, description);
+
 		// compare hennef with hennef
 		CompareResult compareResult = locationComparator
 				.compare(hennef, hennef);
@@ -63,4 +64,14 @@ public class LocationComparatorTest {
 
 	}
 
+	@Test
+	public void test2() {
+		Location hennef = geoDataFetcher.getLocation(7.2914, 50.7699,
+				description);
+		Location india = geoDataFetcher.getLocation("400014 Mumbai, India",
+				description);
+		locationComparator.compare(hennef, india);
+		locationComparator.print();
+
+	}
 }

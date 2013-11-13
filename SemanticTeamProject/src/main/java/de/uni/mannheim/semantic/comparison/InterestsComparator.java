@@ -6,11 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.sun.xml.internal.xsom.impl.scd.Iterators.Map;
-
 import de.uni.mannheim.semantic.model.CompareResult;
 import de.uni.mannheim.semantic.model.Interest;
-import de.uni.mannheim.semantic.model.InterestCompareObject;
 import de.uni.mannheim.semantic.model.InterestCompareResult;
 
 /**
@@ -25,7 +22,7 @@ public class InterestsComparator {
 		List<Interest> fbInterests = filterInterestsWithCover(interests1);
 		List<Interest> celebrityInterests = filterInterestsWithCover(interests2);
 		if(fbInterests.size() == 0 || celebrityInterests.size() == 0) {
-			return null;
+			return new ArrayList<InterestCompareResult>();
 		}
 		// define the steps per movie
 		int steps = 100 / celebrityInterests.size();
@@ -79,21 +76,6 @@ public class InterestsComparator {
 			}
 		}
 
-		// for (String genre : genreList) {
-		// InterestCompareObject ico1 = new InterestCompareObject(genre);
-		// InterestCompareResult cr = new InterestCompareResult(0, genre,
-		// ico1, ico1);
-		// resultList.add(cr);
-		// for (Interest i : celebrityInterests) {
-		// if (i.getGenre().contains(genre.trim())) {
-		// ico1.getPicURLs1().add(i.getCoverURL());
-		// ico1.getPicURLs2().add(i.getCoverURL());
-		// InterestCompareResult sr = new InterestCompareResult(
-		// 100 / celebrityInterests.size(), genre, ico1, ico1);
-		// cr.getSubresults().add(sr);
-		// }
-		// }
-		// }
 		return resultList;
 	}
 

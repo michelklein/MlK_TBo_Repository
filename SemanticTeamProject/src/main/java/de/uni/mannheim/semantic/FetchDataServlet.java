@@ -70,6 +70,9 @@ public class FetchDataServlet extends HttpServlet {
 					fbPerson.getLocations().add(location);
 				}
 			}
+			
+			request.getSession().setAttribute("facebookUser", fbPerson);
+			
 			json = fbPerson.toJsonString();
 
 		} else if ("celebrity".equals(method)) {
@@ -84,10 +87,7 @@ public class FetchDataServlet extends HttpServlet {
 					}
 				}
 
-				Facebook facebook = (Facebook) request.getSession()
-						.getAttribute("facebook");
-				FacebookParser fbParser = new FacebookParser(facebook);
-				Person fbPerson = fbParser.parseFacebookPerson();
+				Person fbPerson= (Person) request.getSession().getAttribute("facebookUser");
 				CompareResult ageResult = ageComparator.compare(
 						fbPerson.getBirthdate(), celebrity.getBirthdate());
 
