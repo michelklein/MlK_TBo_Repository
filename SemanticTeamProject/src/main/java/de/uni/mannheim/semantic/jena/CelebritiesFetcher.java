@@ -401,7 +401,7 @@ public class CelebritiesFetcher {
 				lastName = gll(soln, "lastname");
 				fullname = String.format("%s %s", firstName, lastName);
 				if (!celebrities.contains(fullname)) {
-					System.out.println("\"" + fullname + "\",");
+//					System.out.println("\"" + fullname + "\",");
 					celebrities.add(fullname);
 				}
 			}

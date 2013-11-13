@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.hp.hpl.jena.sparql.pfunction.library.container;
+
 import de.uni.mannheim.semantic.model.CompareResult;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.InterestCompareResult;
@@ -55,12 +57,20 @@ public class InterestsComparator {
 			genreToInterests.remove(getKeyForSmallesList(genreToInterests));
 		}
 
+		// sort genre list
+		List<String> sortedGenreList = new ArrayList<String>();
+		while (sortedGenreList.size() < 5) {
+			String genre = getKeyForGreatestList(genreToInterests,
+					sortedGenreList);
+			sortedGenreList.add(genre);
+		}
+
 		// create one InterestCompareResulsts per genre
-		for (String genre : genreToInterests.keySet()) {
+		for (String genre : sortedGenreList) {
 			// contains all interests for the current genre
 			List<Interest> interestPerGenre = new ArrayList<Interest>();
 			InterestCompareResult interestCompareResult = new InterestCompareResult(
-					0, genre, genreToInterests.get(genre), interestPerGenre);
+					0, "", genreToInterests.get(genre), interestPerGenre);
 			// add the celebrity interests to the list
 			for (Interest i : celebrityInterests) {
 				if (i.getGenre().contains(genre.trim())) {
@@ -89,6 +99,23 @@ public class InterestsComparator {
 			List<Interest> list = genreToInterest.get(k);
 			if (list.size() < min) {
 				min = list.size();
+				key = k;
+			}
+		}
+		return key;
+	}
+
+	private String getKeyForGreatestList(
+			Map<String, List<Interest>> genreToInterest, List<String> except) {
+		String key = null;
+		int max = 0;
+		for (String k : genreToInterest.keySet()) {
+			if (except.contains(k)) {
+				continue;
+			}
+			List<Interest> list = genreToInterest.get(k);
+			if (list.size() > max) {
+				max = list.size();
 				key = k;
 			}
 		}
