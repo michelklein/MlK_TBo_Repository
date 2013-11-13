@@ -24,7 +24,7 @@ public class LocationsComparator {
 
 		List<CompareResult> results = new ArrayList<CompareResult>();
 		List<Location> comparedLocations = new ArrayList<Location>();
-		
+
 		for (Location l2 : locations2) {
 			CompareResult bestResult = null;
 			Location bestLocation = null;
@@ -44,7 +44,8 @@ public class LocationsComparator {
 				}
 			}
 			comparedLocations.add(bestLocation);
-			results.add(bestResult);
+			if (bestResult != null)
+				results.add(bestResult);
 		}
 
 		return results;
