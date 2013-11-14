@@ -19,7 +19,7 @@ import facebook4j.conf.ConfigurationBuilder;
 public class SignInServlet extends HttpServlet {
 	private static final long serialVersionUID = -7453606094644144082L;
 	private Logger logger = LogManager.getLogger(SignInServlet.class.getName());
-	
+
 	@Override
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
@@ -27,10 +27,13 @@ public class SignInServlet extends HttpServlet {
 		logger.info("Load Properties and configure OAuthentification");
 		Properties prop = PropertiesUtils.load("general.properties");
 		ConfigurationBuilder cb = new ConfigurationBuilder();
-		cb.setDebugEnabled(true).setOAuthAppId(prop.getProperty("oauth.appId"))
+		String property = prop.getProperty("debug");
+		cb.setOAuthAppId(prop.getProperty("oauth.appId"))
 				.setOAuthAppSecret(prop.getProperty("oauth.appSecret"))
-				.setOAuthPermissions(prop.getProperty("oauth.permissions"));
-		
+				.setOAuthPermissions(prop.getProperty("oauth.permissions"))
+				.setDebugEnabled(new Boolean(property))
+				.setPrettyDebugEnabled(false);
+
 		FacebookFactory ff = new FacebookFactory(cb.build());
 		Facebook facebook = ff.getInstance();
 		request.getSession().setAttribute("facebook", facebook);
