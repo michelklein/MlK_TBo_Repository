@@ -4,7 +4,6 @@ import java.util.List;
 
 public class InterestCompareResult extends CompareResult {
 
-	private static final int WIDTH_PER_IMAGE = 150;
 	private String genre;
 	public InterestCompareResult(int value, String genre, String desc1, String desc2,
 			List<Interest> facebookIntersts, List<Interest> celebrityInterests) {
@@ -90,8 +89,12 @@ public class InterestCompareResult extends CompareResult {
 			return 2;
 		} else if (size <= 9) {
 			return 3;
-		} else {
+		} else if(size <= 16) {
 			return 4;
+		} else if(size <=25) {
+			return 5;
+		} else {
+			return 6;
 		}
 	}
 
