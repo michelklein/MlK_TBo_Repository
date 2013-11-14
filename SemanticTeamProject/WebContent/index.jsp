@@ -10,7 +10,8 @@
 <!-- Optional theme -->
 <link rel="stylesheet"
 	href="bootstrap/3.0.0/css/bootstrap-theme.min.css">
-
+<link rel="stylesheet"
+	href="bootstrap/font-awesome-4.0.3/css/font-awesome.min.css">
 <!-- Latest compiled and minified JavaScript -->
 <script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
 <script src="bootstrap/3.0.0/js/bootstrap.min.js"></script>
@@ -85,7 +86,7 @@
  -->
 		<div id="content" class="preUser">
 			<div class="row">
-				<div class="col-md-5 col-md-offset-1">
+				<div class="col-md-4 col-md-offset-1">
 					<div id="fbUser">
 						<div class="panel-header-own">
 							<img id="fbUserImage" src="images/defaultProfile.png"
@@ -95,6 +96,7 @@
 						</div>
 					</div>
 				</div>
+				<div class="col-md-1" id="total"></div>
 				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
@@ -147,147 +149,160 @@
 
 						$(".twitter-typeahead").hide();
 						var $typeahead = $(this);
-						$.getJSON("fetchData?op=celebrity&name="
+						$.getJSON("fetchData?op=celebrity&comp=none&name="
 								+ $typeahead.val(), function(data) {
-							constructMatching(data);
+							constructCel(data);
+						});
+						$.getJSON("fetchData?op=celebrity&comp=date&name="
+								+ $typeahead.val(), function(data) {
+							createDynMatch("#date", data.ageCompResult,
+									"Significant Dates", false);
+							if (data.total != 0)
+								finallyTotal(data);
+						});
+						$.getJSON("fetchData?op=celebrity&comp=loc&name="
+								+ $typeahead.val(), function(data) {
+							createDynMatch("#locations", data.locationResult,
+									"Visited Locations", false);
+							if (data.total != 0)
+								finallyTotal(data);
+						});
+						$.getJSON("fetchData?op=celebrity&comp=genre&name="
+								+ $typeahead.val(), function(data) {
+							createDynMatch("#movies", data.movieResult,
+									"Movie Genres", true);
+							if (data.total != 0)
+								finallyTotal(data);
 						});
 
 					});
-
-			function constructMatching(data) {
+			function constructCel(data) {
 				$(".preUser").removeClass("preUser");
-				var json = data;
-				console.debug(data);
-				$("#celebrityImage").attr('src', json.celebrity.imageURL);
-				$("#celebrityFirstname").html(json.celebrity.firstname);
-				$("#celebrityLastname").html(json.celebrity.lastname);
-
+				$("#celebrityImage").attr('src', data.celebrity.imageURL);
+				$("#celebrityFirstname").html(data.celebrity.firstname);
+				$("#celebrityLastname").html(data.celebrity.lastname);
 				$(".header-show").show();
+			}
 
-				$("#attr_age_celebrity").html(json.celebrity.formattedBirthday);
+			function createDynMatch(id, baseData, title, onebar) {
 
-				createDynMatch("#locations", json.locationResult, "Locations",
-						false);
-				createDynMatch("#movies", json.movieResult, "Interests", true);
+				$(id).empty();
+				$(id).append(
+						"<div class='row "+title+"'><div class='col-md-2 attr_caption'>"
+								+ title + ":</div></div>");
+				$
+						.each(
+								baseData,
+								function() {
+									if (this.sum != 0) {
+										var tt1 = "";
+										if (this.HTMLo1)
+											tt1 = this.HTMLo1;
 
-				createDynMatch("#date", json.ageCompResult, "Birthdate", false);
+										var tt2 = "";
+										if (this.HTMLo2)
+											tt2 = this.HTMLo2;
 
-				function createDynMatch(id, baseData, title, onebar) {
+										$(id)
+												.append(
+														"<div class='row "+title+"'><div class='col-md-1 attr_caption_small'>"
+																+ this.desc1
+																+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+tt1+"'>"
+																+ this.o1
+																+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div>");
+										if (!onebar) {
 
-					$(id).empty();
-					$(id).append(
-							"<div class='row'><div class='col-md-1 attr_caption'>"
-									+ title + ":</div></div>");
-					$
-							.each(
-									baseData,
-									function() {
-										if (this.sum != 0) {
-											var tt = "";
-											if (this.HTMLo1)
-												tt = this.HTMLo1;
+											$
+													.each(
+															this.subresults,
+															function() {
+																if (this.value != 0) {
+																	$(id)
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.append(
+																					"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																							+ this.value
+																							+ "%"
+																							+ "</span></div>");
+																	$(id)
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.children()
+																			.last()
+																			.width(
+																					this.value
+																							+ "%");
 
-											$(id)
-													.append(
-															"<div class='row'><div class='col-md-1 attr_caption_small'>"
-																	+ this.desc1
-																	+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+tt+"'>"
-																	+ this.o1
-																	+ "</div><div class='col-md-6'><div class='progress' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTML+"'></div>");
-											if (!onebar) {
-
-												$
-														.each(
-																this.subresults,
-																function() {
-																	if (this.value != 0) {
-																		$(id)
-																				.children()
-																				.last()
-																				.children()
-																				.last()
-																				.children()
-																				.last()
-																				.append(
-																						"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
-																								+ this.value
-																								+ "%"
-																								+ "</span></div>");
-																		$(id)
-																				.children()
-																				.last()
-																				.children()
-																				.last()
-																				.children()
-																				.last()
-																				.children()
-																				.last()
-																				.width(
-																						this.value
-																								+ "%");
-
-																	}
-																});
-											} else {
-												if (this.value != 0) {
-													$(id)
-															.children()
-															.last()
-															.children()
-															.last()
-															.children()
-															.last()
-															.append(
-																	"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
-																			+ this.value
-																			+ "%"
-																			+ "</span></div>");
-													$(id)
-															.children()
-															.last()
-															.children()
-															.last()
-															.children()
-															.last()
-															.children()
-															.last()
-															.width(
-																	this.value
-																			+ "%");
-												}
+																}
+															});
+										} else {
+											if (this.value != 0) {
+												$(id)
+														.children()
+														.last()
+														.children()
+														.last()
+														.children()
+														.last()
+														.append(
+																"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																		+ this.value
+																		+ "%"
+																		+ "</span></div>");
+												$(id)
+														.children()
+														.last()
+														.children()
+														.last()
+														.children()
+														.last()
+														.children()
+														.last()
+														.width(this.value + "%");
 											}
-											$(id)
-													.children()
-													.last()
-													.append(
-															"<div class='col-md-2 textAlignRight attr' data-toggle='tooltip' data-html='true' data-original-title='"+this.HTMLo2+"'>"
-																	+ this.o2
-																	+ "</div><div class='col-md-1 attr_caption_small leftAlign'>"
-																	+ this.desc2
-																	+ "</div></div>");
 										}
-									});
-				}
-
-				if (json.ageCompResult.value == 0) {
-					$("#progress_age > .sr-only").addClass("noResult");
-				} else {
-					$("#progress_age > .sr-only").removeClass("noResult");
-				}
+										$(id)
+												.children()
+												.last()
+												.append(
+														"<div class='col-md-2 textAlignRight attr' data-toggle='tooltip' data-html='true' data-original-title='"+tt2+"'>"
+																+ this.o2
+																+ "</div><div class='col-md-1 attr_caption_small leftAlign'>"
+																+ this.desc2
+																+ "</div></div>");
+										$("."+title).slideDown(1000,"swing");
+									}
+								});
+			}
+			function finallyTotal(data) {
+				$("#total").append(
+						"<span class='header-name header-bold bigger'>"
+								+ data.total + "</span>");
+				$("#total").append("<span class='header-name bigger'>%</span>");
 				$("[data-toggle='tooltip']").tooltip();
-
 				$(".progress-bar").each(function() {
 					$(this).removeClass('progress-bar').fadeIn(500, function() {
 						$(this).addClass('progress-bar');
 					});
 
 				});
+				$("#total").fadeIn(3000);
 			}
 		</script>
 
 	</tag:loggedin>
 	<div class="loadingModal">
-		<span class="glyphicon glyphicon-refresh centBig"></span>
+		<i class="fa fa-refresh fa-5x centBig"></i>
+
 	</div>
 </body>
 </html>

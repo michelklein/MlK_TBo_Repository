@@ -92,8 +92,8 @@ h1 small,h2 small,h3 small,h4 small,h5 small,h6 small,.h1 small,.h2 small,.h3 sm
 }
 
 .twitter-typeahead {
-  top: 15px;
-    width: 400px;
+	top: 15px;
+	width: 400px;
 }
 
 .form-control {
@@ -256,30 +256,45 @@ table {
 .preUser {
 	padding: 150px 0 !important;
 }
-.leftAlign{
-		text-align: left !important;
+
+.leftAlign {
+	text-align: left !important;
 }
+
+.bigger {
+	font-size: 120px;
+}
+
 .centBig {
 	position: absolute;
 	left: 50%;
 	top: 50%;
-	font-size: 60px;
-    -webkit-animation-name: rotate; 
-    -webkit-animation-duration: 1.5s; 
-    -webkit-animation-iteration-count: infinite;
-    -webkit-animation-timing-function: linear;
-    -moz-animation-name: rotate; 
-    -moz-animation-duration: 2s; 
-    -moz-animation-iteration-count: infinite;
-    -moz-animation-timing-function: linear;
+	-webkit-animation-name: rotate;
+	-webkit-animation-duration: 1s;
+	-webkit-animation-iteration-count: infinite;
+	-webkit-animation-timing-function: linear;
+	-moz-animation-name: rotate;
+	-moz-animation-duration: 1s;
+	-moz-animation-iteration-count: infinite;
+	-moz-animation-timing-function: linear;
 }
 
-@-webkit-keyframes rotate {
-    from {-webkit-transform: rotate(0deg);}
-    to {-webkit-transform: rotate(360deg);}
+@
+-webkit-keyframes rotate {
+	from {-webkit-transform: rotate(0deg);
 }
 
-@-moz-keyframes rotate {
-    from {-moz-transform: rotate(0deg);}
-    to {-moz-transform: rotate(360deg);}
+to {
+	-webkit-transform: rotate(360deg);
+}
+
+}
+@
+-moz-keyframes rotate {
+	from {-moz-transform: rotate(0deg);
+}
+
+to {
+	-moz-transform: rotate(360deg);
+}
 }
