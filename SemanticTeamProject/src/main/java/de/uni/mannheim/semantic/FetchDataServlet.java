@@ -53,6 +53,7 @@ public class FetchDataServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String method = request.getParameter("op");
+		String compMethod = request.getParameter("comp");
 		logger.info("Call DataFetcherServlet with method: " + method);
 		String json = null;
 		if ("facebook".equals(method)) {
@@ -79,26 +80,46 @@ public class FetchDataServlet extends HttpServlet {
 			Person celebrity = CelebritiesFetcher.get()
 					.createCel(celebrityName);
 			if (celebrity != null) {
+
 				logger.info("Found celebrity. Starting comparison");
 				Person fbPerson = (Person) request.getSession().getAttribute(
 						"facebookUser");
+				if (compMethod.equals("none")) {
+					MatchingContainer comp = new MatchingContainer(celebrity,
+							null, null, null);
+					request.getSession().setAttribute("comp", comp);
+				} else if (compMethod.equals("date")) {
+					List<CompareResult> ageResult = new ArrayList<CompareResult>();
+					ageResult.add(ageComparator.compare(
+							fbPerson.getBirthdate(), celebrity.getBirthdate()));
+					logger.info("Get compare results for category date");
+					((MatchingContainer) request.getSession().getAttribute(
+							"comp")).setAgeCompResult(ageResult);
+				} else if (compMethod.equals("loc")) {
+					List<CompareResult> locationResults = locationsComparator
+							.compare(fbPerson.getLocations(),
+									celebrity.getLocations());
+					logger.info("Get compare results for category locations");
+
+					((MatchingContainer) request.getSession().getAttribute(
+							"comp")).setLocationResults(locationResults);
+				} else if (compMethod.equals("genre")) {
+
+					List<InterestCompareResult> movieR = movieComparator
+							.compare(fbPerson.getInterest(),
+									celebrity.getInterest());
+					logger.info("Get compare results for category movies");
+
+					((MatchingContainer) request.getSession().getAttribute(
+							"comp")).setMovieResult(movieR);
+				}
+
+				((MatchingContainer) request.getSession().getAttribute(
+						"comp")).calcTotal();
 				
-				List<CompareResult> ageResult = new ArrayList<CompareResult>();
-				ageResult.add(ageComparator.compare(fbPerson.getBirthdate(),
-						celebrity.getBirthdate()));
-				logger.info("Get compare results for category age");
-				List<CompareResult> locationResults = locationsComparator
-						.compare(fbPerson.getLocations(),
-								celebrity.getLocations());
-				logger.info("Get compare results for category locations");
 				
-				List<InterestCompareResult> movieR = movieComparator.compare(
-						fbPerson.getInterest(), celebrity.getInterest());
-				logger.info("Get compare results for category movies");
-				
-				MatchingContainer comp = new MatchingContainer(celebrity,
-						ageResult, locationResults, movieR);
-				json = comp.toJsonString();
+				json = ((MatchingContainer) request.getSession().getAttribute(
+						"comp")).toJsonString();
 			}
 		} else if ("celebrityList".equals(method)) {
 			logger.info("Start loading celebrity names");

@@ -22,7 +22,7 @@ public class AgeComparator extends AbstractComparator<Date> {
 	public CompareResult compare(Date o1, Date o2) {
 		this.o1 = o1;
 		this.o2 = o2;
-		result = new CompareResult(0, "","", sdfToDate2.format(o1).toString(),
+		result = new CompareResult(0, "Birthday","Birthday", sdfToDate2.format(o1).toString(),
 				sdfToDate2.format(o2).toString());
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(o1);
