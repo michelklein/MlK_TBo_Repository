@@ -72,6 +72,20 @@ public class CompareResult extends AbstractToJson {
 		return sum;
 
 	}
+	
+	public String getHTMLo1() {
+		AbstractToolTipInfo facebook = (AbstractToolTipInfo) o1;
+		return getHTMLForToolTipInfo(facebook);
+	}
+
+	public String getHTMLo2() {
+		AbstractToolTipInfo celebrity = (AbstractToolTipInfo) o2;
+		return getHTMLForToolTipInfo(celebrity);
+	}
+
+	private String getHTMLForToolTipInfo(AbstractToolTipInfo toolTip) {
+		return "<div>"+toolTip.getToolTipInfo()+"</div>";
+	}
 
 	public String getHTML() {
 		StringBuilder builder = new StringBuilder();
