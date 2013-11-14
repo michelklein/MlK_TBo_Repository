@@ -286,6 +286,7 @@
 								});
 			}
 			function finallyTotal(data) {
+				$("#total").empty();
 				$("#total").append(
 						"<span class='header-name header-bold bigger'>"
 								+ data.total + "</span>");

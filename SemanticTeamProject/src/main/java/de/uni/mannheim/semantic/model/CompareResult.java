@@ -11,6 +11,13 @@ public class CompareResult extends AbstractToJson {
 	protected String desc1;
 	protected String desc2;
 	
+	public void setDesc1(String desc1) {
+		this.desc1 = desc1;
+	}
+
+	public void setDesc2(String desc2) {
+		this.desc2 = desc2;
+	}
 	/** Indicates if the compare result is valid or not. */
 	protected boolean valid = true;
 

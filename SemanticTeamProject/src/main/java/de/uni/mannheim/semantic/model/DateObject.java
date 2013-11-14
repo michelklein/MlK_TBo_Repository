@@ -10,17 +10,20 @@ public class DateObject {
 	
 	public static final String BIRTHDATE = "Birthdate";
 	public static final String RELEASE_DATE = "Release Date";
+	public static final String START_DATE = "Start Date";
+	public static final String END_DATE = "End Date";
 
 	private boolean prio;
 	private String description;
 	private Date date;
-	
+	private String name;
 	
 	public DateObject(Date date, String description) {
 		super();
 		this.prio = getPrio(description);
 		this.description = description;
 		this.date = date;
+		System.out.println(description+" : "+date);
 	}
 	
 	public boolean isPrio() {
@@ -52,5 +55,10 @@ public class DateObject {
 		}
 		return true;
 	}
+
+	public String getName() {
+		return name;
+	}
+
 	
 }

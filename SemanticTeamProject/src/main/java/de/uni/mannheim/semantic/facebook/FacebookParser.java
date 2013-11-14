@@ -35,7 +35,7 @@ import facebook4j.internal.org.json.JSONException;
 import facebook4j.internal.org.json.JSONObject;
 
 public class FacebookParser {
-
+	DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 	private Logger logger = LogManager
 			.getLogger(FacebookParser.class.getName());
 	private Facebook fb;
@@ -77,10 +77,6 @@ public class FacebookParser {
 				}
 			}
 
-			// Birthdate
-			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
-			Date birthdate = df.parse(fb.getMe().getBirthday());
-
 			// CurrLocation
 			ResponseList<Checkin> checkins = fb.getCheckins();
 			if (checkins != null && checkins.size() > 0) {
@@ -96,8 +92,9 @@ public class FacebookParser {
 			if (educations != null) {
 				for (Education i : educations) {
 					if (locationTmp != null) {
-						Location loc = parseLocation(i.getSchool().getId(),
-								Location.EDUCATIONPLACE);
+						Location loc = parseLocation(i.getSchool().getId(), i
+								.getSchool().getName());
+
 						if (loc != null) {
 							locations.add(loc);
 						}
@@ -110,8 +107,8 @@ public class FacebookParser {
 			if (work != null) {
 				for (Work w : work) {
 					if (locationTmp != null) {
-						Location loc = parseLocation(w.getEmployer().getId(),
-								Location.WORKPLACE);
+						Location loc = parseLocation(w.getEmployer().getId(), w
+								.getEmployer().getName());
 						if (loc != null) {
 							locations.add(loc);
 						}
@@ -143,10 +140,12 @@ public class FacebookParser {
 			}
 
 			List<DateObject> dates = new ArrayList<DateObject>();
+			Date birthdate = df.parse(fb.getMe().getBirthday());
 			dates.add(new DateObject(birthdate, DateObject.BIRTHDATE));
-			
-			person = new Person(firstname, name, dates, locations,
-					interests, picURL);
+			dates.addAll(getDates());
+
+			person = new Person(firstname, name, dates, locations, interests,
+					picURL);
 		} catch (FacebookException e) {
 			logger.error(e.toString(), e);
 		} catch (ParseException e) {
@@ -200,9 +199,10 @@ public class FacebookParser {
 					logger.info(String.format("found movie: %s", movie));
 					return movie;
 				}
-				Interest interest = new Interest(c.getCategory(), url, genre, c.getId(),
-						name, null, null);
-				logger.info(String.format("found interest: %s", interest.toString()));
+				Interest interest = new Interest(c.getCategory(), url, genre,
+						c.getId(), name, null, null);
+				logger.info(String.format("found interest: %s",
+						interest.toString()));
 				return interest;
 			}
 
@@ -235,6 +235,53 @@ public class FacebookParser {
 		}
 		logger.info("no large profile picture found!");
 		return null;
+
+	}
+
+	private List<DateObject> getDates() {
+
+		DateFormat fbdf = new SimpleDateFormat("yyyy-MM-dd");
+		List<DateObject> dates = new ArrayList<DateObject>();
+		logger.info("get dates");
+		JSONArray fqlRes;
+		try {
+			fqlRes = fb
+					.executeFQL("SELECT work, education FROM user WHERE uid = me() ");
+
+			if (fqlRes.length() == 1) {
+				JSONObject jo = (JSONObject) fqlRes.getJSONObject(0);
+				JSONArray workA = (JSONArray) jo.getJSONArray("work");
+				JSONArray education = (JSONArray) jo.getJSONArray("education");
+
+				for (int i = 0; i < workA.length(); i++) {
+					JSONObject work = workA.getJSONObject(i);
+					String workLoc = work.getJSONObject("employer").get("name")
+							.toString();
+					if(workLoc.contains(" "))
+					workLoc = workLoc.substring(0, workLoc.indexOf(" "));
+					if (work.has("start_date")) {
+						Object startDateStr = work.get("start_date");
+
+						dates.add(new DateObject(fbdf.parse(startDateStr
+								.toString()), "Joining Work"));
+					}
+					if (work.has("end_date")) {
+						Object endDateStr = work.get("end_date");
+						dates.add(new DateObject(fbdf.parse(endDateStr
+								.toString()), "Leaving Work"));
+					}
+				}
+			}
+
+		} catch (FacebookException e) {
+			logger.error(e.toString(), e);
+		} catch (JSONException e) {
+			logger.error(e.toString(), e);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dates;
 
 	}
 

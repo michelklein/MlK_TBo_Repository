@@ -70,16 +70,21 @@ public class InterestsComparator {
 			// contains all interests for the current genre
 			List<Interest> interestPerGenre = new ArrayList<Interest>();
 			InterestCompareResult interestCompareResult = new InterestCompareResult(
-					0, genre, "", "", genreToInterests.get(genre), interestPerGenre);
+					0, genre,
+					String.valueOf(genreToInterests.get(genre).size()), "",
+					genreToInterests.get(genre), interestPerGenre);
 			// add the celebrity interests to the list
 			for (Interest i : celebrityInterests) {
 				if (i.getGenre().contains(genre.trim())) {
 					interestPerGenre.add(i);
-					interestCompareResult.getSubresults()
-							.add(new CompareResult(steps, i.getName(),i.getName(), genre,
-									genre));
+					interestCompareResult.getSubresults().add(
+							new CompareResult(steps, i.getName(), i.getName(),
+									genre, genre));
 				}
 			}
+
+			interestCompareResult.setDesc2(String.valueOf(interestPerGenre
+					.size()));
 			// if there is at least one interest per genre, create one
 			// InterstCompareResult
 			if (interestPerGenre.size() > 0) {
