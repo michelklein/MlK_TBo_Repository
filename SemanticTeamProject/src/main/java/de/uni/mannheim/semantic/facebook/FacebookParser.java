@@ -192,7 +192,7 @@ public class FacebookParser {
 						movie = movieFetcher.getMovie(builder.toString(),
 								releaseDate);
 					}
-					logger.info(String.format("found movie: %s", movie.toString()));
+					logger.info(String.format("found movie: %s", movie));
 					return movie;
 				}
 				Interest interest = new Interest(c.getCategory(), url, genre, c.getId(),
