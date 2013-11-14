@@ -5,8 +5,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import de.uni.mannheim.semantic.model.CompareResult;
+import de.uni.mannheim.semantic.model.DateObject;
 
-public class AgeComparator extends AbstractComparator<Date> {
+public class DateComparator extends AbstractComparator<DateObject> {
 	private static SimpleDateFormat sdfToDate2 = new SimpleDateFormat(
 			"EEEE, dd.MM.yyyy");
 	private static final int DECADE_PERCENT = 5;
@@ -19,15 +20,18 @@ public class AgeComparator extends AbstractComparator<Date> {
 	private static final int AGE_PERCENT = 50;
 
 	@Override
-	public CompareResult compare(Date o1, Date o2) {
+	public CompareResult compare(DateObject o1, DateObject o2) {
+		if(o1 == null || o2 == null) {
+			return null;
+		}
 		this.o1 = o1;
 		this.o2 = o2;
-		result = new CompareResult(0, "Birthday","Birthday", sdfToDate2.format(o1).toString(),
+		result = new CompareResult(0, o1.getDescription(),o2.getDescription(), sdfToDate2.format(o1).toString(),
 				sdfToDate2.format(o2).toString());
 		Calendar cal1 = Calendar.getInstance();
-		cal1.setTime(o1);
+		cal1.setTime(o1.getDate());
 		Calendar cal2 = Calendar.getInstance();
-		cal2.setTime(o2);
+		cal2.setTime(o2.getDate());
 
 		// age comparison
 		int age1 = getAge(cal1);

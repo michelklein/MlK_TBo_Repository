@@ -75,52 +75,58 @@ public class FetchDataServlet extends HttpServlet {
 			request.getSession().setAttribute("facebookUser", fbPerson);
 			json = fbPerson.toJsonString();
 		} else if ("celebrity".equals(method)) {
-			String celebrityName = request.getParameter("name");
-			logger.info("Create Celebrity Person for name: " + celebrityName);
-			Person celebrity = CelebritiesFetcher.get()
-					.createCel(celebrityName);
-			if (celebrity != null) {
 
-				logger.info("Found celebrity. Starting comparison");
+			Person celebrity = ((Person) request.getSession().getAttribute(
+					"cel"));
+
+			logger.info("Found celebrity. Starting comparison");
+
+			if (compMethod.equals("none")) {
+				String celebrityName = request.getParameter("name");
+				logger.info("Create Celebrity Person for name: "
+						+ celebrityName);
+				celebrity = CelebritiesFetcher.get().createCel(celebrityName);
+				request.getSession().setAttribute("cel", celebrity);
+
+				MatchingContainer comp = new MatchingContainer(celebrity, null,
+						null, null);
+				request.getSession().setAttribute("comp", comp);
+			} else if (compMethod.equals("date")) {
 				Person fbPerson = (Person) request.getSession().getAttribute(
 						"facebookUser");
-				if (compMethod.equals("none")) {
-					MatchingContainer comp = new MatchingContainer(celebrity,
-							null, null, null);
-					request.getSession().setAttribute("comp", comp);
-				} else if (compMethod.equals("date")) {
-					List<CompareResult> ageResult = new ArrayList<CompareResult>();
-					ageResult.add(ageComparator.compare(
-							fbPerson.getBirthdate(), celebrity.getBirthdate()));
-					logger.info("Get compare results for category date");
-					((MatchingContainer) request.getSession().getAttribute(
-							"comp")).setAgeCompResult(ageResult);
-				} else if (compMethod.equals("loc")) {
-					List<CompareResult> locationResults = locationsComparator
-							.compare(fbPerson.getLocations(),
-									celebrity.getLocations());
-					logger.info("Get compare results for category locations");
+				List<CompareResult> ageResult = new ArrayList<CompareResult>();
+				ageResult.add(ageComparator.compare(fbPerson.getBirthdate(),
+						celebrity.getBirthdate()));
+				logger.info("Get compare results for category date");
+				((MatchingContainer) request.getSession().getAttribute("comp"))
+						.setAgeCompResult(ageResult);
+			} else if (compMethod.equals("loc")) {
+				Person fbPerson = (Person) request.getSession().getAttribute(
+						"facebookUser");
+				List<CompareResult> locationResults = locationsComparator
+						.compare(fbPerson.getLocations(),
+								celebrity.getLocations());
+				logger.info("Get compare results for category locations");
 
-					((MatchingContainer) request.getSession().getAttribute(
-							"comp")).setLocationResults(locationResults);
-				} else if (compMethod.equals("genre")) {
+				((MatchingContainer) request.getSession().getAttribute("comp"))
+						.setLocationResults(locationResults);
+			} else if (compMethod.equals("genre")) {
+				Person fbPerson = (Person) request.getSession().getAttribute(
+						"facebookUser");
+				List<InterestCompareResult> movieR = movieComparator.compare(
+						fbPerson.getInterest(), celebrity.getInterest());
+				logger.info("Get compare results for category movies");
 
-					List<InterestCompareResult> movieR = movieComparator
-							.compare(fbPerson.getInterest(),
-									celebrity.getInterest());
-					logger.info("Get compare results for category movies");
-
-					((MatchingContainer) request.getSession().getAttribute(
-							"comp")).setMovieResult(movieR);
-				}
-
-				((MatchingContainer) request.getSession().getAttribute(
-						"comp")).calcTotal();
-				
-				
-				json = ((MatchingContainer) request.getSession().getAttribute(
-						"comp")).toJsonString();
+				((MatchingContainer) request.getSession().getAttribute("comp"))
+						.setMovieResult(movieR);
 			}
+
+			((MatchingContainer) request.getSession().getAttribute("comp"))
+					.calcTotal();
+
+			json = ((MatchingContainer) request.getSession().getAttribute(
+					"comp")).toJsonString();
+
 		} else if ("celebrityList".equals(method)) {
 			logger.info("Start loading celebrity names");
 			// json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();

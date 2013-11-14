@@ -16,35 +16,35 @@ public class Person extends AbstractToJson {
 	private String firstname;
 	private String lastname;
 	private String imageURL;
-	private Date birthdate;
 	private List<Interest> interests;
 	private Set<Location> locations;
+	private List<DateObject> dates;
 
-	public Person(String firstname, String lastname, Date birthdate, Set<Location> locations,
+	public Person(String firstname, String lastname, List<DateObject> dates, Set<Location> locations,
 			List<Interest> interest, String imageURL) {
 		super();
 		this.firstname = firstname;
 		this.lastname = lastname;
 		this.interests = interest;
-		this.birthdate = birthdate;
 		this.imageURL = imageURL;
 		this.locations = locations;
+		this.dates = dates;
 	}
 	
-	public Person(String firstname, String lastname, String birthdate, Set<Location> locations,
-			List<Interest> interest, String imageURL) {
-		super();
-		this.firstname = firstname;
-		this.lastname = lastname;
-		this.interests = interest;
-		this.imageURL = imageURL;
-		this.locations = locations;
-		try {
-			this.birthdate = sdfToDate.parse(birthdate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-	}
+//	public Person(String firstname, String lastname, String birthdate, Set<Location> locations,
+//			List<Interest> interest, String imageURL) {
+//		super();
+//		this.firstname = firstname;
+//		this.lastname = lastname;
+//		this.interests = interest;
+//		this.imageURL = imageURL;
+//		this.locations = locations;
+//		try {
+//			this.birthdate = sdfToDate.parse(birthdate);
+//		} catch (ParseException e) {
+//			e.printStackTrace();
+//		}
+//	}
 
 	public String getFirstname() {
 		return firstname;
@@ -54,31 +54,12 @@ public class Person extends AbstractToJson {
 		return lastname;
 	}
 
-
-	public Date getBirthdate() {
-		return birthdate;
-	}
-
 	public Set<Location> getLocations() {
 		return locations;
 	}
 
-	/* GUI Functions */
-
-	public String getFormattedBirthday() {
-		return sdfToDate2.format(birthdate).toString();
-	}
-	
-//	public String getFormattedLocs(List<Institution> i) {
-//		String result = "";
-//		for (Institution institution : i) {
-//			result = result + institution.getName();
-//		}
-//		return result;
-//	}
-
 	public String toString() {
-		return String.format("%s %s, birthdate: %s",  firstname, lastname, getFormattedBirthday());
+		return String.format("%s %s",  firstname, lastname);
 	}
 
 	public List<Interest> getInterest() {

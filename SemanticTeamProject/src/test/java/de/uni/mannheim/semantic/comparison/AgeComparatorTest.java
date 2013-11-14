@@ -9,33 +9,36 @@ import java.util.Date;
 
 import org.junit.Test;
 
+import com.hp.hpl.jena.sparql.vocabulary.DOAP;
+
 import de.uni.mannheim.semantic.model.CompareResult;
+import de.uni.mannheim.semantic.model.DateObject;
 
 public class AgeComparatorTest {
 	private DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-	private AgeComparator ageComparator = new AgeComparator();
+	private DateComparator ageComparator = new DateComparator();
 
 	@Test
 	public void testCompareDateDate() throws ParseException {
 		Date d1 = df.parse("12.01.1989");
 		Date d2 = df.parse("12.01.1991");
-		CompareResult result = ageComparator.compare(d1, d2);
+		CompareResult result = ageComparator.compare(new DateObject(d1, DateObject.BIRTHDATE), new DateObject(d2, DateObject.BIRTHDATE));
 		print(result, d1, d2);
 
-		d1 = df.parse("12.01.1989");
+		d1= df.parse("12.01.1989");
 		d2 = df.parse("17.09.1989");
-		result = ageComparator.compare(d1, d2);
+		result = ageComparator.compare(new DateObject(d1, DateObject.BIRTHDATE), new DateObject(d2, DateObject.BIRTHDATE));
 		print(result, d1, d2);
 		
 		
 		d1 = df.parse("12.01.1989");
 		d2 = df.parse("02.02.1993");
-		result = ageComparator.compare(d1, d2);
+		result = ageComparator.compare(new DateObject(d1, DateObject.BIRTHDATE), new DateObject(d2, DateObject.BIRTHDATE));
 		print(result, d1, d2);
 		
 		d1 = df.parse("12.01.1989");
 		d2 = df.parse("05.01.1876");
-		result = ageComparator.compare(d1, d2);
+		result = ageComparator.compare(new DateObject(d1, DateObject.BIRTHDATE), new DateObject(d2, DateObject.BIRTHDATE));
 		print(result, d1, d2);
 
 		assertTrue(true);
@@ -48,7 +51,7 @@ public class AgeComparatorTest {
 	}
 
 	private void printDates(Date d1, Date d2) {
-		System.out.println(String.format("Compare: %s and %s", df.format(d1),
+		System.out.println(String.format("Compare: %s and %s", df.format(new DateObject(d1, DateObject.BIRTHDATE)),
 				df.format(d2)));
 	}
 

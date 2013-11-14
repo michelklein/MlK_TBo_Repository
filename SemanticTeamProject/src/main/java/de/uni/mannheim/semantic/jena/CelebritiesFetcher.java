@@ -8,6 +8,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -29,6 +30,7 @@ import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
 
 import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.FetchMovieData;
+import de.uni.mannheim.semantic.model.DateObject;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
@@ -178,7 +180,16 @@ public class CelebritiesFetcher {
 			DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 
 			try {
-				p = new Person(givenName, surname, df.parse(date),
+				List<DateObject> dates = new ArrayList<DateObject>();
+				dates.add(new DateObject(df.parse(date), DateObject.BIRTHDATE));
+				for(Interest i : interests) {
+					Date releaseDate = i.getReleaseDate();
+					if(releaseDate != null)  {
+						dates.add(new DateObject(releaseDate, DateObject.RELEASE_DATE));
+					}
+				}
+				
+				p = new Person(givenName, surname, dates,
 						getCelebrityLocations(name), interests, tn);
 				// add shooting locations to celebrity
 				List<Interest> interestList = p.getInterest();
@@ -317,42 +328,42 @@ public class CelebritiesFetcher {
 		return x.toString();
 	}
 
-	public List<Person> getCelebritiePersons() {
-		List<Person> result = new ArrayList<Person>();
-		try {
-			String queryStr2 = "PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> select ?firstname ?lastname ?birthdate where {?p a dbpedia-owl:Bodybuilder. ?p foaf:givenName ?firstname. ?p foaf:surname ?lastname. ?p dbpedia-owl:birthDate ?birthdate} ORDER BY ASC(?lastname) ";
-			Query query = QueryFactory.create(queryStr2);
-
-			// Remote execution.
-			QueryExecution qexec = QueryExecutionFactory.sparqlService(
-					"http://dbpedia.org/sparql", query);
-			// Set the DBpedia specific timeout.
-			((QueryEngineHTTP) qexec).addParam("timeout", "10000");
-
-			// Execute.
-			ResultSet rs = qexec.execSelect();
-			String firstName = null;
-			String lastName = null;
-			String date = null;
-			while (rs.hasNext()) {
-				QuerySolution soln = rs.nextSolution();
-				RDFNode x = soln.get("firstname"); // Get a result variable by
-													// name.
-				firstName = x.asNode().getLiteralLexicalForm();
-				x = soln.get("lastname"); // Get a result variable by name.
-				lastName = x.asNode().getLiteralLexicalForm();
-				x = soln.get("birthdate"); // Get a result variable by name.
-				date = x.asNode().getLiteralLexicalForm();
-				result.add(new Person(firstName, lastName, date, null, null,
-						null));
-			}
-			ResultSetFormatter.out(System.out, rs, query);
-			qexec.close();
-		} catch (Exception e) {
-			logger.error(e.toString(), e);
-		}
-		return result;
-	}
+//	public List<Person> getCelebritiePersons() {
+//		List<Person> result = new ArrayList<Person>();
+//		try {
+//			String queryStr2 = "PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> select ?firstname ?lastname ?birthdate where {?p a dbpedia-owl:Bodybuilder. ?p foaf:givenName ?firstname. ?p foaf:surname ?lastname. ?p dbpedia-owl:birthDate ?birthdate} ORDER BY ASC(?lastname) ";
+//			Query query = QueryFactory.create(queryStr2);
+//
+//			// Remote execution.
+//			QueryExecution qexec = QueryExecutionFactory.sparqlService(
+//					"http://dbpedia.org/sparql", query);
+//			// Set the DBpedia specific timeout.
+//			((QueryEngineHTTP) qexec).addParam("timeout", "10000");
+//
+//			// Execute.
+//			ResultSet rs = qexec.execSelect();
+//			String firstName = null;
+//			String lastName = null;
+//			String date = null;
+//			while (rs.hasNext()) {
+//				QuerySolution soln = rs.nextSolution();
+//				RDFNode x = soln.get("firstname"); // Get a result variable by
+//													// name.
+//				firstName = x.asNode().getLiteralLexicalForm();
+//				x = soln.get("lastname"); // Get a result variable by name.
+//				lastName = x.asNode().getLiteralLexicalForm();
+//				x = soln.get("birthdate"); // Get a result variable by name.
+//				date = x.asNode().getLiteralLexicalForm();
+//				result.add(new Person(firstName, lastName, date, null, null,
+//						null));
+//			}
+//			ResultSetFormatter.out(System.out, rs, query);
+//			qexec.close();
+//		} catch (Exception e) {
+//			logger.error(e.toString(), e);
+//		}
+//		return result;
+//	}
 
 	public List<String> getArtists() {
 		List<String> celebrities = new ArrayList<String>();

@@ -1,9 +1,22 @@
 package de.uni.mannheim.semantic.model;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Set;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 
 public class Interest {
 
+	private static SimpleDateFormat sdfToDate = new SimpleDateFormat(
+			"yyyyMMdd");
+	private Logger logger = LogManager.getLogger(SimpleDateFormat.class
+			.getName());
+	
 	private String kind;
 	private String cover_url;
 	private Set<String> genre;
@@ -24,8 +37,16 @@ public class Interest {
 	}
 	
 
-	public String getReleaseDate() {
-		return releaseDate;
+	public Date getReleaseDate() {
+		if(releaseDate == null) {
+			return null;
+		}
+		try {
+			return sdfToDate.parse(releaseDate);
+		} catch (ParseException e) {
+			logger.error(e.toString(),e);
+		}
+		return null;
 	}
 
 	public String getKind() {

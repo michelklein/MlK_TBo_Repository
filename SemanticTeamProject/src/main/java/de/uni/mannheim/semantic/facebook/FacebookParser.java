@@ -17,6 +17,7 @@ import org.apache.log4j.Logger;
 import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.FetchMovieData;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
+import de.uni.mannheim.semantic.model.DateObject;
 import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
@@ -140,7 +141,11 @@ public class FacebookParser {
 				i.getGenre().addAll(
 						CelebritiesFetcher.get().getGenreFromFile(i.getName()));
 			}
-			person = new Person(firstname, name, birthdate, locations,
+
+			List<DateObject> dates = new ArrayList<DateObject>();
+			dates.add(new DateObject(birthdate, DateObject.BIRTHDATE));
+			
+			person = new Person(firstname, name, dates, locations,
 					interests, picURL);
 		} catch (FacebookException e) {
 			logger.error(e.toString(), e);
