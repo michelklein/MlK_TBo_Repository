@@ -64,7 +64,7 @@ public class FetchDataServlet extends HttpServlet {
 			String latitude = request.getParameter("lati");
 			String longitude = request.getParameter("longi");
 			if (latitude != null && longitude != null) {
-				Location location = geoFetcher.getLocation(longitude, latitude,
+				Location location = geoFetcher.getLocation("Browser",longitude, latitude,
 						Location.BROWSER_LOCATION);
 				logger.info("Found Browser location and add to Facebook User");
 				if (location != null) {

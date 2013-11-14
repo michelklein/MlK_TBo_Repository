@@ -105,7 +105,6 @@ public class CelebritiesFetcher {
 				surname = gll(s, "surname");
 				date = gll(s, "date");
 				tn = g(s, "thumbnail");
-//				birthplace = s.get("birthPlace");
 				personIdent = g(s, "p");
 				first = false;
 			}
@@ -181,11 +180,11 @@ public class CelebritiesFetcher {
 
 			try {
 				List<DateObject> dates = new ArrayList<DateObject>();
-				dates.add(new DateObject(df.parse(date), DateObject.BIRTHDATE));
+				dates.add(new DateObject(df.parse(date), DateObject.BIRTHDATE,""));
 				for(Interest i : interests) {
 					Date releaseDate = i.getReleaseDate();
 					if(releaseDate != null)  {
-						dates.add(new DateObject(releaseDate, DateObject.RELEASE_DATE));
+						dates.add(new DateObject(releaseDate, DateObject.RELEASE_DATE,i.getName()));
 					}
 				}
 				

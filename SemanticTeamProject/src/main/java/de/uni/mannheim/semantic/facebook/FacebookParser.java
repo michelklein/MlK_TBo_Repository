@@ -62,7 +62,7 @@ public class FacebookParser {
 			IdNameEntity hometown = fb.getMe().getHometown();
 			if (hometown != null) {
 				Location loc = parseLocation(hometown.getId(),
-						Location.BIRTHPLACE);
+						Location.BIRTHPLACE,"");
 				if (loc != null) {
 					locations.add(loc);
 				}
@@ -71,7 +71,7 @@ public class FacebookParser {
 			IdNameEntity locationTmp = fb.getMe().getLocation();
 			if (locationTmp != null) {
 				Location loc = parseLocation(locationTmp.getId(),
-						Location.CURRENT_LOCATION);
+						"Facebook",Location.CURRENT_LOCATION);
 				if (loc != null) {
 					locations.add(loc);
 				}
@@ -81,7 +81,7 @@ public class FacebookParser {
 			ResponseList<Checkin> checkins = fb.getCheckins();
 			if (checkins != null && checkins.size() > 0) {
 				Location loc = parseLocation(checkins.get(0).getId(),
-						Location.CURRENT_LOCATION);
+						"Browser", Location.CURRENT_LOCATION);
 				if (loc != null) {
 					locations.add(loc);
 				}
@@ -92,8 +92,9 @@ public class FacebookParser {
 			if (educations != null) {
 				for (Education i : educations) {
 					if (locationTmp != null) {
-						Location loc = parseLocation(i.getSchool().getId(), i
-								.getSchool().getName());
+						Location loc = parseLocation(i.getSchool().getId(),
+								Location.EDUCATIONPLACE, i.getSchool()
+										.getName());
 
 						if (loc != null) {
 							locations.add(loc);
@@ -107,8 +108,8 @@ public class FacebookParser {
 			if (work != null) {
 				for (Work w : work) {
 					if (locationTmp != null) {
-						Location loc = parseLocation(w.getEmployer().getId(), w
-								.getEmployer().getName());
+						Location loc = parseLocation(w.getEmployer().getId(),
+								Location.WORKPLACE, w.getEmployer().getName());
 						if (loc != null) {
 							locations.add(loc);
 						}
@@ -141,7 +142,7 @@ public class FacebookParser {
 
 			List<DateObject> dates = new ArrayList<DateObject>();
 			Date birthdate = df.parse(fb.getMe().getBirthday());
-			dates.add(new DateObject(birthdate, DateObject.BIRTHDATE));
+			dates.add(new DateObject(birthdate, DateObject.BIRTHDATE, 	fb.getMe().getHometown().getName()));
 			dates.addAll(getDates());
 
 			person = new Person(firstname, name, dates, locations, interests,
@@ -251,24 +252,22 @@ public class FacebookParser {
 			if (fqlRes.length() == 1) {
 				JSONObject jo = (JSONObject) fqlRes.getJSONObject(0);
 				JSONArray workA = (JSONArray) jo.getJSONArray("work");
-				JSONArray education = (JSONArray) jo.getJSONArray("education");
 
 				for (int i = 0; i < workA.length(); i++) {
 					JSONObject work = workA.getJSONObject(i);
 					String workLoc = work.getJSONObject("employer").get("name")
 							.toString();
-					if(workLoc.contains(" "))
-					workLoc = workLoc.substring(0, workLoc.indexOf(" "));
+					System.out.println(workLoc);
 					if (work.has("start_date")) {
 						Object startDateStr = work.get("start_date");
 
 						dates.add(new DateObject(fbdf.parse(startDateStr
-								.toString()), "Joining Work"));
+								.toString()), "Joining Work", workLoc));
 					}
 					if (work.has("end_date")) {
 						Object endDateStr = work.get("end_date");
 						dates.add(new DateObject(fbdf.parse(endDateStr
-								.toString()), "Leaving Work"));
+								.toString()), "Leaving Work", workLoc));
 					}
 				}
 			}
@@ -285,18 +284,19 @@ public class FacebookParser {
 
 	}
 
-	private Location parseLocation(String id, String description) {
+	private Location parseLocation(String id, String description, String name) {
 		Page p;
 		try {
 			p = fb.getPage(id);
 			facebook4j.Place.Location location = p.getLocation();
 			if (location != null) {
-				Location loc = geocoding.getLocation(location.getLongitude(),
+				Location loc = geocoding.getLocation(name,location.getLongitude(),
 						location.getLatitude(), description);
 				if (loc == null) {
 					loc = geocoding
 							.getLocation(location.getCity(), description);
 				}
+				loc.setToolTip(name);
 				return loc;
 			}
 		} catch (FacebookException e) {

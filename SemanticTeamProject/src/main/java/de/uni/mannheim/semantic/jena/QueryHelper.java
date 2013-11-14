@@ -138,6 +138,7 @@ public class QueryHelper {
 		StringBuilder builder = new StringBuilder();
 		builder.append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> ")
 				.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
+				.append("PREFIX ont: <http://dbpedia.org/ontology/>")
 				.append("select DISTINCT ?name ")
 				.append("where {?m a dbpedia-owl:Film.")
 				.append("?m dbpedia-owl:starring ?p.")

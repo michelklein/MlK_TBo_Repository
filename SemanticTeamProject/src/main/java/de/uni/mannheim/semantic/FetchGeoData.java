@@ -26,16 +26,17 @@ public class FetchGeoData {
 
 	private static final String TIMEZONE_URL = "https://maps.googleapis.com/maps/api/timezone/json?";
 
-	private Logger logger = LogManager.getLogger(FetchGeoData.class
-			.getName());
-	
+	private Logger logger = LogManager.getLogger(FetchGeoData.class.getName());
+
 	public Location getLocation(String name, String description) {
-		logger.info(String.format("load location for name: %s and descrption: %s", name, description));
+		logger.info(String.format(
+				"load location for name: %s and descrption: %s", name,
+				description));
 		if (name == null) {
 			logger.warn("name should not be null");
 			return null;
 		}
-		
+
 		final Geocoder geocoder = new Geocoder();
 		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder()
 				.setAddress(name).setLanguage("en").getGeocoderRequest();
@@ -44,8 +45,9 @@ public class FetchGeoData {
 				&& geocoderResponse.getResults().size() > 0) {
 			GeocoderGeometry geometry = geocoderResponse.getResults().get(0)
 					.getGeometry();
-			Location location = getLocation(geometry.getLocation().getLng().doubleValue(),
-					geometry.getLocation().getLat().doubleValue(), description);
+			Location location = getLocation(name, geometry.getLocation()
+					.getLng().doubleValue(), geometry.getLocation().getLat()
+					.doubleValue(), description);
 			return location;
 		} else {
 			logger.info("no location found!");
@@ -53,21 +55,25 @@ public class FetchGeoData {
 		}
 	}
 
-	public Location getLocation(String longitude, String latitude,
+	public Location getLocation(String name, String longitude, String latitude,
 			String description) {
-		logger.info(String.format("load location for longitude: %s, latitude: %s and descrption: %s",longitude, latitude, description));
+		logger.info(String
+				.format("load location for longitude: %s, latitude: %s and descrption: %s",
+						longitude, latitude, description));
 		if (longitude == null || latitude == null || longitude == ""
 				|| latitude == "") {
 			logger.warn("longitude/latitude should not be null");
 			return null;
 		}
-		return getLocation(Double.valueOf(longitude), Double.valueOf(latitude),
-				description);
+		return getLocation(name, Double.valueOf(longitude),
+				Double.valueOf(latitude), description);
 	}
 
-	public Location getLocation(Double longitude, Double latitude,
+	public Location getLocation(String name, Double longitude, Double latitude,
 			String description) {
-		logger.info(String.format("load location for longitude: %s, latitude: %s and descrption: %s",longitude, latitude, description));
+		logger.info(String
+				.format("load location for longitude: %s, latitude: %s and descrption: %s",
+						longitude, latitude, description));
 		if (longitude == null || latitude == null) {
 			logger.warn("longitude/latitude should not be null");
 			return null;
@@ -79,13 +85,14 @@ public class FetchGeoData {
 								.valueOf(longitude))).setLanguage("en")
 				.getGeocoderRequest();
 		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-		Location location = getLocationForGeoResponse(geocoderResponse, longitude, latitude,
-				description);
-		logger.info(String.format("location found: %s", location.getFormattedLocation()));
+		Location location = getLocationForGeoResponse(name, geocoderResponse,
+				longitude, latitude, description);
+		logger.info(String.format("location found: %s",
+				location.getFormattedLocation()));
 		return location;
 	}
 
-	private Location getLocationForGeoResponse(
+	private Location getLocationForGeoResponse(String name,
 			GeocodeResponse geocoderResponse, Double longitude,
 			Double latitude, String description) {
 		String placeName = null;
@@ -97,7 +104,7 @@ public class FetchGeoData {
 
 		if (geocoderResponse.getStatus().equals(GeocoderStatus.ZERO_RESULTS)) {
 			return null;
-		} 
+		}
 
 		for (GeocoderResult result : geocoderResponse.getResults()) {
 			for (GeocoderAddressComponent address : result
@@ -127,8 +134,8 @@ public class FetchGeoData {
 			}
 		}
 
-		return new Location(lgn, lat, placeName,  country, state,
-				postalCode, getOffsetUTC(longitude, latitude), description, null);
+		return new Location(lgn, lat, placeName, country, state, postalCode,
+				getOffsetUTC(longitude, latitude), description, name);
 	}
 
 	public Integer getOffsetUTC(Double longitude, Double latitude) {

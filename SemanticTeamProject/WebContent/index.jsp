@@ -140,9 +140,8 @@
 			$('#search-celebrity').typeahead(
 					{
 						name : 'celebrities',
-						prefetch : 'fetchData?op=celebrityList&'
-								+ new Date().getTime(),
-						limit : 20,
+						prefetch : 'fetchData?op=celebrityList',
+						limit : 10,
 					}).on(
 					'typeahead:selected',
 					function($e) {
