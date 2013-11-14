@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import de.uni.mannheim.semantic.comparison.AgeComparator;
+import de.uni.mannheim.semantic.comparison.DatesComparison;
 import de.uni.mannheim.semantic.comparison.InterestsComparator;
 import de.uni.mannheim.semantic.comparison.LocationsComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
@@ -35,7 +35,7 @@ public class FetchDataServlet extends HttpServlet {
 	private Logger logger = LogManager.getLogger(FetchDataServlet.class
 			.getName());
 	private FetchGeoData geoFetcher = new FetchGeoData();
-	private AgeComparator ageComparator = new AgeComparator();
+	private DatesComparison datesComparator = new DatesComparison();
 	private LocationsComparator locationsComparator = new LocationsComparator();
 	private InterestsComparator movieComparator = new InterestsComparator();
 
@@ -94,9 +94,7 @@ public class FetchDataServlet extends HttpServlet {
 			} else if (compMethod.equals("date")) {
 				Person fbPerson = (Person) request.getSession().getAttribute(
 						"facebookUser");
-				List<CompareResult> ageResult = new ArrayList<CompareResult>();
-				ageResult.add(ageComparator.compare(fbPerson.getBirthdate(),
-						celebrity.getBirthdate()));
+				List<CompareResult> ageResult = datesComparator.compare(fbPerson.getDates(), celebrity.getDates());
 				logger.info("Get compare results for category date");
 				((MatchingContainer) request.getSession().getAttribute("comp"))
 						.setAgeCompResult(ageResult);

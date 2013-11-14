@@ -1,8 +1,6 @@
 package de.uni.mannheim.semantic.model;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,6 +29,8 @@ public class Person extends AbstractToJson {
 		this.dates = dates;
 	}
 	
+	
+	
 //	public Person(String firstname, String lastname, String birthdate, Set<Location> locations,
 //			List<Interest> interest, String imageURL) {
 //		super();
@@ -45,6 +45,12 @@ public class Person extends AbstractToJson {
 //			e.printStackTrace();
 //		}
 //	}
+
+	public List<DateObject> getDates() {
+		return dates;
+	}
+
+
 
 	public String getFirstname() {
 		return firstname;
