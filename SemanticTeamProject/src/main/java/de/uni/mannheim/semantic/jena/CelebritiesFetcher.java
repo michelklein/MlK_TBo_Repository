@@ -205,7 +205,7 @@ public class CelebritiesFetcher {
 			} catch (ParseException e) {
 				logger.error(e.toString(), e);
 			}
-			logger.info("create person: " + p);
+			logger.info("Create person: " + p);
 			return p;
 		}
 		logger.info("create person: " + p);
