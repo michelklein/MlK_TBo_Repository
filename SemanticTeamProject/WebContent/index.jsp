@@ -17,6 +17,8 @@
 <script src="bootstrap/3.0.0/js/bootstrap.min.js"></script>
 <script src="bootstrap/3.0.0/js/typeahead.js"></script>
 
+<script src="bootstrap/3.0.0/js/jquery.animateNumber.js"></script>
+
 <link rel="stylesheet"
 	href="bootstrap/3.0.0/css/typeahead.js-bootstrap.css">
 <link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap-mod.css">
@@ -96,7 +98,7 @@
 						</div>
 					</div>
 				</div>
-				<div class="col-md-1" id="total"></div>
+				<div class="col-md-1" id="total" style="display: none"></div>
 				<div class="col-md-5">
 					<div id="fbUser">
 						<div class="panel-header-own floatRight">
@@ -118,9 +120,9 @@
 
 
 
-			<div id="date"></div>
-			<div id="locations"></div>
-			<div id="movies"></div>
+			<div id="date" style="display: none"></div>
+			<div id="locations" style="display: none"></div>
+			<div id="movies" style="display: none"></div>
 
 
 
@@ -137,12 +139,11 @@
 
 			});
 
-			$('#search-celebrity').typeahead(
-					{
-						name : 'celebrities',
-						prefetch : 'fetchData?op=celebrityList',
-						limit : 10,
-					}).on(
+			$('#search-celebrity').typeahead({
+				name : 'celebrities',
+				prefetch : 'fetchData?op=celebrityList',
+				limit : 10,
+			}).on(
 					'typeahead:selected',
 					function($e) {
 
@@ -189,7 +190,7 @@
 
 				$(id).empty();
 				$(id).append(
-						"<div class='row "+title+"'><div class='col-md-2 attr_caption'>"
+						"<div class='row'><div class='col-md-2 attr_caption'>"
 								+ title + ":</div></div>");
 				$
 						.each(
@@ -206,7 +207,7 @@
 
 										$(id)
 												.append(
-														"<div class='row "+title+"'><div class='col-md-1 attr_caption_small'>"
+														"<div class='row'><div class='col-md-1 attr_caption_small'>"
 																+ this.desc1
 																+ "</div><div class='col-md-2 attr' data-toggle='tooltip' data-html='true' data-original-title='"+tt1+"'>"
 																+ this.o1
@@ -226,7 +227,7 @@
 																			.children()
 																			.last()
 																			.append(
-																					"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																					"<div class='eb progress-bar' style='width:0%'><span class='sr-only'>"
 																							+ this.value
 																							+ "%"
 																							+ "</span></div>");
@@ -255,7 +256,7 @@
 														.children()
 														.last()
 														.append(
-																"<div class='progress-bar' style='width:0%'><span class='sr-only'>"
+																"<div class='eb progress-bar' style='width:0%'><span class='sr-only'>"
 																		+ this.value
 																		+ "%"
 																		+ "</span></div>");
@@ -280,30 +281,40 @@
 																+ "</div><div class='col-md-1 attr_caption_small leftAlign'>"
 																+ this.desc2
 																+ "</div></div>");
-										$("." + title).slideDown(1000, "swing");
+
 									}
 								});
 			}
 			function finallyTotal(data) {
 				$("#total").empty();
 				$("#total").append(
-						"<span class='header-name header-bold bigger'>"
-								+ data.total + "</span>");
+						"<span id='totalnumber' class='header-name header-bold bigger'>"
+								+ 0 + "</span>");
 				$("#total").append("<span class='header-name bigger'>%</span>");
 				$("[data-toggle='tooltip']").tooltip();
-				$(".progress-bar").each(function() {
-					$(this).removeClass('progress-bar').fadeIn(500, function() {
-						$(this).addClass('progress-bar');
-					});
 
+				$(".progress-bar").removeClass('progress-bar').fadeIn(500,
+						function() {
+							$(this).addClass('progress-bar');
+						});
+
+				$("#date").slideDown(1000, function() {
+					$("#locations").delay(500).slideDown(1000, function() {
+						$("#movies").delay(500).slideDown(1000, function() {
+							$(".progress-bar").removeClass('eb');
+							$("#total").fadeIn(3000);
+							$("#totalnumber").animateNumber(data.total);
+							window.scrollTo(0,0);
+						});
+					});
 				});
-				$("#total").fadeIn(3000);
+
 			}
 		</script>
 
 	</tag:loggedin>
 	<div class="loadingModal">
-		<i class="fa fa-refresh fa-5x centBig"></i>
+		<i class="fa fa-spinner fa-spin fa-5x cent"></i>
 
 	</div>
 </body>
