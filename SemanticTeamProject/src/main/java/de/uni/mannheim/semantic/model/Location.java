@@ -1,6 +1,6 @@
 package de.uni.mannheim.semantic.model;
 
-public class Location {
+public class Location extends AbstractToolTipInfo {
 
 	public static final String BIRTHPLACE = "Birth";
 	public static final String DEATHPLACE = "Death";
@@ -20,10 +20,11 @@ public class Location {
 	private String description;
 	private String formattedLocation;
 	private boolean prio;
-
+	private String toolTipInfo;
+	
 	public Location(Double longitude, Double latitude, String name,
 			String country, String state, String postalCode, Integer offsetUTC,
-			String description) {
+			String description, String toolTipInfo) {
 		this.longitude = longitude;
 		this.latitude = latitude;
 		this.name = name;
@@ -39,6 +40,7 @@ public class Location {
 			this.formattedLocation = String.format("%s %s, %s", postalCode,
 					name, country);
 		}
+		this.toolTipInfo = toolTipInfo;
 	}
 
 	public Double getLongitude() {
@@ -151,6 +153,15 @@ public class Location {
 		} else {
 			return true;
 		}
+	}
+	
+	public void setToolTip(String toolTipInfo) {
+		this.toolTipInfo = toolTipInfo;
+	}
+
+	@Override
+	public String getToolTipInfo() {
+		return toolTipInfo;
 	}
 
 }

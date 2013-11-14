@@ -3,7 +3,7 @@ package de.uni.mannheim.semantic.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class DateObject {
+public class DateObject extends AbstractToolTipInfo {
 
 	private static SimpleDateFormat sdfToDate2 = new SimpleDateFormat(
 			"EEEE, dd.MM.yyyy");
@@ -16,14 +16,14 @@ public class DateObject {
 	private boolean prio;
 	private String description;
 	private Date date;
-	private String name;
+	private String toolTipInfo;
 	
-	public DateObject(Date date, String description,String name) {
+	public DateObject(Date date, String description,String toolTipInfo) {
 		super();
 		this.prio = getPrio(description);
 		this.description = description;
 		this.date = date;
-		this.name = name;
+		this.toolTipInfo = toolTipInfo;
 		System.out.println(description+" : "+date);
 	}
 	
@@ -57,9 +57,11 @@ public class DateObject {
 		return true;
 	}
 
-	public String getName() {
-		return name;
+	@Override
+	public String getToolTipInfo() {
+		return toolTipInfo;
 	}
+
 
 	
 }

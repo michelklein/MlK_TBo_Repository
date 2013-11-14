@@ -128,7 +128,7 @@ public class FetchGeoData {
 		}
 
 		return new Location(lgn, lat, placeName,  country, state,
-				postalCode, getOffsetUTC(longitude, latitude), description);
+				postalCode, getOffsetUTC(longitude, latitude), description, null);
 	}
 
 	public Integer getOffsetUTC(Double longitude, Double latitude) {
