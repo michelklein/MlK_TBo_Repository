@@ -152,27 +152,29 @@
 						$.getJSON("fetchData?op=celebrity&comp=none&name="
 								+ $typeahead.val(), function(data) {
 							constructCel(data);
-						});
-						$.getJSON("fetchData?op=celebrity&comp=date&name="
-								+ $typeahead.val(), function(data) {
-							createDynMatch("#date", data.ageCompResult,
-									"Significant Dates", false);
-							if (data.total != 0)
-								finallyTotal(data);
-						});
-						$.getJSON("fetchData?op=celebrity&comp=loc&name="
-								+ $typeahead.val(), function(data) {
-							createDynMatch("#locations", data.locationResult,
-									"Visited Locations", false);
-							if (data.total != 0)
-								finallyTotal(data);
-						});
-						$.getJSON("fetchData?op=celebrity&comp=genre&name="
-								+ $typeahead.val(), function(data) {
-							createDynMatch("#movies", data.movieResult,
-									"Movie Genres", true);
-							if (data.total != 0)
-								finallyTotal(data);
+							$.getJSON("fetchData?op=celebrity&comp=date&name="
+									+ $typeahead.val(), function(data) {
+								createDynMatch("#date", data.ageCompResult,
+										"Significant Dates", false);
+								if (data.total != 0)
+									finallyTotal(data);
+							});
+							$.getJSON("fetchData?op=celebrity&comp=loc&name="
+									+ $typeahead.val(), function(data) {
+								createDynMatch("#locations",
+										data.locationResult,
+										"Visited Locations", false);
+								if (data.total != 0)
+									finallyTotal(data);
+							});
+							$.getJSON("fetchData?op=celebrity&comp=genre&name="
+									+ $typeahead.val(), function(data) {
+								createDynMatch("#movies", data.movieResult,
+										"Movie Genres", true);
+								if (data.total != 0)
+									finallyTotal(data);
+							});
+
 						});
 
 					});
@@ -279,7 +281,7 @@
 																+ "</div><div class='col-md-1 attr_caption_small leftAlign'>"
 																+ this.desc2
 																+ "</div></div>");
-										$("."+title).slideDown(1000,"swing");
+										$("." + title).slideDown(1000, "swing");
 									}
 								});
 			}
