@@ -196,7 +196,7 @@ public class FacebookParser {
 					return movie;
 				}
 				Interest interest = new Interest(c.getCategory(), url, genre, c.getId(),
-						name, null);
+						name, null, null);
 				logger.info(String.format("found interest: %s", interest.toString()));
 				return interest;
 			}

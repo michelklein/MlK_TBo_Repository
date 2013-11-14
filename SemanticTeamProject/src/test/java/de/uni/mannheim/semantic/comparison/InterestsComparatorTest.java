@@ -42,21 +42,21 @@ public class InterestsComparatorTest {
 		genres.add("Drama");
 		genres.add("Comedy");
 		genres.add("Crime");
-		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "Pain & Gain",null));
+		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "Pain & Gain",null,null));
 
 		// Fast & Furious
 		genres = new HashSet<String>();
 		genres.add("Action-Thriller");
 		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null,
-				"Fast & Furious",null));
+				"Fast & Furious",null,null));
 
 		// Kindskšpfe
 		genres.add("Kšmodie");
-		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "Kindskšpfe",null));
+		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "Kindskšpfe",null,null));
 
 		// WHAT A MAN
 		genres.add("Kšmodie");
-		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "WHAT A MAN",null));
+		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "WHAT A MAN",null,null));
 		return interests;
 	}
 
@@ -69,26 +69,26 @@ public class InterestsComparatorTest {
 		genres.add("Animation");
 		genres.add("Sci-Fi");
 		genres.add("Family");
-		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "Titan A.E.",null));
+		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "Titan A.E.",null,null));
 
 		// School Ties
 		genres = new HashSet<String>();
 		genres.add("Drama");
-		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "School Ties",null));
+		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "School Ties",null,null));
 
 		// Ocean's Twelve.
 		genres = new HashSet<String>();
 		genres.add("Crime");
 		genres.add("Thriller");
 		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null,
-				"Ocean's Twelve",null));
+				"Ocean's Twelve",null,null));
 
 		// The Rainmaker
 		genres = new HashSet<String>();
 		genres.add("Crime");
 		genres.add("Thriller");
 		interests
-				.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "The Rainmaker",null));
+				.add(new Interest("movie", COVER_URL_DUMMY, genres, null, "The Rainmaker",null,null));
 
 		// The Talented Mr. Ripley
 		genres = new HashSet<String>();
@@ -97,7 +97,7 @@ public class InterestsComparatorTest {
 		genres.add("Music");
 		genres.add("Drama");
 		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null,
-				"The Talented Mr. Ripley",null));
+				"The Talented Mr. Ripley",null,null));
 
 		// The Bourne Ultimatum
 		genres = new HashSet<String>();
@@ -105,7 +105,7 @@ public class InterestsComparatorTest {
 		genres.add("Thriller");
 		genres.add("Action");
 		interests.add(new Interest("movie", COVER_URL_DUMMY, genres, null,
-				"The Bourne Ultimatum",null));
+				"The Bourne Ultimatum",null,null));
 
 		return interests;
 	}

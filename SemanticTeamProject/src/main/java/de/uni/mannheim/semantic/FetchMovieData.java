@@ -68,10 +68,15 @@ public class FetchMovieData {
 			}
 			rd.close();
 			if (result.contains("error")) {
-				JSONObject json = new JSONObject(result);
+				JSONObject json = null;
+				if (result.startsWith("[")) {
+					JSONArray jsonArray = new JSONArray(result);
+					json = (JSONObject) jsonArray.get(0);
+				} else {
+					json = new JSONObject(result);
+				}
 				if (json.has("code")) {
-					System.out
-							.println(json.get("error") + " for movie: " + url);
+					logger.warn(json.get("error") + " for movie: " + url);
 					return null;
 				}
 			}
@@ -105,7 +110,11 @@ public class FetchMovieData {
 			if (json.has("filming_locations")) {
 				location = json.getString("filming_locations");
 			}
-			Interest movie = new Interest("movie", imageURL, genres, null, title, location);
+			String releaseDate = null;
+			if(json.has("release_date")) {
+				releaseDate = json.getString("release_date");
+			}
+			Interest movie = new Interest("movie", imageURL, genres, null, title, location, releaseDate);
 			logger.info(String.format("found movie: %s", movie.toString()));
 			return movie;
 		} catch (Exception e) {

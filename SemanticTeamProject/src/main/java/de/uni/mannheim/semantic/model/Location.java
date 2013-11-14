@@ -19,6 +19,7 @@ public class Location {
 	private String postalCode;
 	private String description;
 	private String formattedLocation;
+	private boolean prio;
 
 	public Location(Double longitude, Double latitude, String name,
 			String country, String state, String postalCode, Integer offsetUTC,
@@ -31,8 +32,13 @@ public class Location {
 		this.postalCode = postalCode;
 		this.offsetUTC = offsetUTC;
 		this.description = description;
-		this.formattedLocation = String.format("%s %s, %s", postalCode, name,
-				country);
+		this.prio = getPrioForDescription(description);
+		if (postalCode == null) {
+			this.formattedLocation = String.format("%s, %s", name, country);
+		} else {
+			this.formattedLocation = String.format("%s %s, %s", postalCode,
+					name, country);
+		}
 	}
 
 	public Double getLongitude() {
@@ -91,6 +97,10 @@ public class Location {
 		return formattedLocation;
 	}
 
+	public boolean isPrio() {
+		return prio;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -133,6 +143,14 @@ public class Location {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	
+	private boolean getPrioForDescription(String description) {
+		if(SHOOTING_LOCATION.equals(description)) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 
 }

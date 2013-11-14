@@ -124,7 +124,7 @@ public class CelebritiesFetcher {
 					if (!oldLabel.equals(label)) {
 						g = new HashSet<String>();
 						Interest i = new Interest("music", COVER_URL_DUMMY, g,
-								"id", label, null);
+								"id", label, null, null);
 						interests.add(i);
 						oldLabel = label;
 					} else {

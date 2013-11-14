@@ -10,15 +10,22 @@ public class Interest {
 	private String id;
 	private String name;
 	private String location;
+	private String releaseDate;
 
 	public Interest(String kind, String cover_url, Set<String> set, String id,
-			String name, String location) {
+			String name, String location, String releaseDate) {
 		this.kind = kind;
 		this.cover_url = cover_url;
 		this.genre = set;
 		this.id = id;
 		this.name = name;
 		this.location = location;
+		this.releaseDate = releaseDate;
+	}
+	
+
+	public String getReleaseDate() {
+		return releaseDate;
 	}
 
 	public String getKind() {
