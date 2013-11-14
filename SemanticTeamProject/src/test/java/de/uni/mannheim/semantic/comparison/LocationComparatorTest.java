@@ -17,17 +17,17 @@ public class LocationComparatorTest {
 
 	@Test
 	public void test() {
-		Location hennef = geoDataFetcher.getLocation(7.2914, 50.7699,
+		Location hennef = geoDataFetcher.getLocation(null,7.2914, 50.7699,
 				description);
-		Location siegburg = geoDataFetcher.getLocation(7.2234, 50.8027,
+		Location siegburg = geoDataFetcher.getLocation(null,7.2234, 50.8027,
 				description);
 		Location kšln = geoDataFetcher
-				.getLocation(7.0416, 50.8998, description);
-		Location berlin = geoDataFetcher.getLocation(13.2905, 52.4827,
+				.getLocation(null,7.0416, 50.8998, description);
+		Location berlin = geoDataFetcher.getLocation(null,13.2905, 52.4827,
 				description);
-		Location mannheim = geoDataFetcher.getLocation(8.5316, 49.5121,
+		Location mannheim = geoDataFetcher.getLocation(null,8.5316, 49.5121,
 				description);
-		Location californien = geoDataFetcher.getLocation(-76.5312, 38.3006,
+		Location californien = geoDataFetcher.getLocation(null,-76.5312, 38.3006,
 				description);
 
 		// Location hennef = new Location(7.2914, 50.7699, "Hennef", "Germany",
@@ -66,7 +66,7 @@ public class LocationComparatorTest {
 
 	@Test
 	public void test2() {
-		Location hennef = geoDataFetcher.getLocation(7.2914, 50.7699,
+		Location hennef = geoDataFetcher.getLocation(null,7.2914, 50.7699,
 				description);
 		Location india = geoDataFetcher.getLocation("400014 Mumbai, India",
 				description);

@@ -84,6 +84,9 @@ public class CompareResult extends AbstractToJson {
 	}
 
 	private String getHTMLForToolTipInfo(AbstractToolTipInfo toolTip) {
+		if(toolTip == null || (toolTip.getToolTipInfo() == null || toolTip.getToolTipInfo().equals(""))) {
+			return null;
+		}
 		return "<div>"+toolTip.getToolTipInfo()+"</div>";
 	}
 
