@@ -81,7 +81,7 @@ public class FacebookParser {
 			ResponseList<Checkin> checkins = fb.getCheckins();
 			if (checkins != null && checkins.size() > 0) {
 				Location loc = parseLocation(checkins.get(0).getId(),
-						"Browser", Location.CURRENT_LOCATION);
+						"Facebook", Location.CURRENT_LOCATION);
 				if (loc != null) {
 					locations.add(loc);
 				}

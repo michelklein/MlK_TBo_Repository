@@ -8,7 +8,6 @@ public class Location extends AbstractToolTipInfo {
 	public static final String EDUCATIONPLACE = "Education";
 	public static final String CURRENT_LOCATION = "Current";
 	public static final String SHOOTING_LOCATION = "Shooting";
-	public static final String BROWSER_LOCATION = "Browser";
 
 	private Double longitude;
 	private Double latitude;

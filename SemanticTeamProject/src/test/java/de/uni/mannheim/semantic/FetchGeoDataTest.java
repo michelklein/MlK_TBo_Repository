@@ -33,34 +33,34 @@ public class FetchGeoDataTest {
 
 	@Test
 	public void testGetLocationStringString() {
-		Location location = fetcher.getLocation(null, "",description);
+		Location location = fetcher.getLocation(null,null, "",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("", "",description);
+		location = fetcher.getLocation(null,"", "",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("", null,description);
+		location = fetcher.getLocation(null,"", null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("7.283333000000001", null,description);
+		location = fetcher.getLocation(null,"7.283333000000001", null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(null, "50.773",description);
+		location = fetcher.getLocation(null,null, "50.773",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("7.283333000000001", "",description);
+		location = fetcher.getLocation(null,"7.283333000000001", "",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("", "50.773",description);
+		location = fetcher.getLocation(null,"", "50.773",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("0", "0",description);
+		location = fetcher.getLocation(null,"0", "0",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("-123124121.123", "-123332223.122",description);
+		location = fetcher.getLocation(null,"-123124121.123", "-123332223.122",description);
 		assertNull(location);
 		
-		location = fetcher.getLocation("7.283333000000001", "50.773",description);
+		location = fetcher.getLocation(null,"7.283333000000001", "50.773",description);
 		assertEquals("Germany", location.getCountry());
 		assertEquals("53773", location.getPostalCode());
 		assertEquals("North Rhine-Westphalia", location.getState());
@@ -70,26 +70,26 @@ public class FetchGeoDataTest {
 
 	@Test
 	public void testGetLocationDoubleDouble() {
-		Location location = fetcher.getLocation(new Double(23), null,description);
+		Location location = fetcher.getLocation(null,new Double(23), null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(null, new Double(42),description);
+		location = fetcher.getLocation(null,null, new Double(42),description);
 		assertNull(location);
 		
 		
-		location = fetcher.getLocation(7.283333000000001, null,description);
+		location = fetcher.getLocation(null,7.283333000000001, null,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(null, 50.773,description);
+		location = fetcher.getLocation(null,null, 50.773,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(0.0, 0.0,description);
+		location = fetcher.getLocation(null,0.0, 0.0,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(-123124121.123, -123332223.122,description);
+		location = fetcher.getLocation(null,-123124121.123, -123332223.122,description);
 		assertNull(location);
 		
-		location = fetcher.getLocation(7.283333000000001, 50.773,description);
+		location = fetcher.getLocation(null,.283333000000001, 50.773,description);
 		assertEquals("Germany", location.getCountry());
 		assertEquals("53773", location.getPostalCode());
 		assertEquals("North Rhine-Westphalia", location.getState());

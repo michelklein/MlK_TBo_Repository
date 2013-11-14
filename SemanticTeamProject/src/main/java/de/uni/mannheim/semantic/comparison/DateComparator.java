@@ -1,15 +1,12 @@
 package de.uni.mannheim.semantic.comparison;
 
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 
 import de.uni.mannheim.semantic.model.CompareResult;
 import de.uni.mannheim.semantic.model.DateObject;
 
 public class DateComparator extends AbstractComparator<DateObject> {
-	private static SimpleDateFormat sdfToDate2 = new SimpleDateFormat(
-			"EEEE, dd.MM.yyyy");
+	
 	private static final int DECADE_PERCENT = 5;
 	private static final int CENTURY_PERCENT = 5;
 	private static final int YEAR_PERCENT = 5;
@@ -21,13 +18,13 @@ public class DateComparator extends AbstractComparator<DateObject> {
 
 	@Override
 	public CompareResult compare(DateObject o1, DateObject o2) {
-		if(o1 == null || o2 == null) {
+		if (o1 == null || o2 == null) {
 			return null;
 		}
 		this.o1 = o1;
 		this.o2 = o2;
-		result = new CompareResult(0, o1.getDescription(),o2.getDescription(), sdfToDate2.format(o1.getDate()).toString(),
-				sdfToDate2.format(o2.getDate()).toString());
+		result = new CompareResult(0, o1.getDescription(), o2.getDescription(),
+				o1, o2);
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(o1.getDate());
 		Calendar cal2 = Calendar.getInstance();
@@ -39,12 +36,12 @@ public class DateComparator extends AbstractComparator<DateObject> {
 		int div = age1 - age2;
 		div = div < 0 ? div * -1 : div;
 		if (age1 > 100 || age2 > 100) {
-			result.getSubresults().add(new CompareResult(0, "Age","", o1, o2));
+			result.getSubresults().add(new CompareResult(0, "Age", "", o1, o2));
 		} else {
 			double divide = (double) (100 - div) / 100;
 			double agePercent = AGE_PERCENT * divide;
 			result.getSubresults().add(
-					new CompareResult((int) agePercent, "Age", "",o1, o2));
+					new CompareResult((int) agePercent, "Age", "", o1, o2));
 			result.setValue((int) (result.getValue() + agePercent));
 		}
 		// century comparison
@@ -54,7 +51,7 @@ public class DateComparator extends AbstractComparator<DateObject> {
 		String century2 = String.valueOf(year2).substring(0, 2);
 		int tempResult = century1.equals(century2) ? CENTURY_PERCENT : 0;
 		result.getSubresults().add(
-				new CompareResult(tempResult, "Century","", o1, o2));
+				new CompareResult(tempResult, "Century", "", o1, o2));
 		result.setValue(result.getValue() + tempResult);
 
 		// decade comparison
@@ -62,7 +59,7 @@ public class DateComparator extends AbstractComparator<DateObject> {
 		String decade2 = String.valueOf(year2).substring(0, 3);
 		tempResult = decade1.equals(decade2) ? DECADE_PERCENT : 0;
 		result.getSubresults().add(
-				new CompareResult(tempResult, "Decade","", o1, o2));
+				new CompareResult(tempResult, "Decade", "", o1, o2));
 		result.setValue(result.getValue() + tempResult);
 
 		// year comparison
