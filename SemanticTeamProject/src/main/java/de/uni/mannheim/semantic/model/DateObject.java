@@ -18,11 +18,12 @@ public class DateObject {
 	private Date date;
 	private String name;
 	
-	public DateObject(Date date, String description) {
+	public DateObject(Date date, String description,String name) {
 		super();
 		this.prio = getPrio(description);
 		this.description = description;
 		this.date = date;
+		this.name = name;
 		System.out.println(description+" : "+date);
 	}
 	
