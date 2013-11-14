@@ -26,8 +26,8 @@ public class DateComparator extends AbstractComparator<DateObject> {
 		}
 		this.o1 = o1;
 		this.o2 = o2;
-		result = new CompareResult(0, o1.getDescription(),o2.getDescription(), sdfToDate2.format(o1).toString(),
-				sdfToDate2.format(o2).toString());
+		result = new CompareResult(0, o1.getDescription(),o2.getDescription(), sdfToDate2.format(o1.getDate()).toString(),
+				sdfToDate2.format(o2.getDate()).toString());
 		Calendar cal1 = Calendar.getInstance();
 		cal1.setTime(o1.getDate());
 		Calendar cal2 = Calendar.getInstance();
