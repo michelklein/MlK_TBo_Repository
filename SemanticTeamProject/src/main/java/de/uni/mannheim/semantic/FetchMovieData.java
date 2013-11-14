@@ -11,17 +11,22 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.uni.mannheim.semantic.model.Interest;
 import facebook4j.internal.org.json.JSONArray;
 import facebook4j.internal.org.json.JSONObject;
 
 public class FetchMovieData {
-
+	private Logger logger = LogManager.getLogger(FetchMovieData.class
+			.getName());
 	private static final String API_URL = "http://mymovieapi.com/";
 	private static final Pattern pattern = Pattern.compile("\\d{4}");
 
 	public Interest getMovieByIMDBId(String id) {
 		String imdbId = id.substring(id.lastIndexOf("/") + 1);
+		logger.info("load movie with imdbid: " + imdbId);
 		return getMovieResult(getURL(imdbId));
 	}
 
@@ -30,16 +35,18 @@ public class FetchMovieData {
 	}
 
 	public Interest getMovie(String title, String year) {
+		logger.info(String.format("load movie with title: %s and year: %s", title, year));
 		if (title == null) {
+			logger.warn("title should not be null");
 			return null;
 		}
 
 		if (year != null) {
 			Matcher matcher = pattern.matcher(year);
-			if (matcher.find()) {
+			if (matcher.find() && year.length() > 4) {
 				int endIndex = matcher.end();
 				String convertedYear = year.substring(endIndex - 4, endIndex);
-				System.out.println(String.format("Convert Year: %s to %s",
+				logger.debug(String.format("Convert Year: %s to %s",
 						year, convertedYear));
 				year = convertedYear;
 			}
@@ -98,9 +105,11 @@ public class FetchMovieData {
 			if (json.has("filming_locations")) {
 				location = json.getString("filming_locations");
 			}
-			return new Interest("movie", imageURL, genres, null, title, location);
+			Interest movie = new Interest("movie", imageURL, genres, null, title, location);
+			logger.info(String.format("found movie: %s", movie.toString()));
+			return movie;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 		return null;
 	}
@@ -120,7 +129,7 @@ public class FetchMovieData {
 								API_URL, convertTitleForURL(title)));
 			}
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 		return url;
 	}
@@ -133,7 +142,7 @@ public class FetchMovieData {
 							"%s?id=%s&type=json&plot=simple&episode=1&lang=en-US&aka=simple&release=simple&business=0&tech=0",
 							API_URL, imdbId));
 		} catch (MalformedURLException e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 		return url;
 	}

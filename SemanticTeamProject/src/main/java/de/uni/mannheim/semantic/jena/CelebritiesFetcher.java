@@ -14,6 +14,8 @@ import java.util.Set;
 
 import org.apache.jena.atlas.json.JsonArray;
 import org.apache.jena.atlas.json.JsonObject;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
@@ -24,7 +26,6 @@ import com.hp.hpl.jena.query.ResultSet;
 import com.hp.hpl.jena.query.ResultSetFormatter;
 import com.hp.hpl.jena.rdf.model.RDFNode;
 import com.hp.hpl.jena.sparql.engine.http.QueryEngineHTTP;
-import com.sun.j3d.utils.behaviors.picking.Intersect;
 
 import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.FetchMovieData;
@@ -34,14 +35,27 @@ import de.uni.mannheim.semantic.model.Person;
 import de.uni.mannheim.semantic.util.PropertiesUtils;
 
 public class CelebritiesFetcher {
-
+	private Logger logger = LogManager.getLogger(CelebritiesFetcher.class
+			.getName());
 	private FetchGeoData geocoding = new FetchGeoData();
 	private FetchMovieData movieFetcher = new FetchMovieData();
 	private static final String COVER_URL_DUMMY = "http://www.ernieputto.de/filmstuff4/batman_begins/batman_begins_poster_us2.jpg";
+	private static CelebritiesFetcher instance;
+
+	private CelebritiesFetcher() {
+	}
+
+	public static CelebritiesFetcher get() {
+		if (instance == null) {
+			instance = new CelebritiesFetcher();
+		}
+		return instance;
+	}
 
 	public static void main(String[] args) throws IOException {
 
-		CelebritiesFetcher.get().getAllDates("<http://dbpedia.org/page/Arnold_Schwarzenegger>");
+		CelebritiesFetcher.get().getAllDates(
+				"<http://dbpedia.org/page/Arnold_Schwarzenegger>");
 		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
 		// Set<Location> celebrityLocations = CelebritiesFetcher.get()
 		// .getCelebrityLocations("Arnold Schwarzenegger");
@@ -57,25 +71,8 @@ public class CelebritiesFetcher {
 		// }
 	}
 
-	private void getAllDates(String string) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	private static CelebritiesFetcher instance;
-
-	private CelebritiesFetcher() {
-
-	}
-
-	public static CelebritiesFetcher get() {
-		if (instance == null) {
-			instance = new CelebritiesFetcher();
-		}
-		return instance;
-	}
-
 	public Person createCel(String name) {
+		logger.info("create celebrity for name: " + name);
 		Person p = null;
 		String givenName = "";
 		String surname = "";
@@ -83,12 +80,10 @@ public class CelebritiesFetcher {
 		String tn = "";
 		Set<String> type = new HashSet<String>();
 		String personIdent = "";
-		RDFNode birthplace = null;
 		boolean first = true;
 		List<Interest> interests = new ArrayList<Interest>();
 		ResultSet resSet = execute("http://dbpedia.org/sparql",
 				QueryHelper.getBasicInfoQuery(name));
-		;
 
 		while (resSet.hasNext()) {
 			QuerySolution s = resSet.nextSolution();
@@ -108,14 +103,13 @@ public class CelebritiesFetcher {
 				surname = gll(s, "surname");
 				date = gll(s, "date");
 				tn = g(s, "thumbnail");
-				birthplace = s.get("birthPlace");
+//				birthplace = s.get("birthPlace");
 				personIdent = g(s, "p");
 				first = false;
 			}
 
 			type.add(g(s, "sc"));
 			if (is(type, "artist")) {
-				System.out.println("artist?");
 				resSet = execute("http://dbpedia.org/sparql",
 						QueryHelper.getAlbumsQuery(personIdent));
 
@@ -123,13 +117,11 @@ public class CelebritiesFetcher {
 				Set<String> g = null;
 				while (resSet.hasNext()) {
 					s = resSet.nextSolution();
-					System.out.println(s);
 					String label = gll(s, "label");
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
 
 					if (!oldLabel.equals(label)) {
-						System.out.println("new " + label);
 						g = new HashSet<String>();
 						Interest i = new Interest("music", COVER_URL_DUMMY, g,
 								"id", label, null);
@@ -154,7 +146,6 @@ public class CelebritiesFetcher {
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
 					label = label.trim();
-					// label = label + " (" + year + ")";
 
 					String imdb = null;
 					try {
@@ -172,11 +163,6 @@ public class CelebritiesFetcher {
 					} catch (Exception e) {
 					}
 
-					// Interest i = new Interest("movie", COVER_URL_DUMMY,
-					// getGenreFromFile(label), imdb, label);
-					// interests.add(i);
-
-					System.out.println(imdb);
 					Interest i = null;
 					if (imdb != null) {
 						i = movieFetcher.getMovieByIMDBId(imdb);
@@ -185,7 +171,6 @@ public class CelebritiesFetcher {
 					}
 					if (i != null)
 						interests.add(i);
-
 				}
 
 			}
@@ -207,11 +192,12 @@ public class CelebritiesFetcher {
 					}
 				}
 			} catch (ParseException e) {
-				e.printStackTrace();
+				logger.error(e.toString(), e);
 			}
-
+			logger.info("create person: " + p.toString());
 			return p;
 		}
+		logger.info("create person: " + p.toString());
 		return p;
 	}
 
@@ -266,7 +252,7 @@ public class CelebritiesFetcher {
 				locations.add(loc);
 			}
 		}
-
+		logger.info("found locations: " + locations);
 		return locations;
 	}
 
@@ -277,11 +263,6 @@ public class CelebritiesFetcher {
 			return node.asNode().getLiteralLexicalForm();
 		}
 
-		return null;
-	}
-
-	private String getAlbumsQuery(String sameAs) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -316,9 +297,8 @@ public class CelebritiesFetcher {
 			}
 			bf.close();
 		} catch (IOException e) {
-			System.out.println("IO Error Occurred: " + e.toString());
+			logger.error("IO Error Occurred: " + e.toString(), e);
 		}
-
 		return g;
 	}
 
@@ -367,10 +347,9 @@ public class CelebritiesFetcher {
 						null));
 			}
 			ResultSetFormatter.out(System.out, rs, query);
-			// System.out.println(result);
 			qexec.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 		return result;
 	}
@@ -393,14 +372,12 @@ public class CelebritiesFetcher {
 				QuerySolution soln = rs.nextSolution();
 				name = gll(soln, "name");
 				if (!celebrities.contains(name)) {
-//					System.out.println("\"" + fullname + "\",");
 					celebrities.add(name);
 				}
 			}
-			// System.out.println(celebrities.size());
 			qexec.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 
 		return celebrities;
@@ -450,10 +427,9 @@ public class CelebritiesFetcher {
 					celebrities.add(fullname);
 				}
 			}
-			// System.out.println(celebrities.size());
 			qexec.close();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 
 		return celebrities;
@@ -712,7 +688,7 @@ public class CelebritiesFetcher {
 		}
 		return array.toString();
 	}
-	
+
 	public String getArtistsAsJson() {
 		JsonObject json = new JsonObject();
 		JsonArray array = new JsonArray();
@@ -723,6 +699,8 @@ public class CelebritiesFetcher {
 		return array.toString();
 	}
 
+	private void getAllDates(String string) {
+	}
 
 	public String getCelebritiesAsJson() {
 		JsonObject json = new JsonObject();

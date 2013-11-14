@@ -6,6 +6,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import com.google.code.geocoder.Geocoder;
 import com.google.code.geocoder.GeocoderRequestBuilder;
 import com.google.code.geocoder.model.GeocodeResponse;
@@ -23,11 +26,16 @@ public class FetchGeoData {
 
 	private static final String TIMEZONE_URL = "https://maps.googleapis.com/maps/api/timezone/json?";
 
+	private Logger logger = LogManager.getLogger(FetchGeoData.class
+			.getName());
+	
 	public Location getLocation(String name, String description) {
+		logger.info(String.format("load location for name: %s and descrption: %s", name, description));
 		if (name == null) {
+			logger.warn("name should not be null");
 			return null;
 		}
-
+		
 		final Geocoder geocoder = new Geocoder();
 		GeocoderRequest geocoderRequest = new GeocoderRequestBuilder()
 				.setAddress(name).setLanguage("en").getGeocoderRequest();
@@ -36,17 +44,21 @@ public class FetchGeoData {
 				&& geocoderResponse.getResults().size() > 0) {
 			GeocoderGeometry geometry = geocoderResponse.getResults().get(0)
 					.getGeometry();
-			return getLocation(geometry.getLocation().getLng().doubleValue(),
+			Location location = getLocation(geometry.getLocation().getLng().doubleValue(),
 					geometry.getLocation().getLat().doubleValue(), description);
+			return location;
 		} else {
+			logger.info("no location found!");
 			return null;
 		}
 	}
 
 	public Location getLocation(String longitude, String latitude,
 			String description) {
+		logger.info(String.format("load location for longitude: %s, latitude: %s and descrption: %s",longitude, latitude, description));
 		if (longitude == null || latitude == null || longitude == ""
 				|| latitude == "") {
+			logger.warn("longitude/latitude should not be null");
 			return null;
 		}
 		return getLocation(Double.valueOf(longitude), Double.valueOf(latitude),
@@ -55,7 +67,9 @@ public class FetchGeoData {
 
 	public Location getLocation(Double longitude, Double latitude,
 			String description) {
+		logger.info(String.format("load location for longitude: %s, latitude: %s and descrption: %s",longitude, latitude, description));
 		if (longitude == null || latitude == null) {
+			logger.warn("longitude/latitude should not be null");
 			return null;
 		}
 		final Geocoder geocoder = new Geocoder();
@@ -65,8 +79,10 @@ public class FetchGeoData {
 								.valueOf(longitude))).setLanguage("en")
 				.getGeocoderRequest();
 		GeocodeResponse geocoderResponse = geocoder.geocode(geocoderRequest);
-		return getLocationForGeoResponse(geocoderResponse, longitude, latitude,
+		Location location = getLocationForGeoResponse(geocoderResponse, longitude, latitude,
 				description);
+		logger.info(String.format("location found: %s", location.getFormattedLocation()));
+		return location;
 	}
 
 	private Location getLocationForGeoResponse(
@@ -82,15 +98,6 @@ public class FetchGeoData {
 		if (geocoderResponse.getStatus().equals(GeocoderStatus.ZERO_RESULTS)) {
 			return null;
 		} 
-//		else if (geocoderResponse.getStatus().equals(
-//				GeocoderStatus.OVER_QUERY_LIMIT)) {
-//			try {
-//				Thread.sleep(2000);
-//			} catch (InterruptedException e) {
-//				e.printStackTrace();
-//			}
-//			getLocation(longitude, latitude, description);
-//		}
 
 		for (GeocoderResult result : geocoderResponse.getResults()) {
 			for (GeocoderAddressComponent address : result
@@ -119,8 +126,6 @@ public class FetchGeoData {
 				break;
 			}
 		}
-		// return new Location(lgn, lat, placeName, null, country, state,
-		// postalCode, getOffsetUTC(longitude, latitude), description);
 
 		return new Location(lgn, lat, placeName,  country, state,
 				postalCode, getOffsetUTC(longitude, latitude), description);
@@ -154,7 +159,7 @@ public class FetchGeoData {
 			Integer offsetUTC = new Integer(json.getString("rawOffset"));
 			return offsetUTC / 3600;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		} finally {
 			if (conn != null)
 				conn.disconnect();

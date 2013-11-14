@@ -65,6 +65,9 @@ public class Interest {
 		this.location = location;
 	}
 	
+	public String toString() {
+		return String.format("%s, %s, %s",  name, genre, location);
+	}
 	
 
 }

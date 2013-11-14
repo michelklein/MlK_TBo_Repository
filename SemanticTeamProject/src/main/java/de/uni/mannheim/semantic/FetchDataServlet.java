@@ -11,13 +11,15 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import de.uni.mannheim.semantic.comparison.AgeComparator;
 import de.uni.mannheim.semantic.comparison.InterestsComparator;
 import de.uni.mannheim.semantic.comparison.LocationsComparator;
 import de.uni.mannheim.semantic.facebook.FacebookParser;
 import de.uni.mannheim.semantic.jena.CelebritiesFetcher;
 import de.uni.mannheim.semantic.model.CompareResult;
-import de.uni.mannheim.semantic.model.Interest;
 import de.uni.mannheim.semantic.model.InterestCompareResult;
 import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.MatchingContainer;
@@ -30,6 +32,8 @@ import facebook4j.Facebook;
 @WebServlet("/FetchDataServlet")
 public class FetchDataServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	private Logger logger = LogManager.getLogger(FetchDataServlet.class
+			.getName());
 	private FetchGeoData geoFetcher = new FetchGeoData();
 	private AgeComparator ageComparator = new AgeComparator();
 	private LocationsComparator locationsComparator = new LocationsComparator();
@@ -49,69 +53,62 @@ public class FetchDataServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		String method = request.getParameter("op");
-		System.out.println("Call DataFetcherServlet with method: " + method);
+		logger.info("Call DataFetcherServlet with method: " + method);
 		String json = null;
 		if ("facebook".equals(method)) {
 			Facebook facebook = (Facebook) request.getSession().getAttribute(
 					"facebook");
 			FacebookParser fbParser = new FacebookParser(facebook);
 			Person fbPerson = fbParser.parseFacebookPerson();
-
-			// for (Interest i : fbPerson.getInterest()) {
-			// System.out.println(i.getName());
-			// for (String s : i.getGenre()) {
-			// System.out.println("___" + s);
-			// }
-			// }
 			String latitude = request.getParameter("lati");
 			String longitude = request.getParameter("longi");
 			if (latitude != null && longitude != null) {
 				Location location = geoFetcher.getLocation(longitude, latitude,
 						Location.BROWSER_LOCATION);
+				logger.info("Found Browser location and add to Facebook User");
 				if (location != null) {
 					fbPerson.getLocations().add(location);
 				}
 			}
 
 			request.getSession().setAttribute("facebookUser", fbPerson);
-
 			json = fbPerson.toJsonString();
-
 		} else if ("celebrity".equals(method)) {
 			String celebrityName = request.getParameter("name");
+			logger.info("Create Celebrity Person for name: " + celebrityName);
 			Person celebrity = CelebritiesFetcher.get()
 					.createCel(celebrityName);
 			if (celebrity != null) {
-				for (Interest i : celebrity.getInterest()) {
-					System.out.println(i.getName());
-					for (String s : i.getGenre()) {
-						System.out.println("___" + s);
-					}
-				}
-
+				logger.info("Found celebrity. Starting comparison");
 				Person fbPerson = (Person) request.getSession().getAttribute(
 						"facebookUser");
+				
 				List<CompareResult> ageResult = new ArrayList<CompareResult>();
 				ageResult.add(ageComparator.compare(fbPerson.getBirthdate(),
 						celebrity.getBirthdate()));
-
+				logger.info("Get compare results for category age");
 				List<CompareResult> locationResults = locationsComparator
 						.compare(fbPerson.getLocations(),
 								celebrity.getLocations());
-
+				logger.info("Get compare results for category locations");
+				
 				List<InterestCompareResult> movieR = movieComparator.compare(
 						fbPerson.getInterest(), celebrity.getInterest());
-
+				logger.info("Get compare results for category movies");
+				
 				MatchingContainer comp = new MatchingContainer(celebrity,
 						ageResult, locationResults, movieR);
 				json = comp.toJsonString();
 			}
 		} else if ("celebrityList".equals(method)) {
+			logger.info("Start loading celebrity names");
 			// json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();
 			json = CelebritiesFetcher.get().getArtistsAsJson();
+			logger.info("End loading celebrity names");
 		}
 
 		if (json != null) {
+			logger.info("return response as json string");
 			response.setContentType("application/json");
 			PrintWriter out = response.getWriter();
 			out.print(json);

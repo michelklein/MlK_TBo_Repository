@@ -78,12 +78,7 @@ public class Person extends AbstractToJson {
 //	}
 
 	public String toString() {
-		if (birthdate != null) {
-			return firstname + " " + lastname + " "
-					+ sdfToDate2.format(birthdate) + "\n";
-		} else {
-			return firstname + " " + lastname + "\n";
-		}
+		return String.format("%s %s, birthdate: %s",  firstname, lastname, getFormattedBirthday());
 	}
 
 	public List<Interest> getInterest() {

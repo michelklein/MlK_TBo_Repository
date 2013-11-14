@@ -5,14 +5,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import com.sun.xml.internal.ws.message.RelatesToHeader;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import de.uni.mannheim.semantic.FetchGeoData;
 import de.uni.mannheim.semantic.FetchMovieData;
@@ -34,6 +34,9 @@ import facebook4j.internal.org.json.JSONException;
 import facebook4j.internal.org.json.JSONObject;
 
 public class FacebookParser {
+
+	private Logger logger = LogManager
+			.getLogger(FacebookParser.class.getName());
 	private Facebook fb;
 	private FetchGeoData geocoding = new FetchGeoData();
 	private FetchMovieData movieFetcher = new FetchMovieData();
@@ -44,13 +47,13 @@ public class FacebookParser {
 	}
 
 	public Person parseFacebookPerson() {
+		logger.info("Starting parse facebook person");
 		Person person = null;
 		Set<Location> locations = new HashSet<Location>();
 		try {
 			// Picture
-			// String picURL = fb.getPictureURL(PictureSize.large).toString();
 			String picURL = getLargeProfilePicture();
-			// Firstname
+			// First name
 			String firstname = fb.getMe().getFirstName();
 			// Name
 			String name = fb.getMe().getLastName();
@@ -73,8 +76,6 @@ public class FacebookParser {
 				}
 			}
 
-			// Interest
-			List<String> inter = fb.getMe().getInterestedIn();
 			// Birthdate
 			DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 			Date birthdate = df.parse(fb.getMe().getBirthday());
@@ -141,25 +142,19 @@ public class FacebookParser {
 			}
 			person = new Person(firstname, name, birthdate, locations,
 					interests, picURL);
-			// TBoSuperDuperPrinter(person);
 		} catch (FacebookException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			// } catch (JSONException e) {
-			// // TODO Auto-generated catch block
-			// e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
+		logger.info("Finish pare facebook person: " + person.toString());
 		return person;
 	}
 
 	private Interest createInterestByID(Category c) {
-		// TODO Auto-generated method stub
+		logger.info("load interest by category: " + c.getName());
 		JSONArray fqlRes;
 		try {
 			fqlRes = fb
@@ -197,25 +192,27 @@ public class FacebookParser {
 						movie = movieFetcher.getMovie(builder.toString(),
 								releaseDate);
 					}
+					logger.info(String.format("found movie: %s", movie.toString()));
 					return movie;
 				}
-				return new Interest(c.getCategory(), url, genre, c.getId(),
+				Interest interest = new Interest(c.getCategory(), url, genre, c.getId(),
 						name, null);
+				logger.info(String.format("found interest: %s", interest.toString()));
+				return interest;
 			}
 
 		} catch (FacebookException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
+		logger.warn("no interest found");
 		return null;
 
 	}
 
 	private String getLargeProfilePicture() {
-
+		logger.info("load large profile picture");
 		JSONArray fqlRes;
 		try {
 			fqlRes = fb
@@ -227,12 +224,11 @@ public class FacebookParser {
 			}
 
 		} catch (FacebookException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
+		logger.info("no large profile picture found!");
 		return null;
 
 	}
@@ -252,8 +248,7 @@ public class FacebookParser {
 				return loc;
 			}
 		} catch (FacebookException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 		return null;
 	}
@@ -271,10 +266,8 @@ public class FacebookParser {
 	//
 	// }
 	// } catch (IllegalArgumentException e) {
-	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// } catch (IllegalAccessException e) {
-	// // TODO Auto-generated catch block
 	// e.printStackTrace();
 	// }
 	// }
