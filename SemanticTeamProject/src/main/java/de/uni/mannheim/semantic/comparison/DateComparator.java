@@ -36,12 +36,12 @@ public class DateComparator extends AbstractComparator<DateObject> {
 		int div = age1 - age2;
 		div = div < 0 ? div * -1 : div;
 		if (age1 > 100 || age2 > 100) {
-			result.getSubresults().add(new CompareResult(0, "Age", "", o1, o2));
+			result.getSubresults().add(new CompareResult(0, "Difference", "", o1, o2));
 		} else {
 			double divide = (double) (100 - div) / 100;
 			double agePercent = AGE_PERCENT * divide;
 			result.getSubresults().add(
-					new CompareResult((int) agePercent, "Age", "", o1, o2));
+					new CompareResult((int) agePercent, "Difference", "", o1, o2));
 			result.setValue((int) (result.getValue() + agePercent));
 		}
 		// century comparison
