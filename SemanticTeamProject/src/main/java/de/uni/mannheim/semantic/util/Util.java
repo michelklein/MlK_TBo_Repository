@@ -20,7 +20,7 @@ public class Util {
 				String fname = field.getName();
 				Object value;
 				value = field.get(p);
-				logger.info("Field: " + fname + " : " + value);
+				logger.info("Fields: " + fname + " : " + value);
 			}
 		} catch (IllegalArgumentException e) {
 			logger.error(e.toString(), e);
