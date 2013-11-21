@@ -3,6 +3,11 @@ package de.uni.mannheim.semantic.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contains all information about to compared object. These information are used to create the progress bars in the ui.
+ * 
+ * @author Michel
+ */
 public class CompareResult extends AbstractToJson {
 
 	/** The achieved result in percent */

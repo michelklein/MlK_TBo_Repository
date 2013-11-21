@@ -34,8 +34,13 @@ import facebook4j.internal.org.json.JSONArray;
 import facebook4j.internal.org.json.JSONException;
 import facebook4j.internal.org.json.JSONObject;
 
+/**
+ * load all required information from facebook and create a facebook person.
+ * 
+ * @author Michel
+ */
 public class FacebookParser {
-	DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+	private static final DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 	private Logger logger = LogManager
 			.getLogger(FacebookParser.class.getName());
 	private Facebook fb;
@@ -43,10 +48,21 @@ public class FacebookParser {
 	private FetchMovieData movieFetcher = new FetchMovieData();
 	private Pattern pattern = Pattern.compile("[-/{}()]");
 
+	/**
+	 * 
+	 * @param f
+	 *            the current facebook entity need to fetch the facebook
+	 *            information
+	 */
 	public FacebookParser(Facebook f) {
 		fb = f;
 	}
 
+	/**
+	 * Get all required information from the given facebook entity.
+	 * 
+	 * @return a {@link Person} with all fetched facebook information
+	 */
 	public Person parseFacebookPerson() {
 		logger.info("Starting parse facebook person");
 		Person person = null;
@@ -62,7 +78,7 @@ public class FacebookParser {
 			IdNameEntity hometown = fb.getMe().getHometown();
 			if (hometown != null) {
 				Location loc = parseLocation(hometown.getId(),
-						Location.BIRTHPLACE,"");
+						Location.BIRTHPLACE, "");
 				if (loc != null) {
 					locations.add(loc);
 				}
@@ -70,8 +86,8 @@ public class FacebookParser {
 
 			IdNameEntity locationTmp = fb.getMe().getLocation();
 			if (locationTmp != null) {
-				Location loc = parseLocation(locationTmp.getId(),
-						"Facebook",Location.CURRENT_LOCATION);
+				Location loc = parseLocation(locationTmp.getId(), "Facebook",
+						Location.CURRENT_LOCATION);
 				if (loc != null) {
 					locations.add(loc);
 				}
@@ -120,19 +136,12 @@ public class FacebookParser {
 			List<Interest> interests = new ArrayList<Interest>();
 
 			List<Category> allInts = new ArrayList<Category>();
-			// allInts.addAll(fb.getBooks());
 			allInts.addAll(fb.getMovies());
-			// allInts.addAll(fb.getTelevision());
-			// allInts.addAll(fb.getMusic());
-			// allInts.addAll(fb.getGames());
-
-			// fb.getLikedPage();
 
 			for (Category c : allInts) {
 				Interest interest = createInterestByID(c);
 				if (interest != null)
 					interests.add(interest);
-				// TBoSuperDuperPrinter(createInterestByID(c));
 			}
 
 			for (Interest i : interests) {
@@ -142,7 +151,8 @@ public class FacebookParser {
 
 			List<DateObject> dates = new ArrayList<DateObject>();
 			Date birthdate = df.parse(fb.getMe().getBirthday());
-			dates.add(new DateObject(birthdate, DateObject.BIRTHDATE, 	fb.getMe().getHometown().getName()));
+			dates.add(new DateObject(birthdate, DateObject.BIRTHDATE, fb
+					.getMe().getHometown().getName()));
 			dates.addAll(getDates());
 
 			person = new Person(firstname, name, dates, locations, interests,
@@ -257,7 +267,6 @@ public class FacebookParser {
 					JSONObject work = workA.getJSONObject(i);
 					String workLoc = work.getJSONObject("employer").get("name")
 							.toString();
-					System.out.println(workLoc);
 					if (work.has("start_date")) {
 						Object startDateStr = work.get("start_date");
 
@@ -277,8 +286,7 @@ public class FacebookParser {
 		} catch (JSONException e) {
 			logger.error(e.toString(), e);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			logger.error(e.toString(), e);
 		}
 		return dates;
 
@@ -290,8 +298,9 @@ public class FacebookParser {
 			p = fb.getPage(id);
 			facebook4j.Place.Location location = p.getLocation();
 			if (location != null) {
-				Location loc = geocoding.getLocation(name,location.getLongitude(),
-						location.getLatitude(), description);
+				Location loc = geocoding.getLocation(name,
+						location.getLongitude(), location.getLatitude(),
+						description);
 				if (loc == null) {
 					loc = geocoding
 							.getLocation(location.getCity(), description);
@@ -304,32 +313,5 @@ public class FacebookParser {
 		}
 		return null;
 	}
-
-	// public static void TBoSuperDuperPrinter(Object p) {
-	// try {
-	// for (Field field : getInheritedFields(p.getClass())) {
-	// field.setAccessible(true);
-	// String fname = field.getName();
-	// Object value;
-	//
-	// value = field.get(p);
-	//
-	// System.out.println("Field: " + fname + " : " + value);
-	//
-	// }
-	// } catch (IllegalArgumentException e) {
-	// e.printStackTrace();
-	// } catch (IllegalAccessException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// public static List<Field> getInheritedFields(Class<?> type) {
-	// List<Field> fields = new ArrayList<Field>();
-	// for (Class<?> c = type; c != null; c = c.getSuperclass()) {
-	// fields.addAll(Arrays.asList(c.getDeclaredFields()));
-	// }
-	// return fields;
-	// }
 
 }

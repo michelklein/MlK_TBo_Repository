@@ -1,15 +1,14 @@
 package de.uni.mannheim.semantic.model;
 
-import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * This represents both a facebook and a celebrity Person. 
+ * @author Michel
+ */
 public class Person extends AbstractToJson {
-	private static SimpleDateFormat sdfToDate = new SimpleDateFormat(
-			"yyyy-MM-dd");
-	private static SimpleDateFormat sdfToDate2 = new SimpleDateFormat(
-			"EEEE, dd.MM.yyyy");
 
 	private String firstname;
 	private String lastname;
@@ -29,28 +28,9 @@ public class Person extends AbstractToJson {
 		this.dates = dates;
 	}
 	
-	
-	
-//	public Person(String firstname, String lastname, String birthdate, Set<Location> locations,
-//			List<Interest> interest, String imageURL) {
-//		super();
-//		this.firstname = firstname;
-//		this.lastname = lastname;
-//		this.interests = interest;
-//		this.imageURL = imageURL;
-//		this.locations = locations;
-//		try {
-//			this.birthdate = sdfToDate.parse(birthdate);
-//		} catch (ParseException e) {
-//			e.printStackTrace();
-//		}
-//	}
-
 	public List<DateObject> getDates() {
 		return dates;
 	}
-
-
 
 	public String getFirstname() {
 		return firstname;

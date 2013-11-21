@@ -2,6 +2,11 @@ package de.uni.mannheim.semantic.model;
 
 import java.util.List;
 
+/**
+ * Contains all information about two compared {@link Interest} object. These information are used to create the progress bars in the ui.
+ * 
+ * @author Michel
+ */
 public class InterestCompareResult extends CompareResult {
 
 	private String genre;

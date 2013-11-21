@@ -1,5 +1,10 @@
 package de.uni.mannheim.semantic.model;
 
+/**
+ * Container for all required location information.
+ * 
+ * @author Michel
+ */
 public class Location extends AbstractToolTipInfo {
 
 	public static final String BIRTHPLACE = "Birth";

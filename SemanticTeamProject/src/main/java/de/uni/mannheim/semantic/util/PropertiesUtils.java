@@ -6,6 +6,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
+import de.uni.mannheim.semantic.FetchDataServlet;
+
 /**
  * Util class for the simple access to properties file 
  * 
@@ -13,6 +18,9 @@ import java.util.Properties;
  */
 public class PropertiesUtils {
 
+	private static final Logger logger = LogManager.getLogger(PropertiesUtils.class
+			.getName());
+	
 	/**
 	 * private constructor because of the static methods.
 	 */
@@ -30,12 +38,10 @@ public class PropertiesUtils {
 	public static Properties load(String propsName)  {
 	     InputStream in = PropertiesUtils.class.getClassLoader().getResourceAsStream(propsName);
 		Properties props = new Properties();
-//		URL url = ClassLoader.getSystemResource(propsName);
 			try {
 				props.load(in);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				logger.error(e.toString(), e);
 			}
 		return props;
 	}

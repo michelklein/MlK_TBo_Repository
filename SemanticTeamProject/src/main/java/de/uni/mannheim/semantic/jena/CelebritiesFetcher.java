@@ -36,17 +36,23 @@ import de.uni.mannheim.semantic.model.Location;
 import de.uni.mannheim.semantic.model.Person;
 import de.uni.mannheim.semantic.util.PropertiesUtils;
 
+/** 
+ * This class fetch all information about celebrities from different data sources like dbpedia and linkedmdb. 
+ * @author Michel
+ */
 public class CelebritiesFetcher {
 	private Logger logger = LogManager.getLogger(CelebritiesFetcher.class
 			.getName());
 	private FetchGeoData geocoding = new FetchGeoData();
 	private FetchMovieData movieFetcher = new FetchMovieData();
-	private static final String COVER_URL_DUMMY = "http://www.ernieputto.de/filmstuff4/batman_begins/batman_begins_poster_us2.jpg";
 	private static CelebritiesFetcher instance;
 
 	private CelebritiesFetcher() {
 	}
 
+	/**
+	 * @return the singleton instance of this class
+	 */
 	public static CelebritiesFetcher get() {
 		if (instance == null) {
 			instance = new CelebritiesFetcher();
@@ -54,25 +60,11 @@ public class CelebritiesFetcher {
 		return instance;
 	}
 
-	public static void main(String[] args) throws IOException {
-
-		CelebritiesFetcher.get().getAllDates(
-				"<http://dbpedia.org/page/Arnold_Schwarzenegger>");
-		// CelebritiesFetcher.get().getCelebrity("Arnold SchwarzeneggerKonrad Adenauer");
-		// Set<Location> celebrityLocations = CelebritiesFetcher.get()
-		// .getCelebrityLocations("Arnold Schwarzenegger");
-		// System.out.println("Arnold");
-		// for (Location loc : celebrityLocations) {
-		// System.out.println(loc.toString());
-		// }
-		// celebrityLocations = CelebritiesFetcher.get().getCelebrityLocations(
-		// "Konrad Adenauer");
-		// System.out.println("Konni");
-		// for (Location loc : celebrityLocations) {
-		// System.out.println(loc.toString());
-		// }
-	}
-
+	/**
+	 * create a celebrity {@link Person} 
+	 * @param name the name of the celebrity
+	 * @return a {@link Person} object with all fetched information
+	 */
 	public Person createCel(String name) {
 		logger.info("create celebrity for name: " + name);
 		Person p = null;
@@ -89,28 +81,22 @@ public class CelebritiesFetcher {
 
 		while (resSet.hasNext()) {
 			QuerySolution s = resSet.nextSolution();
-			givenName = gll(s, "givenName");
-			surname = gll(s, "surname");
-			date = gll(s, "date");
-			tn = g(s, "thumbnail");
-			// String resName = s
-			// .get("birthPlace")
-			// .toString()
-			// .substring(
-			// s.get("birthPlace").toString().lastIndexOf("/") + 1);
-			// Location location = geocoding.getLocation(resName);
-			// home = new Institution(gll(s, "label"), location);
+			givenName = getLexicalString(s, "givenName");
+			surname = getLexicalString(s, "surname");
+			date = getLexicalString(s, "date");
+			tn = getString(s, "thumbnail");
+
 			if (first) {
-				givenName = gll(s, "givenName");
-				surname = gll(s, "surname");
-				date = gll(s, "date");
-				tn = g(s, "thumbnail");
-				personIdent = g(s, "p");
+				givenName = getLexicalString(s, "givenName");
+				surname = getLexicalString(s, "surname");
+				date = getLexicalString(s, "date");
+				tn = getString(s, "thumbnail");
+				personIdent = getString(s, "p");
 				first = false;
 			}
 
-			type.add(g(s, "sc"));
-			if (is(type, "artist")) {
+			type.add(getString(s, "sc"));
+			if (isType(type, "artist")) {
 				resSet = execute("http://dbpedia.org/sparql",
 						QueryHelper.getAlbumsQuery(personIdent));
 
@@ -118,29 +104,29 @@ public class CelebritiesFetcher {
 				Set<String> g = null;
 				while (resSet.hasNext()) {
 					s = resSet.nextSolution();
-					String label = gll(s, "label");
+					String label = getLexicalString(s, "label");
 					if (label.indexOf("(") != -1)
 						label = label.substring(0, label.indexOf("("));
 
 					if (!oldLabel.equals(label)) {
 						g = new HashSet<String>();
-						Interest i = new Interest("music", COVER_URL_DUMMY, g,
+						Interest i = new Interest("music", null, g,
 								"id", label, null, null);
 						interests.add(i);
 						oldLabel = label;
 					} else {
-						g.add(g(s, "genre"));
+						g.add(getString(s, "genre"));
 					}
 
 				}
 			}
-			if (is(type, "actor")) {
+			if (isType(type, "actor")) {
 				resSet = execute("http://dbpedia.org/sparql",
 						QueryHelper.getMoviesQuery(personIdent));
 				while (resSet.hasNext()) {
 					s = resSet.nextSolution();
-					String label = gll(s, "label");
-					String year = g(s, "year");
+					String label = getLexicalString(s, "label");
+					String year = getString(s, "year");
 					year = year.substring(year.indexOf("_") - 4,
 							year.indexOf("_"));
 					year = year.trim();
@@ -150,12 +136,12 @@ public class CelebritiesFetcher {
 
 					String imdb = null;
 					try {
-						String sa = g(s, "p");
+						String sa = getString(s, "p");
 						ResultSet imdbRS = execute(
 								"http://www.linkedmdb.org/sparql",
 								QueryHelper.getIMDBQuery(sa));
 						while (imdbRS.hasNext()) {
-							String page = g(imdbRS.nextSolution(), "page");
+							String page = getString(imdbRS.nextSolution(), "page");
 							if (page.contains("imdb.com/title/tt")) {
 								imdb = page;
 							}
@@ -211,7 +197,7 @@ public class CelebritiesFetcher {
 		return p;
 	}
 
-	private boolean is(Set<String> type, String string) {
+	private boolean isType(Set<String> type, String string) {
 		for (String d : type) {
 			if (d.toLowerCase().contains(string))
 				return true;
@@ -312,7 +298,7 @@ public class CelebritiesFetcher {
 		return g;
 	}
 
-	private String gll(QuerySolution s, String string) {
+	private String getLexicalString(QuerySolution s, String string) {
 		RDFNode x = s.get(string);
 		if (x != null) {
 			String result = x.asNode().getLiteralLexicalForm();
@@ -322,48 +308,15 @@ public class CelebritiesFetcher {
 		}
 	}
 
-	private String g(QuerySolution s, String string) {
+	private String getString(QuerySolution s, String string) {
 		RDFNode x = s.get(string);
 		return x.toString();
 	}
 
-//	public List<Person> getCelebritiePersons() {
-//		List<Person> result = new ArrayList<Person>();
-//		try {
-//			String queryStr2 = "PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX foaf: <http://xmlns.com/foaf/0.1/> select ?firstname ?lastname ?birthdate where {?p a dbpedia-owl:Bodybuilder. ?p foaf:givenName ?firstname. ?p foaf:surname ?lastname. ?p dbpedia-owl:birthDate ?birthdate} ORDER BY ASC(?lastname) ";
-//			Query query = QueryFactory.create(queryStr2);
-//
-//			// Remote execution.
-//			QueryExecution qexec = QueryExecutionFactory.sparqlService(
-//					"http://dbpedia.org/sparql", query);
-//			// Set the DBpedia specific timeout.
-//			((QueryEngineHTTP) qexec).addParam("timeout", "10000");
-//
-//			// Execute.
-//			ResultSet rs = qexec.execSelect();
-//			String firstName = null;
-//			String lastName = null;
-//			String date = null;
-//			while (rs.hasNext()) {
-//				QuerySolution soln = rs.nextSolution();
-//				RDFNode x = soln.get("firstname"); // Get a result variable by
-//													// name.
-//				firstName = x.asNode().getLiteralLexicalForm();
-//				x = soln.get("lastname"); // Get a result variable by name.
-//				lastName = x.asNode().getLiteralLexicalForm();
-//				x = soln.get("birthdate"); // Get a result variable by name.
-//				date = x.asNode().getLiteralLexicalForm();
-//				result.add(new Person(firstName, lastName, date, null, null,
-//						null));
-//			}
-//			ResultSetFormatter.out(System.out, rs, query);
-//			qexec.close();
-//		} catch (Exception e) {
-//			logger.error(e.toString(), e);
-//		}
-//		return result;
-//	}
 
+	/**
+	 * @return a {@link List} with all possible artists name for the celebrity comparison
+	 */
 	public List<String> getArtists() {
 		List<String> celebrities = new ArrayList<String>();
 		try {
@@ -380,7 +333,7 @@ public class CelebritiesFetcher {
 			while (rs.hasNext()) {
 
 				QuerySolution soln = rs.nextSolution();
-				name = gll(soln, "name");
+				name = getLexicalString(soln, "name");
 				if (!celebrities.contains(name)) {
 					celebrities.add(name);
 				}
@@ -393,58 +346,11 @@ public class CelebritiesFetcher {
 		return celebrities;
 	}
 
-	public List<String> getCelebrities() {
-		List<String> celebrities = new ArrayList<String>();
-		try {
-			StringBuilder builder = new StringBuilder();
-			builder.append(
-					"PREFIX dbpedia-owl: <http://dbpedia.org/ontology/> ")
-					.append("PREFIX foaf: <http://xmlns.com/foaf/0.1/> ")
-					.append("PREFIX ont: <http://dbpedia.org/ontology/>")
-					.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-					.append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-					.append("select DISTINCT ?firstname ?lastname where {")
-					.append("?p foaf:givenName ?firstname.")
-					.append("?p foaf:surname ?lastname.")
-					.append("?p ont:thumbnail ?thumbnail.")
-					.append("?p ont:birthPlace <http://dbpedia.org/resource/Germany>.")
-					.append("?p ont:birthDate ?birthDate.")
-					.append("?p a ?type.")
-					.append("?type rdfs:subClassOf ?sc.")
-					.append(" FILTER (!isBlank(?lastname) &&")
-					.append("((?sc = <http://dbpedia.org/class/yago/Actor109765278>)||(?sc = <http://dbpedia.org/class/yago/Musician110339966>)||(?sc = <http://dbpedia.org/class/yago/Writer110794014>))")
-					.append(")} ORDER BY ASC(?lastname) ");
 
-			// Remote execution.
-			QueryExecution qexec = QueryExecutionFactory.sparqlService(
-					"http://dbpedia.org/sparql", builder.toString());
-			// Set the DBpedia specific timeout.
-			((QueryEngineHTTP) qexec).addParam("timeout", "10000");
-
-			// Execute.
-			ResultSet rs = qexec.execSelect();
-			String firstName = null;
-			String lastName = null;
-			String fullname = null;
-			while (rs.hasNext()) {
-
-				QuerySolution soln = rs.nextSolution();
-				firstName = gll(soln, "firstname");
-				lastName = gll(soln, "lastname");
-				fullname = String.format("%s %s", firstName, lastName);
-				if (!celebrities.contains(fullname)) {
-					System.out.println("\"" + fullname + "\",");
-					celebrities.add(fullname);
-				}
-			}
-			qexec.close();
-		} catch (Exception e) {
-			logger.error(e.toString(), e);
-		}
-
-		return celebrities;
-	}
-
+	/**
+	 * Only for development. 
+	 * @return a static list with some celebrity names.
+	 */
 	public List<String> getDummyCelebrities() {
 		String[] persons = { "Ursula Acosta", "Konrad Adenauer",
 				"Heinrich Cornelius Agrippa", "Fatih Akõn", "Hans Albers",
@@ -689,6 +595,10 @@ public class CelebritiesFetcher {
 		return new ArrayList<String>(Arrays.asList(persons));
 	}
 
+	/**
+	 * 
+	 * @return the list of all dummy celebrities as json
+	 */
 	public String getDummyCelebritiesAsJson() {
 		JsonObject json = new JsonObject();
 		JsonArray array = new JsonArray();
@@ -699,6 +609,9 @@ public class CelebritiesFetcher {
 		return array.toString();
 	}
 
+	/** 
+	 * @return the list of all possible artists as json string
+	 */
 	public String getArtistsAsJson() {
 		JsonObject json = new JsonObject();
 		JsonArray array = new JsonArray();
@@ -709,16 +622,4 @@ public class CelebritiesFetcher {
 		return array.toString();
 	}
 
-	private void getAllDates(String string) {
-	}
-
-	public String getCelebritiesAsJson() {
-		JsonObject json = new JsonObject();
-		JsonArray array = new JsonArray();
-		for (String celebrity : getCelebrities()) {
-			json.put("celebritie", celebrity);
-			array.add(celebrity);
-		}
-		return array.toString();
-	}
 }

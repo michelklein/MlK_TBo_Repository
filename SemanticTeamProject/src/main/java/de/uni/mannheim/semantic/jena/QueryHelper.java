@@ -1,12 +1,9 @@
 package de.uni.mannheim.semantic.jena;
 
-import java.io.IOException;
-
+/**
+ * A Helper class which contains all sparql queries.  
+ */
 public class QueryHelper {
-
-	public static void main(String[] args) throws IOException {
-		getArtists();
-	}
 
 	public static String getBirthplaceDeathplaceQuery(String celebrityName) {
 		StringBuilder builder = new StringBuilder();
@@ -32,21 +29,6 @@ public class QueryHelper {
 				.append("}");
 		return builder.toString();
 	}
-
-	// public static String getAlmaMataQuery(String celebrityName) {
-	// StringBuilder builder = new StringBuilder();
-	// builder.append("PREFIX dbpprop: <http://dbpedia.org/property/>")
-	// .append("PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>")
-	// .append("PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>")
-	// .append("PREFIX foaf: <http://xmlns.com/foaf/0.1/>")
-	// .append("SELECT DISTINCT ?city ")
-	// .append("WHERE { ?p a dbpedia-owl:Person. ?p rdfs:label ?name. ?p dbpedia-owl:almaMater ?uni. ")
-	// .append("{ ?uni dbpprop:city ?c } UNION {?uni dbpedia-owl:city ?c} ?c rdfs:label ?city. ")
-	// .append("FILTER (?name='" + celebrityName + "'@en)")
-	// .append("FILTER langMatches( lang(?city), 'EN' )")
-	// .append("}");
-	// return builder.toString();
-	// }
 
 	public static String getAlmaMataQuery(String celebrityName) {
 		StringBuilder builder = new StringBuilder();

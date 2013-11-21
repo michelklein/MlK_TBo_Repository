@@ -3,6 +3,13 @@ package de.uni.mannheim.semantic.model;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import de.uni.mannheim.semantic.comparison.DateComparator;
+
+/**
+ * This class represents objects which could be compared with the {@link DateComparator}
+ * 
+ * @author Michel
+ */
 public class DateObject extends AbstractToolTipInfo {
 
 	private static SimpleDateFormat sdfToDate2 = new SimpleDateFormat(
@@ -24,7 +31,6 @@ public class DateObject extends AbstractToolTipInfo {
 		this.description = description;
 		this.date = date;
 		this.toolTipInfo = toolTipInfo;
-		System.out.println(description+" : "+date);
 	}
 	
 	public boolean isPrio() {
@@ -61,7 +67,5 @@ public class DateObject extends AbstractToolTipInfo {
 	public String getToolTipInfo() {
 		return toolTipInfo;
 	}
-
-
 	
 }

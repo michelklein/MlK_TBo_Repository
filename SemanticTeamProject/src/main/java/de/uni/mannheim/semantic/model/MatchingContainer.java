@@ -3,6 +3,11 @@ package de.uni.mannheim.semantic.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Container with all information for the ui.
+ *    
+ * @author Michel
+ */
 public class MatchingContainer extends AbstractToJson {
 
 	private Person celebrity;
@@ -68,7 +73,6 @@ public class MatchingContainer extends AbstractToJson {
 			allRes.addAll(this.movieResult);
 
 			for (CompareResult cr : allRes) {
-				System.out.println(cr.getO1() + ":" + cr.getSum());
 				total += cr.getSum();
 
 			}
@@ -77,7 +81,6 @@ public class MatchingContainer extends AbstractToJson {
 	}
 
 	public void setLocationResults(List<CompareResult> locationResults) {
-		// TODO Auto-generated method stub
 		this.locationResults = locationResults;
 	}
 
