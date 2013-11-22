@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import de.uni.mannheim.semantic.FetchDataServlet;
 import de.uni.mannheim.semantic.util.PropertiesUtils;
 import facebook4j.Facebook;
 import facebook4j.FacebookFactory;
@@ -24,6 +25,8 @@ public class SignInServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		logger.info("Call Sign In Servlet");
+	
+		
 		logger.info("Load Properties and configure OAuthentification");
 		Properties prop = PropertiesUtils.load("general.properties");
 		ConfigurationBuilder cb = new ConfigurationBuilder();

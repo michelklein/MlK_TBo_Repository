@@ -40,7 +40,7 @@ public class FetchMovieData {
 			logger.warn("title should not be null");
 			return null;
 		}
-
+ 
 		if (year != null) {
 			Matcher matcher = pattern.matcher(year);
 			if (matcher.find() && year.length() > 4) {

@@ -1,3 +1,4 @@
+<%@ page import="org.apache.jasper.tagplugins.jstl.core.If"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
 <%@ taglib prefix="tag" tagdir="/WEB-INF/tags"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
@@ -25,6 +26,13 @@
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>Sign in with Facebook example</title>
 </head>
+<%
+	if (request.getParameter("debug") != null) {
+		session.setAttribute("debug", true);
+	} else {
+		session.removeAttribute("debug");
+	}
+%>
 <body>
 
 	<tag:notloggedin>
@@ -38,6 +46,7 @@
 	</tag:notloggedin>
 
 	<tag:loggedin>
+
 		<script type="text/javascript" language="javascript">
 			if (navigator.geolocation) {
 				$("body").addClass("loading");
@@ -87,35 +96,32 @@
 		</div>
  -->
 		<div id="content" class="preUser">
-			<div class="row">
-				<div class="col-md-4 col-md-offset-1">
-					<div id="fbUser">
-						<div class="panel-header-own">
-							<img id="fbUserImage" src="images/defaultProfile.png"
-								class="img-rounded"> <span id="userFirstname"
-								class="header-name header-bold"></span> <span id="userLastname"
-								class="header-name"></span>
-						</div>
-					</div>
+			<div class="row" style="padding-bottom: 50px;">
+				<div class="col-md-2 text-right">
+					<img id="fbUserImage" src="images/defaultProfile.png"
+						class="img-rounded">
 				</div>
-				<div class="col-md-1" id="total" style="display: none"></div>
-				<div class="col-md-5">
-					<div id="fbUser">
-						<div class="panel-header-own floatRight">
-
-							<span id="celebrityFirstname"
-								class="header-name header-show header-bold">First</span> <span
-								id="celebrityLastname" class="header-name header-show">Last</span>
-
-							<input id="search-celebrity" type="text" class="form-control"
-								data-provide="typeahead" data-items="4"
-								placeholder="Type in your celebrity ..."> <img
-								id="celebrityImage" src="images/defaultProfile.png"
-								class="img-rounded imageRight">
-						</div>
-					</div>
+				<div class="col-md-3" style="margin-top: 4%;">
+					<span id="userFirstname" class="header-name header-bold"></span> <span
+						id="userLastname" class="header-name"></span>
 				</div>
-				<div class="col-md-1"></div>
+				<div class="col-md-2" style="margin-top: 2%;">
+					<div id="total" style="display: none"></div>
+				</div>
+
+				<div class="col-md-3 text-right" style="margin-top: 4%;">
+					<span id="celebrityFirstname"
+						class="header-name header-show header-bold">First</span> <span
+						id="celebrityLastname" class="header-name header-show">Last</span>
+					<input id="search-celebrity" type="text" class="form-control"
+						data-provide="typeahead" data-items="4"
+						placeholder="Type in your celebrity ...">
+				</div>
+				<div class="col-md-2">
+					<img id="celebrityImage" src="images/defaultProfile.png"
+						class="img-rounded imageRight">
+				</div>
+
 			</div>
 
 
@@ -304,7 +310,7 @@
 							$(".progress-bar").removeClass('eb');
 							$("#total").fadeIn(3000);
 							$("#totalnumber").animateNumber(data.total);
-							window.scrollTo(0,0);
+							window.scrollTo(0, 0);
 						});
 					});
 				});
