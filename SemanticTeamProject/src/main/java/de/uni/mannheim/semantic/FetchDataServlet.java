@@ -69,17 +69,14 @@ public class FetchDataServlet extends HttpServlet {
 		if ("facebook".equals(method)) {
 			Facebook facebook = (Facebook) request.getSession().getAttribute(
 					"facebook");
-			System.out.println(debug);
 			if (debug == true) {
 				try {
 					json = getDummyData(facebook.getName().substring(0,
 							facebook.getName().indexOf(" ")));
 				} catch (IllegalStateException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.toString(), e);
 				} catch (FacebookException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.toString(), e);
 				}
 
 			} else {
@@ -167,7 +164,6 @@ public class FetchDataServlet extends HttpServlet {
 
 		} else if ("celebrityList".equals(method)) {
 			logger.info("Start loading celebrity names");
-			// json = CelebritiesFetcher.get().getDummyCelebritiesAsJson();
 			json = CelebritiesFetcher.get().getArtistsAsJson();
 			logger.info("End loading celebrity names");
 		}
