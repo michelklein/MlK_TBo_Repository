@@ -144,10 +144,10 @@ public class FacebookParser {
 					interests.add(interest);
 			}
 
-			for (Interest i : interests) {
-				i.getGenre().addAll(
-						CelebritiesFetcher.get().getGenreFromFile(i.getName()));
-			}
+//			for (Interest i : interests) {
+//				i.getGenre().addAll(
+//						CelebritiesFetcher.get().getGenreFromFile(i.getName()));
+//			}
 
 			List<DateObject> dates = new ArrayList<DateObject>();
 			Date birthdate = df.parse(fb.getMe().getBirthday());

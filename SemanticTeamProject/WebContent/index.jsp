@@ -5,23 +5,19 @@
 
 <html>
 <head>
-<!-- Latest compiled and minified CSS -->
-<link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap.min.css">
 
 <!-- Optional theme -->
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap.min.css">
 <link rel="stylesheet"
 	href="bootstrap/3.0.0/css/bootstrap-theme.min.css">
 <link rel="stylesheet"
 	href="bootstrap/font-awesome-4.0.3/css/font-awesome.min.css">
 <!-- Latest compiled and minified JavaScript -->
-<script type="text/javascript" src="http://code.jquery.com/jquery.js"></script>
+<script src="bootstrap/3.0.0/js/jquery-1.10.2.min.js"></script>
 <script src="bootstrap/3.0.0/js/bootstrap.min.js"></script>
-<script src="bootstrap/3.0.0/js/typeahead.js"></script>
-
+<script src="bootstrap/3.0.0/js/typeahead.min.js"></script>
 <script src="bootstrap/3.0.0/js/jquery.animateNumber.js"></script>
-
-<link rel="stylesheet"
-	href="bootstrap/3.0.0/css/typeahead.js-bootstrap.css">
 <link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap-mod.css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
 <title>Sign in with Facebook example</title>
@@ -115,7 +111,7 @@
 						id="celebrityLastname" class="header-name header-show">Last</span>
 					<input id="search-celebrity" type="text" class="form-control"
 						data-provide="typeahead" data-items="4"
-						placeholder="Type in your celebrity ...">
+						placeholder="Type in Celebrity ...">
 				</div>
 				<div class="col-md-2">
 					<img id="celebrityImage" src="images/defaultProfile.png"
