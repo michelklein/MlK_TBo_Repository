@@ -132,6 +132,9 @@
 
 
 		<script type="text/javascript">
+		
+		
+		var finaldata;
 			$.ajaxSetup({
 				cache : false
 			});
@@ -159,7 +162,7 @@
 								createDynMatch("#date", data.ageCompResult,
 										"Significant Dates", false);
 								if (data.total != 0)
-									finallyTotal(data);
+									finallyTotal1(data);
 							});
 							$.getJSON("fetchData?op=celebrity&comp=loc&name="
 									+ $typeahead.val(), function(data) {
@@ -167,18 +170,21 @@
 										data.locationResult,
 										"Visited Locations", false);
 								if (data.total != 0)
-									finallyTotal(data);
+									finallyTotal1(data);
 							});
 							$.getJSON("fetchData?op=celebrity&comp=genre&name="
 									+ $typeahead.val(), function(data) {
 								createDynMatch("#movies", data.movieResult,
 										"Movie Genres", true);
 								if (data.total != 0)
-									finallyTotal(data);
+									finallyTotal1(data);
 							});
 
 						});
-
+						$( "#content" ).click(function() {
+							finallyTotal2(finaldata);
+							$( "#content").unbind( "click" );
+							});
 					});
 			function constructCel(data) {
 				$(".preUser").removeClass("preUser");
@@ -287,7 +293,8 @@
 									}
 								});
 			}
-			function finallyTotal(data) {
+			function finallyTotal1(data) {
+				finaldata=data;
 				$("#total").empty();
 				$("#total").append(
 						"<span id='totalnumber' class='header-name header-bold bigger'>"
@@ -303,15 +310,23 @@
 				$("#date").slideDown(1000, function() {
 					$("#locations").delay(500).slideDown(1000, function() {
 						$("#movies").delay(500).slideDown(1000, function() {
-							$(".progress-bar").removeClass('eb');
-							$("#total").fadeIn(3000);
-							$("#totalnumber").animateNumber(data.total);
-							window.scrollTo(0, 0);
+							
 						});
 					});
 				});
 
 			}
+			function finallyTotal2(data) {
+				$(".progress-bar").removeClass('eb');
+				$("#total").fadeIn(3000);
+				$("#totalnumber").animateNumber(data.total);
+				window.scrollTo(0, 0);
+			}
+			
+			
+			
+			
+			
 		</script>
 
 	</tag:loggedin>
