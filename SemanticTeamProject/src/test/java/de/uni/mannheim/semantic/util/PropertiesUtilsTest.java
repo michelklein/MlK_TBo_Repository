@@ -1,6 +1,6 @@
 package de.uni.mannheim.semantic.util;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 import java.util.Properties;
 
@@ -15,13 +15,13 @@ public class PropertiesUtilsTest {
 			assertNotNull(prop);
 			System.out.println(prop);
 			assertNotNull(prop.getProperty("debug"));
+			assertEquals(prop.getProperty("debug"), "false");
 			assertNotNull(prop.getProperty("oauth.appId"));
 			assertNotNull(prop.getProperty("oauth.appSecret"));
 			assertNotNull(prop.getProperty("oauth.permissions"));
 			assertNotNull(prop.getProperty("jsonStoreEnabled"));
 			
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
