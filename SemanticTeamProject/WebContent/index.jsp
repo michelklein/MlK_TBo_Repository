@@ -20,7 +20,7 @@
 <script src="bootstrap/3.0.0/js/jquery.animateNumber.js"></script>
 <link rel="stylesheet" href="bootstrap/3.0.0/css/bootstrap-mod.css">
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Sign in with Facebook example</title>
+<title>Semantic Team Project - Celebrity Comparison</title>
 </head>
 <%
 	if (request.getParameter("debug") != null) {
