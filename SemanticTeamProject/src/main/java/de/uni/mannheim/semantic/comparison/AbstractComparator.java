@@ -3,7 +3,6 @@ package de.uni.mannheim.semantic.comparison;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
-import de.uni.mannheim.semantic.FetchDataServlet;
 import de.uni.mannheim.semantic.model.CompareResult;
 
 public abstract class AbstractComparator<T extends Object> {
